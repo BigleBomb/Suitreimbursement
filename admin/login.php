@@ -12,7 +12,14 @@
 	<!-- Custom Stylesheet -->
 	<link rel="stylesheet" href="./css/style.css">
 
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script><!-- Latest compiled and minified CSS -->
+	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+
+	<!-- jQuery library -->
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+	<!-- Latest compiled JavaScript -->
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 </head>
 
 <body>
@@ -39,7 +46,7 @@
 					$password = $_POST['password'];
 					$ch = curl_init();
 
-					curl_setopt($ch, CURLOPT_URL,"192.168.1.49:1000/login");
+					curl_setopt($ch, CURLOPT_URL,"localhost:1000/login");
 					curl_setopt($ch, CURLOPT_POST, 1);
 					curl_setopt($ch, CURLOPT_POSTFIELDS,
             				"email=$email&password=$password");
@@ -48,16 +55,19 @@
 					curl_close ($ch);
 					$resp = json_decode($server_output);
 
-					session_start();
 					// Store Session Data
-					$_SESSION['token']= $resp->token;
-					echo $_SESSION['token'];
 
 					if ($resp->success===true){
 						header("Location: dashboard.html");
+						session_start();
+						$_SESSION['token']= $resp->token;
+						echo $_SESSION['token'];
 					}
 					else {
-						echo 'error oy salah';
+						echo '<div class="alert alert-danger alert-dismissable">
+  								<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+  								<strong>Email or password is wrong</strong>
+							</div>';
 					}
 
 				}
