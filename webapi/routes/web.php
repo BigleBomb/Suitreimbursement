@@ -19,6 +19,7 @@ $app->post('/login', 'LoginController@index');
 $app->post('/register', 'UserController@register');
 $app->get('/user/{id}', ['middleware' => 'auth', 'uses' =>  'UserController@get_user']);
 $app->post('/changepass/{id}', 'UserController@changepass');
+$app->post('/set/{menu}/{id}', 'UserController@set');
 
 $app->get('/reimburse', 'ReimburseController@index');
 $app->get('/reimburse/{id}', 'ReimburseController@get_reimburse');

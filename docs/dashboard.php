@@ -1,4 +1,11 @@
 <!doctype html>
+
+<?php 
+	session_start();
+
+	if(!isset($_SESSION['token'])){
+
+?>
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
@@ -612,3 +619,10 @@
 	</script>
 
 </html>
+
+	<?php } 
+	else{
+		echo "Invalid session. Please login";
+	}
+?>
+
