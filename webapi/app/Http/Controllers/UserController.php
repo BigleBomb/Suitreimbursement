@@ -72,7 +72,34 @@ class UserController extends Controller
     }
 
     public function set(Request $request, $menu, $id){
-        if($menu === 'privillege'){
+        if($menu === 'nama'){
+            if($request->has('nama')){
+                $nama = $request->input('nama');
+                $user = User::where('id', $id)->first();
+                if($user){
+                    $user->nama = $nama;
+                    if($user->save()){
+                        $res['success'] = true;
+                        $res['message'] = 'User id '.$id.' name has been changed';
+
+                        return response($res);                        
+                    }
+                    else{
+                        $res['success'] = false;
+                        $res['message'] = 'Error updating id '.$id.' name';
+
+                        return response($res);
+                    }
+                }
+                else{
+                    $res['success'] = false;
+                    $res['message'] = 'Invalid user';
+
+                    return response($res);
+                }
+            }
+        }
+        else if($menu === 'privillege'){
             if($request->has('level')){
                 $priv = $request->input('level');
                 $user = User::where('id', $id)->first();
@@ -190,9 +217,4 @@ class UserController extends Controller
             return response($res);
         }
     }
-    /*
-     * Ganti password
-     *
-     * URL /changepass/{id}?password=
-     */
 }
