@@ -623,6 +623,7 @@
 	<?php } 
 	else{
 		echo "Invalid session. Please login";
+		echo "Login here";
 	}
 ?>
 
