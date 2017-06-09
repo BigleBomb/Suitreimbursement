@@ -17,7 +17,6 @@ class UserController extends Controller
     public function register(Request $request)
     {
         function test(){
-            
         }
         function randomPassword() {
             $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
