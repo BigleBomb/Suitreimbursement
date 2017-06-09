@@ -29,6 +29,7 @@
 <body>
 
 	<div class="wrapper">
+
 	    <div class="sidebar" data-color="purple" data-image="./assets/img/sidebar-1.jpg">
 			<!--
 		        Tip 1: You can change the color of the sidebar using: data-color="purple | blue | green | orange | red"
@@ -37,35 +38,35 @@
 		    -->
 
 			<div class="logo">
-				<a href="http://www.creative-tim.com" class="simple-text">
+				<a href="http://www.suitmedia.com" class="simple-text">
 					Creative Tim
 				</a>
 			</div>
 
 	    	<div class="sidebar-wrapper">
-				<ul class="nav">
-	                <li>
-	                    <a href="dashboard.html">
+	            <ul class="nav">
+	                <li class="active">
+	                    <a href="dashboard.php">
 	                        <i class="material-icons">dashboard</i>
 	                        <p>Dashboard</p>
 	                    </a>
 	                </li>
-	                <li class="active">
-	                    <a href="user.html">
+	                <li>
+	                    <a href="user.php">
 	                        <i class="material-icons">person</i>
-	                        <p>User Profile</p>
+	                        <p>User Management</p>
 	                    </a>
 	                </li>
 	                <li>
-	                    <a href="table.html">
+	                    <a href="reimbursement.php">
 	                        <i class="material-icons">content_paste</i>
-	                        <p>Table List</p>
+	                        <p>Reimbursement</p>
 	                    </a>
 	                </li>
 	                <li>
 	                    <a href="typography.html">
 	                        <i class="material-icons">library_books</i>
-	                        <p>Typography</p>
+	                        <p>Menu tambahan</p>
 	                    </a>
 	                </li>
 	                <li>
@@ -87,11 +88,11 @@
 	                    </a>
 	                </li>
 					<li class="active-pro">
-                        <a href="upgrade.html">
+	                    <a href="upgrade.html">
 	                        <i class="material-icons">unarchive</i>
 	                        <p>Upgrade to PRO</p>
 	                    </a>
-                    </li>
+	                </li>
 	            </ul>
 	    	</div>
 	    </div>

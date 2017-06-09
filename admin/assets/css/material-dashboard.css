@@ -3567,6 +3567,7 @@ footer .btn {
 }
 .card .card-content {
   padding: 15px 20px;
+
 }
 .card .card-content .category {
   margin-bottom: 0;
@@ -3728,6 +3729,8 @@ footer .btn {
 .card-stats .card-content {
   text-align: right;
   padding-top: 10px;
+    padding-top: 125px;
+padding-bottom: 80px;
 }
 
 .card-nav-tabs .header-raised {
