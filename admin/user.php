@@ -59,14 +59,14 @@
 	                </li>
 	                <li>
 	                    <a href="reimbursement.php">
-	                        <i class="material-icons">Reimbursement</i>
-	                        <p>Table List</p>
+	                        <i class="material-icons">content_paste</i>
+	                        <p>Reimbursement</p>
 	                    </a>
 	                </li>
 	                <li>
 	                    <a href="typography.html">
 	                        <i class="material-icons">library_books</i>
-	                        <p>menu tambahan</p>
+	                        <p>Menu tambahan</p>
 	                    </a>
 	                </li>
 	                <li>

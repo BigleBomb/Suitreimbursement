@@ -37,7 +37,7 @@
 		    -->
 
 			<div class="logo">
-				<a href="http://www.creative-tim.com" class="simple-text">
+				<a href="http://www.suitmedia.com" class="simple-text">
 					Creative Tim
 				</a>
 			</div>
@@ -45,27 +45,27 @@
 	    	<div class="sidebar-wrapper">
 	            <ul class="nav">
 	                <li class="active">
-	                    <a href="dashboard.html">
+	                    <a href="dashboard.php">
 	                        <i class="material-icons">dashboard</i>
 	                        <p>Dashboard</p>
 	                    </a>
 	                </li>
 	                <li>
-	                    <a href="user.html">
+	                    <a href="user.php">
 	                        <i class="material-icons">person</i>
-	                        <p>User Profile</p>
+	                        <p>User Management</p>
 	                    </a>
 	                </li>
 	                <li>
-	                    <a href="table.html">
+	                    <a href="reimbursement.php">
 	                        <i class="material-icons">content_paste</i>
-	                        <p>Table List</p>
+	                        <p>Reimbursement</p>
 	                    </a>
 	                </li>
 	                <li>
 	                    <a href="typography.html">
 	                        <i class="material-icons">library_books</i>
-	                        <p>Typography</p>
+	                        <p>Menu tambahan</p>
 	                    </a>
 	                </li>
 	                <li>
@@ -160,12 +160,12 @@
 									<i class="material-icons">content_copy</i>
 								</div>
 								<div class="card-content">
-									<p class="category">Used Space</p>
-									<h3 class="title">49/50<small>GB</small></h3>
+									<p class="category">Pending Reimburse</p>
+									<h3 class="title">50<small>Request</small></h3>
 								</div>
 								<div class="card-footer">
 									<div class="stats">
-										<i class="material-icons text-danger">warning</i> <a href="#pablo">Get More Space...</a>
+										<i class="material-icons text-danger">warning</i> <a href="#pablo">Check now...</a>
 									</div>
 								</div>
 							</div>
@@ -176,7 +176,8 @@
 									<i class="material-icons">store</i>
 								</div>
 								<div class="card-content">
-									<p class="category">Revenue</p>
+									<p class="category">Pending amount</p>
+
 									<h3 class="title">$34,245</h3>
 								</div>
 								<div class="card-footer">
@@ -186,7 +187,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-lg-3 col-md-6 col-sm-6">
+<!-- 						<div class="col-lg-3 col-md-6 col-sm-6">
 							<div class="card card-stats">
 								<div class="card-header" data-background-color="red">
 									<i class="material-icons">info_outline</i>
@@ -218,9 +219,53 @@
 									</div>
 								</div>
 							</div>
+						</div>-->
+						<div class="col-lg-6 col-md-12">
+							<div class="card">
+	                            <div class="card-header" data-background-color="orange">
+	                                <h4 class="title">Reimbursement History</h4>
+	                                <p class="category">New reimburse on 15th September, 2016</p>
+	                            </div>
+	                            <div class="card-content table-responsive">
+	                                <table class="table table-hover">
+	                                    <thead class="text-warning">
+	                                        <th>ID</th>
+	                                    	<th>Name</th>
+	                                    	<th>Ammount</th>
+	                                    	<th>Type</th>
+	                                    </thead>
+	                                    <tbody>
+	                                        <tr>
+	                                        	<td>1</td>
+	                                        	<td>Dakota Rice</td>
+	                                        	<td>$36,738</td>
+	                                        	<td>Food</td>
+	                                        </tr>
+	                                        <tr>
+	                                        	<td>2</td>
+	                                        	<td>Minerva Hooper</td>
+	                                        	<td>$23,789</td>
+	                                        	<td>Accomodation</td>
+	                                        </tr>
+	                                        <tr>
+	                                        	<td>3</td>
+	                                        	<td>Sage Rodriguez</td>
+	                                        	<td>$56,142</td>
+	                                        	<td>Accomodation</td>
+	                                        </tr>
+	                                        <tr>
+	                                        	<td>4</td>
+	                                        	<td>Philip Chaney</td>
+	                                        	<td>$38,735</td>
+	                                        	<td>Transportation</td>
+	                                        </tr>
+	                                    </tbody>
+	                                </table>
+	                            </div>
+	                        </div>
 						</div>
-					</div>
-
+					</div> 
+<!-- 
 					<div class="row">
 						<div class="col-md-4">
 							<div class="card">
@@ -274,8 +319,8 @@
 							</div>
 						</div>
 					</div>
-
-					<div class="row">
+ -->
+					<!-- <div class="row">
 						<div class="col-lg-6 col-md-12">
 							<div class="card card-nav-tabs">
 								<div class="card-header" data-background-color="purple">
@@ -496,51 +541,8 @@
 							</div>
 						</div>
 
-						<div class="col-lg-6 col-md-12">
-							<div class="card">
-	                            <div class="card-header" data-background-color="orange">
-	                                <h4 class="title">Employees Stats</h4>
-	                                <p class="category">New employees on 15th September, 2016</p>
-	                            </div>
-	                            <div class="card-content table-responsive">
-	                                <table class="table table-hover">
-	                                    <thead class="text-warning">
-	                                        <th>ID</th>
-	                                    	<th>Name</th>
-	                                    	<th>Salary</th>
-	                                    	<th>Country</th>
-	                                    </thead>
-	                                    <tbody>
-	                                        <tr>
-	                                        	<td>1</td>
-	                                        	<td>Dakota Rice</td>
-	                                        	<td>$36,738</td>
-	                                        	<td>Niger</td>
-	                                        </tr>
-	                                        <tr>
-	                                        	<td>2</td>
-	                                        	<td>Minerva Hooper</td>
-	                                        	<td>$23,789</td>
-	                                        	<td>Curaçao</td>
-	                                        </tr>
-	                                        <tr>
-	                                        	<td>3</td>
-	                                        	<td>Sage Rodriguez</td>
-	                                        	<td>$56,142</td>
-	                                        	<td>Netherlands</td>
-	                                        </tr>
-	                                        <tr>
-	                                        	<td>4</td>
-	                                        	<td>Philip Chaney</td>
-	                                        	<td>$38,735</td>
-	                                        	<td>Korea, South</td>
-	                                        </tr>
-	                                    </tbody>
-	                                </table>
-	                            </div>
-	                        </div>
-						</div>
-					</div>
+
+					</div> -->
 				</div>
 			</div>
 
