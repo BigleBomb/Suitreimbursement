@@ -58,10 +58,12 @@ class ReimburseController extends Controller {
 			if($reimburse){
 				$res['success'] = true;
 				$res['message'] = 'Success adding new reimbursement';
+
 				return response($res);
 			}else{
 				$res['success'] = false;
 				$res['message'] = 'Failed adding new reimbursement';
+
 				return response($res);
 			}
 		}
@@ -69,6 +71,7 @@ class ReimburseController extends Controller {
 		{
 			$res['success'] = false;
 			$res['message'] = 'Invalid user id';
+			
 			return response($res);
 		}
 	}
@@ -113,10 +116,16 @@ class ReimburseController extends Controller {
 				return response($res);
 			}
 			else{
-				
+				$res['success'] = false;
+				$res['message'] = "No pending amount";
+
+				return response($res);
 			}
 		}else{
+			$res['success'] = false;
+			$res['message'] = "Failed to get the pending amount";
 
+			return response($res);
 		}
 	}
 
