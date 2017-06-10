@@ -45,13 +45,13 @@
 
 	    	<div class="sidebar-wrapper">
 	            <ul class="nav">
-	                <li class="active">
+	                <li>
 	                    <a href="dashboard.php">
 	                        <i class="material-icons">dashboard</i>
 	                        <p>Dashboard</p>
 	                    </a>
 	                </li>
-	                <li>
+	                <li class="active">
 	                    <a href="user.php">
 	                        <i class="material-icons">person</i>
 	                        <p>User Management</p>

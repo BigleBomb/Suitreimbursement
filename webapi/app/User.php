@@ -12,6 +12,7 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 {
     use Authenticatable, Authorizable;
 
+    protected $table = 'users';
     /**
      * The attributes that are mass assignable.
      *
@@ -29,4 +30,9 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
     protected $hidden = [
         'password', 'api_token'
     ];
+
+    public function reimburse(){
+
+        return $this->hasMany('App\Reimburse');
+    }
 }

@@ -22,8 +22,10 @@ $app->post('/changepass/{id}', 'UserController@changepass');
 $app->post('/set/{menu}/{id}', 'UserController@set');
 
 $app->get('/reimburse', 'ReimburseController@index');
-$app->get('/reimburse/{id}', 'ReimburseController@get_reimburse');
+$app->get('/reimburse/get/{id}', 'ReimburseController@get_reimburse');
 $app->get('/reimburse/delete/{id}', 'ReimburseController@delete');
 $app->post('/reimburse/new', 'ReimburseController@create');
 $app->post('/reimburse/update/{id}', 'ReimburseController@update');
+$app->get('/reimburse/pendingcount','ReimburseController@get_pending_reimburse');
+$app->get('/reimburse/pendingamount', 'ReimburseController@get_pending_amount');
 

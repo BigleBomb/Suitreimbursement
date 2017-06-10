@@ -46,7 +46,7 @@
 					$password = $_POST['password'];
 					$ch = curl_init();
 
-					curl_setopt($ch, CURLOPT_URL,"localhost:1000/login");
+					curl_setopt($ch, CURLOPT_URL,"192.168.1.49:1000/login");
 					curl_setopt($ch, CURLOPT_POST, 1);
 					curl_setopt($ch, CURLOPT_POSTFIELDS,
             				"email=$email&password=$password");
@@ -57,16 +57,24 @@
 
 					// Store Session Data
 
-					if ($resp->success===true){
-						header("Location: dashboard.html");
-						session_start();
-						$_SESSION['token']= $resp->token;
-						echo $_SESSION['token'];
+					if($resp != null){
+						if ($resp->success===true){
+							session_start();
+							$_SESSION['token']= $resp->token;
+							echo $_SESSION['token'];
+							header("Location: dashboard.php");
+						}
+						else {
+							echo '<div class="alert alert-danger alert-dismissable">
+									<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+									<strong>Email or password is wrong</strong>
+								</div>';
+						}
 					}
-					else {
+					else{
 						echo '<div class="alert alert-danger alert-dismissable">
-  								<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-  								<strong>Email or password is wrong</strong>
+								<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+								<strong>Could not connect to the server</strong>
 							</div>';
 					}
 

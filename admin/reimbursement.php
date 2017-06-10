@@ -1,4 +1,10 @@
 <!doctype html>
+<?php
+	session_start();
+
+	if(isset($_SESSION['token'])){
+
+?>
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
@@ -45,7 +51,7 @@
 
 	    	<div class="sidebar-wrapper">
 	            <ul class="nav">
-	                <li class="active">
+	                <li>
 	                    <a href="dashboard.php">
 	                        <i class="material-icons">dashboard</i>
 	                        <p>Dashboard</p>
@@ -57,7 +63,7 @@
 	                        <p>User Management</p>
 	                    </a>
 	                </li>
-	                <li>
+	                <li class="active">
 	                    <a href="reimbursement.php">
 	                        <i class="material-icons">content_paste</i>
 	                        <p>Reimbursement</p>
@@ -157,55 +163,92 @@
 	                <div class="row">
 	                    <div class="col-md-12">
 	                        <div class="card">
-	                            <div class="card-header" data-background-color="purple">
-	                                <h4 class="title">Simple Table</h4>
-	                                <p class="category">Here is a subtitle for this table</p>
+	                            <div class="card-header" data-background-color="orange">
+	                                <h4 class="title">Pending Reimbursement</h4>
+	                                <p class="category">List of pending reimbursements</p>
 	                            </div>
 	                            <div class="card-content table-responsive">
 	                                <table class="table">
 	                                    <thead class="text-primary">
+											<th width=20px>ID</th>
 	                                    	<th>Name</th>
-	                                    	<th>Country</th>
-	                                    	<th>City</th>
-											<th>Salary</th>
+	                                    	<th width=250 align=left>Project name</th>
+											<th>Type</th>
+	                                    	<th>Date</th>
+											<th>Total</th>
 	                                    </thead>
 	                                    <tbody>
-	                                        <tr>
+											<?php
+												$ch = curl_init();
+
+												$token = $_SESSION['token'];
+												$url = "192.168.1.49:1000/reimburse?token=".$token;
+												curl_setopt($ch, CURLOPT_URL, $url);
+												curl_setopt($ch, CURLOPT_POST, 0);
+												curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+												$server_output = curl_exec ($ch);
+												curl_close ($ch);
+												$resp = json_decode($server_output, true);
+												
+												//echo $server_output.'<br>';
+												if($resp!=null){
+													foreach($resp['result'] as $result){
+														echo "<tr><td>".$result['id']."</td>
+															<td>".$result['user_data']['nama']."</td>
+															<td>".$result['nama_proyek']."</td>
+															<td>".$result['jenis_pengeluaran']."</td>
+															<td>".$result['tanggal']."</td>
+															<td class=text-primary>".$result['jumlah_pengeluaran']."</td>
+														</tr>";
+													}
+												}
+												else{
+													echo "Data not found";
+												}
+											?>
+	                                        <!--<tr>
+												<td>1</td>
+												<td>test</td>
 	                                        	<td>Dakota Rice</td>
 	                                        	<td>Niger</td>
 	                                        	<td>Oud-Turnhout</td>
 												<td class="text-primary">$36,738</td>
 	                                        </tr>
 	                                        <tr>
+												<td>2</td>
 	                                        	<td>Minerva Hooper</td>
 	                                        	<td>Curaçao</td>
 	                                        	<td>Sinaai-Waas</td>
 												<td class="text-primary">$23,789</td>
 	                                        </tr>
 	                                        <tr>
+												<td>3</td>
 	                                        	<td>Sage Rodriguez</td>
 	                                        	<td>Netherlands</td>
 	                                        	<td>Baileux</td>
 												<td class="text-primary">$56,142</td>
 	                                        </tr>
 	                                        <tr>
+												<td>4</td>
 	                                        	<td>Philip Chaney</td>
 	                                        	<td>Korea, South</td>
 	                                        	<td>Overland Park</td>
 												<td class="text-primary">$38,735</td>
 	                                        </tr>
 	                                        <tr>
+												<td>5</td>
 	                                        	<td>Doris Greene</td>
 	                                        	<td>Malawi</td>
 	                                        	<td>Feldkirchen in Kärnten</td>
 												<td class="text-primary">$63,542</td>
 	                                        </tr>
 	                                        <tr>
+												<td>6</td>
 	                                        	<td>Mason Porter</td>
 	                                        	<td>Chile</td>
 	                                        	<td>Gloucester</td>
 												<td class="text-primary">$78,615</td>
-	                                        </tr>
+	                                        </tr>-->
 	                                    </tbody>
 	                                </table>
 
@@ -213,7 +256,7 @@
 	                        </div>
 	                    </div>
 
-	                    <div class="col-md-12">
+	                    <!--<div class="col-md-12">
 	                        <div class="card card-plain">
 	                            <div class="card-header" data-background-color="purple">
 	                                <h4 class="title">Table on Plain Background</h4>
@@ -275,7 +318,7 @@
 	                                </table>
 	                            </div>
 	                        </div>
-	                    </div>
+	                    </div>-->
 	                </div>
 	            </div>
 	        </div>
@@ -337,3 +380,11 @@
 	<script src="./assets/js/demo.js"></script>
 
 </html>
+
+<?php
+
+	}
+	else{
+		echo "Invalid session";
+	}
+?>

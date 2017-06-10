@@ -16,8 +16,6 @@ class UserController extends Controller
      */
     public function register(Request $request)
     {
-        function test(){
-        }
         function randomPassword() {
             $alphabet = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890';
             $pass = array(); 
@@ -29,14 +27,16 @@ class UserController extends Controller
             return implode($pass);
         }
 
+        $nama = $reques->input('nama');
         $username = $request->input('username');
         $email = $request->input('email');
         $password = randomPassword();
 
         $register = User::create([
+            'nama' => $nama,
             'username'=> $username,
             'email'=> $email,
-            'password'=> $password,
+            'password'=> Hash::make($password),
         ]);
 
         if ($register) {
@@ -61,15 +61,18 @@ class UserController extends Controller
     {
         $user = User::where('id', $id)->get();
         if ($user) {
-              $res['success'] = true;
-              $res['message'] = $user;
-        
-              return response($res);
+            $user = User::find($id);
+            $reimburse = $user->reimburse()->get();  
+            $res['success'] = true;
+            $res['result'] = $user;
+            $res['result']['reimburse_data'] = $reimburse;
+            
+            return response($res);
         }else{
-          $res['success'] = false;
-          $res['message'] = 'Cannot find user!';
+        $res['success'] = false;
+        $res['message'] = 'Cannot find user!';
         
-          return response($res);
+        return response($res);
         }
     }
 

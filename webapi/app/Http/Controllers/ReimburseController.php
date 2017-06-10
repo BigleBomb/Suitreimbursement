@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Collection;
 use App\Reimburse;
 use App\User;
 
@@ -13,11 +14,20 @@ class ReimburseController extends Controller {
 		$this->middleware('auth');
 	}
 
-	public function index(Request $request){
-		$reimburse = new Reimburse;
+	public function index(Request $request)
+	{
+		$reimburse = Reimburse::all();
 
 		$res['success'] = true;
-		$res['result'] = $reimburse->all();
+		$res['result'] = $reimburse;
+		$i=0;
+		foreach($reimburse as $userdata)
+		{
+			$user = User::find($userdata->user()->first()->id);
+			$res['result'][$i]['user_data'] = $user;
+			$i++;
+		}
+		return response($res);
 	}
 	
 	public function create(Request $request)
@@ -63,16 +73,68 @@ class ReimburseController extends Controller {
 		}
 	}
 
+	public function get_pending_reimburse(Request $request){
+		$reimburse = Reimburse::where('status', 0)->count();
+		if($reimburse != null){
+			if($reimburse > 0){						
+				$res['success'] = true;
+				$res['result']['count'] = $reimburse;
+
+				return response($res);
+			}else{
+				$res['success'] = false;
+				$res['message'] = "There is no pending Reimbursements";
+
+				return response($res);
+			}
+		}
+		else{
+			$res['success'] = false;
+			$res['message'] = "Failed to get the count";
+
+			return response($res);
+		}
+	}
+
+	public function get_pending_amount(Request $request){
+		$reimburse = Reimburse::all();
+		if($reimburse !== null){
+			$pend = 0;
+			foreach($reimburse as $reimdata)
+			{
+				if($reimdata->status == 0)
+					$pend += $reimdata->jumlah_pengeluaran;
+				else{}
+			}
+			if($pend > 0){
+				$res['success'] = true;
+				$res['result']['amount'] = $pend;
+
+				return response($res);
+			}
+			else{
+				
+			}
+		}else{
+
+		}
+	}
+
 	public function get_reimburse(Request $request, $id){
 		$reimburse = Reimburse::where('id', $id)->first();
 		if($reimburse !== null){
+			$reimburse = Reimburse::find($id);
+			$user = $reimburse->user()->get();
 			$res['success'] = true;
 			$res['result'] = $reimburse;
+			$res['result']['user_data'] = $user;
 
 			return response($res);
 		}else{
 			$res['success'] = false;
 			$res['message'] = 'Reimburse with id ' . $id . ' not found';
+
+			return response($res);
 		}
 	}
 	

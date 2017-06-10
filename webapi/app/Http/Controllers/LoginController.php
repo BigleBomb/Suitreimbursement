@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\User;
+use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
@@ -14,8 +15,6 @@ class LoginController extends Controller
      */
     public function index(Request $request)
     {
-        $hasher = app()->make('hash');
-
         $email = $request->input('email');
         $password = $request->input('password');
 
@@ -26,13 +25,12 @@ class LoginController extends Controller
 
             return response($res);
         }else{
-            if ($hasher->check($password, $login->password)) {
+            if (Hash::check($password, $login->password)) {
                 $api_token = sha1(time());
                 $create_token = User::where('id', $login->id)->update(['token' => $api_token]);
                 if ($create_token) {
                     $res['success'] = true;
                     $res['token'] = $api_token;
-                    //$res['message'] = $login;
 
                     return response($res);
                 }

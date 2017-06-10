@@ -3,7 +3,7 @@
 <?php 
 	session_start();
 
-	if(!isset($_SESSION['token'])){
+	if(isset($_SESSION['token'])){
 
 ?>
 <html lang="en">
@@ -160,19 +160,40 @@
 
 			<div class="content">
 				<div class="container-fluid">
-					<div class="row">
+					<div class="column">
 						<div class="col-lg-3 col-md-6 col-sm-6">
 							<div class="card card-stats">
 								<div class="card-header" data-background-color="orange">
 									<i class="material-icons">content_copy</i>
 								</div>
 								<div class="card-content">
-									<p class="category">Pending Reimburse</p>
-									<h3 class="title">50<small>Request</small></h3>
+									<p class="category">Pending reimburse</p>
+									<h4 class="title">
+										<?php
+											$ch = curl_init();
+
+												$token = $_SESSION['token'];
+												$url = "192.168.1.49:1000/reimburse/pendingcount?token=".$token;
+												curl_setopt($ch, CURLOPT_URL, $url);
+												curl_setopt($ch, CURLOPT_POST, 0);
+												curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+												$server_output = curl_exec ($ch);
+												curl_close ($ch);
+												$resp = json_decode($server_output, true);
+												
+												//echo $server_output.'<br>';
+												if($resp!=null){
+													echo $resp['result']['count'];
+												}
+												else{
+													echo "Data not found";
+												}
+										?>
+										<small>Request</small></h4>
 								</div>
 								<div class="card-footer">
 									<div class="stats">
-										<i class="material-icons text-danger">warning</i> <a href="#pablo">Check now...</a>
+										<i class="material-icons text-danger">warning</i> <a href="reimbursement.php">Check now...</a>
 									</div>
 								</div>
 							</div>
@@ -180,12 +201,32 @@
 						<div class="col-lg-3 col-md-6 col-sm-6">
 							<div class="card card-stats">
 								<div class="card-header" data-background-color="green">
-									<i class="material-icons">store</i>
+									<i class="material-icons">attach_money</i>
 								</div>
 								<div class="card-content">
 									<p class="category">Pending amount</p>
 
-									<h3 class="title">$34,245</h3>
+									<h4 class="title"> Rp.<?php
+											$ch = curl_init();
+
+												$token = $_SESSION['token'];
+												$url = "192.168.1.49:1000/reimburse/pendingamount?token=".$token;
+												curl_setopt($ch, CURLOPT_URL, $url);
+												curl_setopt($ch, CURLOPT_POST, 0);
+												curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+												$server_output = curl_exec ($ch);
+												curl_close ($ch);
+												$resp = json_decode($server_output, true);
+												
+												//echo $server_output.'<br>';
+												if($resp!=null){
+													echo number_format($resp['result']['amount'], 0, ",", ".");
+												}
+												else{
+													echo "Data not found";
+												}
+										?>
+									</h4>
 								</div>
 								<div class="card-footer">
 									<div class="stats">
@@ -227,7 +268,7 @@
 								</div>
 							</div>
 						</div>-->
-						<div class="col-lg-6 col-md-12">
+						<div class="col-md-12">
 							<div class="card">
 	                            <div class="card-header" data-background-color="orange">
 	                                <h4 class="title">Reimbursement History</h4>
@@ -236,13 +277,43 @@
 	                            <div class="card-content table-responsive">
 	                                <table class="table table-hover">
 	                                    <thead class="text-warning">
-	                                        <th>ID</th>
+	                                        <th width=20px>ID</th>
 	                                    	<th>Name</th>
-	                                    	<th>Ammount</th>
-	                                    	<th>Type</th>
+	                                    	<th width=100 align=left>Project name</th>
+											<th>Type</th>
+	                                    	<th>Date</th>
+											<th>Total</th>
 	                                    </thead>
 	                                    <tbody>
-	                                        <tr>
+											<?php
+												$ch = curl_init();
+
+												$token = $_SESSION['token'];
+												$url = "192.168.1.49:1000/reimburse?token=".$token;
+												curl_setopt($ch, CURLOPT_URL, $url);
+												curl_setopt($ch, CURLOPT_POST, 0);
+												curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+												$server_output = curl_exec ($ch);
+												curl_close ($ch);
+												$resp = json_decode($server_output, true);
+												
+												//echo $server_output.'<br>';
+												if($resp!=null){
+													foreach($resp['result'] as $result){
+														echo "<tr><td>".$result['id']."</td>
+															<td>".$result['user_data']['nama']."</td>
+															<td>".$result['nama_proyek']."</td>
+															<td>".$result['jenis_pengeluaran']."</td>
+															<td>".$result['tanggal']."</td>
+															<td class=text-primary>Rp.".number_format($result['jumlah_pengeluaran'], 0, ",", ".")."</td>
+														</tr>";
+													}
+												}
+												else{
+													echo "Data not found";
+												}
+											?>
+	                                        <!--<tr>
 	                                        	<td>1</td>
 	                                        	<td>Dakota Rice</td>
 	                                        	<td>$36,738</td>
@@ -265,7 +336,7 @@
 	                                        	<td>Philip Chaney</td>
 	                                        	<td>$38,735</td>
 	                                        	<td>Transportation</td>
-	                                        </tr>
+	                                        </tr>-->
 	                                    </tbody>
 	                                </table>
 	                            </div>
@@ -623,7 +694,6 @@
 	<?php } 
 	else{
 		echo "Invalid session. Please login";
-		echo "Login here";
 	}
 ?>
 
