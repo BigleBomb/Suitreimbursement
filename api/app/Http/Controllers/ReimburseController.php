@@ -76,6 +76,22 @@ class ReimburseController extends Controller {
 		}
 	}
 
+	public function get_latest(Request $request){
+		$reimburse = Reimburse::orderBy('created_at', 'desc')->first();
+		if($reimburse != null){
+			$res['success'] = true;
+			$res['result'] = $reimburse;
+
+			return response($res);
+		}
+		else{
+			$res['success'] = false;
+			$res['message'] = "Failed to get reimburse data";
+
+			return response($res);
+		}
+	}
+
 	public function get_pending(Request $request, $menu){
 		if($menu === 'totalcount'){
 			$reimburse = Reimburse::where('status', 0)->count();

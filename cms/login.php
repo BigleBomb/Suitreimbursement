@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<?php
+	include('config.php');
+?>
+
 <head>
 	<meta charset="utf-8">
 	<title>Daily UI - Day 1 Sign In</title>
@@ -46,7 +50,7 @@
 					$password = $_POST['password'];
 					$ch = curl_init();
 
-					curl_setopt($ch, CURLOPT_URL,"192.168.1.49:1000/login");
+					curl_setopt($ch, CURLOPT_URL,"$SERVER:$PORT/login");
 					curl_setopt($ch, CURLOPT_POST, 1);
 					curl_setopt($ch, CURLOPT_POSTFIELDS,
             				"email=$email&password=$password");

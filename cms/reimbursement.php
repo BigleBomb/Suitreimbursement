@@ -2,6 +2,8 @@
 <?php
 	session_start();
 
+	include('config.php');
+
 	if(isset($_SESSION['token'])){
 
 ?>
@@ -219,7 +221,7 @@
 												$ch = curl_init();
 
 												$token = $_SESSION['token'];
-												$url = "192.168.1.49:1000/reimburse?token=".$token;
+												$url = "$SERVER:$PORT/reimburse?token=".$token;
 												curl_setopt($ch, CURLOPT_URL, $url);
 												curl_setopt($ch, CURLOPT_POST, 0);
 												curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -229,20 +231,25 @@
 												
 												if($resp!=null){
 													foreach($resp['result'] as $result){
-														echo "<tr><td id=td>".$result['id']."</td>
+														echo "<tr><td>#".$result['id']."</td>
 															<td>".$result['user_data']['nama']."</td>
 															<td>".$result['nama_proyek']."</td>
 															<td>".$result['jenis_pengeluaran']."</td>
-															<td>".$result['tanggal']."</td>
-															<td class=text-primary>Rp.".number_format($result['jumlah_pengeluaran'], 0, ",", ".")."</td>
-															<td><button type='button' class='btn btn-primary' onclick=myFunction('td".$result['id']."')>More info</button>
+															<td>".date_format(date_create($result['tanggal']), 'jS F\,\ Y')
+															."</td>
+															<td>Rp ".number_format($result['jumlah_pengeluaran'], 0, ",", ".")."</td>
+															<td><button class='btn btn-primary' data-background-color='green'>More info</td>
 														</tr>";
 													}
 												}
 												else{
 													echo "Data not found";
 												}
-											?>
+											?><script>
+											$('.table > tbody > tr').on('click', function() {
+												
+											});
+											</script>
 	                                    </tbody>
 	                                </table>
 

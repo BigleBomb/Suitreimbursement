@@ -3,6 +3,8 @@
 <?php 
 	session_start();
 
+	include('config.php');
+
 	if(isset($_SESSION['token'])){
 
 ?>
@@ -75,30 +77,6 @@
 	                        <p>Menu tambahan</p>
 	                    </a>
 	                </li>
-	                <!--<li>
-	                    <a href="icons.html">
-	                        <i class="material-icons">bubble_chart</i>
-	                        <p>Icons</p>
-	                    </a>
-	                </li>
-	                <li>
-	                    <a href="maps.html">
-	                        <i class="material-icons">location_on</i>
-	                        <p>Maps</p>
-	                    </a>
-	                </li>
-	                <li>
-	                    <a href="notifications.html">
-	                        <i class="material-icons text-gray">notifications</i>
-	                        <p>Notifications</p>
-	                    </a>
-	                </li>
-					<li class="active-pro">
-	                    <a href="upgrade.html">
-	                        <i class="material-icons">unarchive</i>
-	                        <p>Upgrade to PRO</p>
-	                    </a>
-	                </li>-->
 	            </ul>
 	    	</div>
 	    </div>
@@ -144,7 +122,7 @@
 		 						</a>
 							</li>
 						</ul>
-
+								<!--SEARCH BUTTON-->
 						<!--<form class="navbar-form navbar-right" role="search">
 							<div class="form-group  is-empty">
 								<input type="text" class="form-control" placeholder="Search">
@@ -173,7 +151,7 @@
 											$ch = curl_init();
 
 												$token = $_SESSION['token'];
-												$url = "192.168.1.49:1000/reimburse/pending/totalcount?token=".$token;
+												$url = "$SERVER:$PORT/reimburse/pending/totalcount?token=".$token;
 												curl_setopt($ch, CURLOPT_URL, $url);
 												curl_setopt($ch, CURLOPT_POST, 0);
 												curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -209,7 +187,7 @@
 											$ch = curl_init();
 
 												$token = $_SESSION['token'];
-												$url = "192.168.1.49:1000/reimburse/pending/totalamount?token=".$token;
+												$url = "$SERVER:$PORT/reimburse/pending/totalamount?token=".$token;
 												curl_setopt($ch, CURLOPT_URL, $url);
 												curl_setopt($ch, CURLOPT_POST, 0);
 												curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -233,7 +211,7 @@
 								</div>
 							</div>
 						</div>
-<!-- 						<div class="col-lg-3 col-md-6 col-sm-6">
+ 						<div class="col-lg-3 col-md-6 col-sm-6">
 							<div class="card card-stats">
 								<div class="card-header" data-background-color="red">
 									<i class="material-icons">info_outline</i>
@@ -250,7 +228,7 @@
 							</div>
 						</div>
 
-						<div class="col-lg-3 col-md-6 col-sm-6">
+						<!--<div class="col-lg-3 col-md-6 col-sm-6">
 							<div class="card card-stats">
 								<div class="card-header" data-background-color="blue">
 									<i class="fa fa-twitter"></i>
@@ -270,14 +248,33 @@
 							<div class="card">
 	                            <div class="card-header" data-background-color="orange">
 	                                <h4 class="title">Reimbursement History</h4>
-	                                <p class="category">New reimburse on 15th September, 2016</p>
+	                                <p class="category">New reimburse on 
+										<?php
+											$ch = curl_init();
+											$token = $_SESSION['token'];
+											$url = "$SERVER:$PORT/reimburse/latest?token=".$token;
+											curl_setopt($ch, CURLOPT_URL, $url);
+											curl_setopt($ch, CURLOPT_POST, 0);
+											curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+											$server_output = curl_exec ($ch);
+											curl_close ($ch);
+											$resp = json_decode($server_output, true);
+											
+											if($resp!=null){
+												echo date_format(date_create($resp['result']['tanggal']), 'jS F Y');		
+											}
+											else{
+												echo "Data not found";
+											}
+										?>
+									</p>
 	                            </div>
 	                            <div class="card-content table-responsive">
 	                                <table class="table table-hover">
 	                                    <thead class="text-warning">
-	                                        <th width=20px>ID</th>
+	                                        <th class="col-lg-1">RID</th>
 	                                    	<th>Name</th>
-	                                    	<th width=100 align=left>Project name</th>
+	                                    	<th class="col-sm-2">Project name</th>
 											<th>Type</th>
 	                                    	<th>Date</th>
 											<th>Total</th>
@@ -287,7 +284,7 @@
 												$ch = curl_init();
 
 												$token = $_SESSION['token'];
-												$url = "192.168.1.49:1000/reimburse?token=".$token;
+												$url = "$SERVER:$PORT/reimburse?token=".$token;
 												curl_setopt($ch, CURLOPT_URL, $url);
 												curl_setopt($ch, CURLOPT_POST, 0);
 												curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -295,15 +292,15 @@
 												curl_close ($ch);
 												$resp = json_decode($server_output, true);
 												
-												//echo $server_output.'<br>';
 												if($resp!=null){
 													foreach($resp['result'] as $result){
-														echo "<tr><td>".$result['id']."</td>
+														echo "<tr><td>#".$result['id']."</td>
 															<td>".$result['user_data']['nama']."</td>
 															<td>".$result['nama_proyek']."</td>
 															<td>".$result['jenis_pengeluaran']."</td>
-															<td>".$result['tanggal']."</td>
-															<td class=text-primary>Rp ".number_format($result['jumlah_pengeluaran'], 0, ",", ".")."</td>
+															<td>".date_format(date_create($result['tanggal']), 'jS F\,\ Y')
+															."</td>
+															<td>Rp ".number_format($result['jumlah_pengeluaran'], 0, ",", ".")."</td>
 														</tr>";
 													}
 												}
@@ -311,30 +308,6 @@
 													echo "Data not found";
 												}
 											?>
-	                                        <!--<tr>
-	                                        	<td>1</td>
-	                                        	<td>Dakota Rice</td>
-	                                        	<td>$36,738</td>
-	                                        	<td>Food</td>
-	                                        </tr>
-	                                        <tr>
-	                                        	<td>2</td>
-	                                        	<td>Minerva Hooper</td>
-	                                        	<td>$23,789</td>
-	                                        	<td>Accomodation</td>
-	                                        </tr>
-	                                        <tr>
-	                                        	<td>3</td>
-	                                        	<td>Sage Rodriguez</td>
-	                                        	<td>$56,142</td>
-	                                        	<td>Accomodation</td>
-	                                        </tr>
-	                                        <tr>
-	                                        	<td>4</td>
-	                                        	<td>Philip Chaney</td>
-	                                        	<td>$38,735</td>
-	                                        	<td>Transportation</td>
-	                                        </tr>-->
 	                                    </tbody>
 	                                </table>
 	                            </div>

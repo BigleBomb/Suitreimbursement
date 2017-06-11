@@ -28,4 +28,4 @@ $app->get('/reimburse/delete/{id}', 'ReimburseController@delete');
 $app->post('/reimburse/new', 'ReimburseController@create');
 $app->post('/reimburse/update/{menu}', 'ReimburseController@update');
 $app->get('/reimburse/pending/{menu}','ReimburseController@get_pending');
-
+$app->get('/reimburse/latest', 'ReimburseController@get_latest');

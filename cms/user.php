@@ -2,6 +2,8 @@
 <?php
 	session_start();
 
+	include('config.php');
+
 	if(isset($_SESSION['token'])){
 ?>
 <html lang="en">
@@ -185,7 +187,7 @@
 												$ch = curl_init();
 
 												$token = $_SESSION['token'];
-												$url = "192.168.1.49:1000/users?token=".$token;
+												$url = "$SERVER:$PORT/users?token=".$token;
 												curl_setopt($ch, CURLOPT_URL, $url);
 												curl_setopt($ch, CURLOPT_POST, 0);
 												curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -355,10 +357,9 @@
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-						<h4 class="modal-title text-primary" background="green">Create new user</h4>
-						
+					<h4 class="modal-title text-primary" background="green">Create new user</h4>		
 					</div>
-					<form method=POST>
+					<form method=POST id="senddata">
 						<div class="modal-body">
 							<div class="column">
 								<div class="col-md-8">
@@ -397,9 +398,65 @@
 							<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 						</div>
 					</form>
+					<script type="text/javascript">
+  						function form_submit() {
+							document.getElementById("senddata").submit();
+					}    
+					</script>
 					<?php
-						$test = $_POST['priv'];
-						echo $test;
+						echo $_POST['priv'];
+						if(isset($_POST['create'])){
+							$nama = $_POST['name'];
+							$username = $_POST['username'];
+							$email = $_POST['email'];
+							$priv = $_POST['priv'];
+							switch($priv){
+								case "Karyawan":
+									$priv = 0;
+									break;
+								case "Atasan":
+									$priv = 1;
+									break;
+								case "Admin":
+									$priv = 2;
+									break;
+								default:
+									$priv = 0;
+									break;
+							}
+
+							curl_setopt($ch, CURLOPT_URL,"$SERVER:$PORT/register");
+							curl_setopt($ch, CURLOPT_POST, 1);
+							curl_setopt($ch, CURLOPT_POSTFIELDS,
+									"nama=$nama&username=$username&email=$email&privilege=$priv");
+							curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+							$server_output = curl_exec ($ch);
+							curl_close ($ch);
+							$resp = json_decode($server_output);
+
+							if($resp != null){
+								if ($resp->success===true){
+									$message = $resp->message;
+									$password = $resp->message->password;
+
+									echo $password;
+								}
+								else {
+									echo "<div class='alert alert-danger alert-dismissable'>
+											<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
+											<strong>$message</strong>
+										</div>";
+								}
+							}
+							else{
+								echo "<div class='alert alert-danger alert-dismissable'>
+											<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
+											<strong>Could not connect to the server</strong>
+										</div>";
+							}
+						}
+						
+
 					?>
 				</div>
 			</div>
