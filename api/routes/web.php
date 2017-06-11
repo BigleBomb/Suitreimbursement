@@ -20,12 +20,12 @@ $app->post('/register', 'UserController@register');
 $app->get('/user/{id}', ['middleware' => 'auth', 'uses' =>  'UserController@get_user']);
 $app->post('/changepass/{id}', 'UserController@changepass');
 $app->post('/set/{menu}/{id}', 'UserController@set');
+$app->get('/users', 'UserController@index');
 
 $app->get('/reimburse', 'ReimburseController@index');
 $app->get('/reimburse/get/{id}', 'ReimburseController@get_reimburse');
 $app->get('/reimburse/delete/{id}', 'ReimburseController@delete');
 $app->post('/reimburse/new', 'ReimburseController@create');
-$app->post('/reimburse/update/{id}', 'ReimburseController@update');
-$app->get('/reimburse/pendingcount','ReimburseController@get_pending_reimburse');
-$app->get('/reimburse/pendingamount', 'ReimburseController@get_pending_amount');
+$app->post('/reimburse/update/{menu}', 'ReimburseController@update');
+$app->get('/reimburse/pending/{menu}','ReimburseController@get_pending');
 

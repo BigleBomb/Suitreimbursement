@@ -27,13 +27,50 @@
     <!--  CSS for Demo Purpose, don't include it in your project     -->
     <link href="./assets/css/demo.css" rel="stylesheet" />
 
+	<link href="./css/modal.css" rel="stylesheet"/>
+
     <!--     Fonts and icons     -->
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300|Material+Icons' rel='stylesheet' type='text/css'>
+	<script>
+		// Get the modal
+		var modal = document.getElementById('myModal');
+
+		// Get the button that opens the modal
+		var btn = document.getElementById("td5");
+
+		// Get the <span> element that closes the modal
+		var span = document.getElementsByClassName("close")[0];
+
+		function myFunction(){
+			document.getElementById('td2').innerHTML = "Test";
+		}
+		// // When the user clicks on the button, open the modal 
+		// btn.onclick = function() {
+		// 	modal.style.display = "block";
+		// }
+
+		// // When the user clicks on <span> (x), close the modal
+		// span.onclick = function() {
+		// 	modal.style.display = "none";
+		// }
+
+		// // When the user clicks anywhere outside of the modal, close it
+		// window.onclick = function(event) {
+		// 	if (event.target == modal) {
+		// 		modal.style.display = "none";
+		// 	}
+		// }
+	</script>
 </head>
 
 <body>
-
+	<div id="myModal" class="modal">
+		<div class="modal-content">
+			<span class="close">&times;</span>
+			<p>Some text in the Modal..</p>
+		</div>
+	</div>
 	<div class="wrapper">
 
 	    <div class="sidebar" data-color="purple" data-image="./assets/img/sidebar-1.jpg">
@@ -75,7 +112,7 @@
 	                        <p>Menu tambahan</p>
 	                    </a>
 	                </li>
-	                <li>
+	                <!--<li>
 	                    <a href="icons.html">
 	                        <i class="material-icons">bubble_chart</i>
 	                        <p>Icons</p>
@@ -92,13 +129,13 @@
 	                        <i class="material-icons text-gray">notifications</i>
 	                        <p>Notifications</p>
 	                    </a>
-	                </li>
-					<li class="active-pro">
+	                </li>-->
+					<!--<li class="active-pro">
 	                    <a href="upgrade.html">
 	                        <i class="material-icons">unarchive</i>
 	                        <p>Upgrade to PRO</p>
 	                    </a>
-	                </li>
+	                </li>-->
 	            </ul>
 	    	</div>
 	    </div>
@@ -192,12 +229,13 @@
 												
 												if($resp!=null){
 													foreach($resp['result'] as $result){
-														echo "<tr><td>".$result['id']."</td>
+														echo "<tr><td id=td>".$result['id']."</td>
 															<td>".$result['user_data']['nama']."</td>
 															<td>".$result['nama_proyek']."</td>
 															<td>".$result['jenis_pengeluaran']."</td>
 															<td>".$result['tanggal']."</td>
 															<td class=text-primary>Rp.".number_format($result['jumlah_pengeluaran'], 0, ",", ".")."</td>
+															<td><button type='button' class='btn btn-primary' onclick=myFunction('td".$result['id']."')>More info</button>
 														</tr>";
 													}
 												}
@@ -210,8 +248,7 @@
 
 	                            </div>
 	                        </div>
-	                    </div>
-
+	                    </div>			
 	                    <!--<div class="col-md-12">
 	                        <div class="card card-plain">
 	                            <div class="card-header" data-background-color="purple">

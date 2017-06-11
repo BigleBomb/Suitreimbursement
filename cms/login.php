@@ -39,7 +39,7 @@
 			<br/>
 			<button type="submit" name="signin">Sign In</button>
 			<br/>
-			<a href="#"><p class="small">Forgot your password?</p></a>
+			<a href="#"><p class="small">Forgot your password?</p></a></form>
 			<?php 
 				if(isset($_POST['signin'])){
 					$email = $_POST['email'];
@@ -79,7 +79,7 @@
 					}
 
 				}
-			 ?></form>
+			 ?>
 		</div>
 	</div>
 </body>

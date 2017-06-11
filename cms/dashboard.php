@@ -75,7 +75,7 @@
 	                        <p>Menu tambahan</p>
 	                    </a>
 	                </li>
-	                <li>
+	                <!--<li>
 	                    <a href="icons.html">
 	                        <i class="material-icons">bubble_chart</i>
 	                        <p>Icons</p>
@@ -98,7 +98,7 @@
 	                        <i class="material-icons">unarchive</i>
 	                        <p>Upgrade to PRO</p>
 	                    </a>
-	                </li>
+	                </li>-->
 	            </ul>
 	    	</div>
 	    </div>
@@ -145,7 +145,7 @@
 							</li>
 						</ul>
 
-						<form class="navbar-form navbar-right" role="search">
+						<!--<form class="navbar-form navbar-right" role="search">
 							<div class="form-group  is-empty">
 								<input type="text" class="form-control" placeholder="Search">
 								<span class="material-input"></span>
@@ -153,14 +153,14 @@
 							<button type="submit" class="btn btn-white btn-round btn-just-icon">
 								<i class="material-icons">search</i><div class="ripple-container"></div>
 							</button>
-						</form>
+						</form>-->
 					</div>
 				</div>
 			</nav>
 
 			<div class="content">
 				<div class="container-fluid">
-					<div class="column">
+					<div class="row">
 						<div class="col-lg-3 col-md-6 col-sm-6">
 							<div class="card card-stats">
 								<div class="card-header" data-background-color="orange">
@@ -173,7 +173,7 @@
 											$ch = curl_init();
 
 												$token = $_SESSION['token'];
-												$url = "192.168.1.49:1000/reimburse/pendingcount?token=".$token;
+												$url = "192.168.1.49:1000/reimburse/pending/totalcount?token=".$token;
 												curl_setopt($ch, CURLOPT_URL, $url);
 												curl_setopt($ch, CURLOPT_POST, 0);
 												curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -181,7 +181,6 @@
 												curl_close ($ch);
 												$resp = json_decode($server_output, true);
 												
-												//echo $server_output.'<br>';
 												if($resp!=null){
 													echo $resp['result']['count'];
 												}
@@ -206,11 +205,11 @@
 								<div class="card-content">
 									<p class="category">Pending amount</p>
 
-									<h4 class="title"> Rp.<?php
+									<h4 class="title"> Rp <?php
 											$ch = curl_init();
 
 												$token = $_SESSION['token'];
-												$url = "192.168.1.49:1000/reimburse/pendingamount?token=".$token;
+												$url = "192.168.1.49:1000/reimburse/pending/totalamount?token=".$token;
 												curl_setopt($ch, CURLOPT_URL, $url);
 												curl_setopt($ch, CURLOPT_POST, 0);
 												curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -218,7 +217,6 @@
 												curl_close ($ch);
 												$resp = json_decode($server_output, true);
 												
-												//echo $server_output.'<br>';
 												if($resp!=null){
 													echo number_format($resp['result']['amount'], 0, ",", ".");
 												}
@@ -305,7 +303,7 @@
 															<td>".$result['nama_proyek']."</td>
 															<td>".$result['jenis_pengeluaran']."</td>
 															<td>".$result['tanggal']."</td>
-															<td class=text-primary>Rp.".number_format($result['jumlah_pengeluaran'], 0, ",", ".")."</td>
+															<td class=text-primary>Rp ".number_format($result['jumlah_pengeluaran'], 0, ",", ".")."</td>
 														</tr>";
 													}
 												}

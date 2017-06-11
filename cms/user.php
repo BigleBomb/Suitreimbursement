@@ -1,4 +1,9 @@
 <!doctype html>
+<?php
+	session_start();
+
+	if(isset($_SESSION['token'])){
+?>
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
@@ -20,6 +25,8 @@
 
     <!--  CSS for Demo Purpose, don't include it in your project     -->
     <link href="./assets/css/demo.css" rel="stylesheet" />
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
     <!--     Fonts and icons     -->
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
@@ -69,7 +76,7 @@
 	                        <p>Menu tambahan</p>
 	                    </a>
 	                </li>
-	                <li>
+	                <!--<li>
 	                    <a href="icons.html">
 	                        <i class="material-icons">bubble_chart</i>
 	                        <p>Icons</p>
@@ -92,7 +99,7 @@
 	                        <i class="material-icons">unarchive</i>
 	                        <p>Upgrade to PRO</p>
 	                    </a>
-	                </li>
+	                </li>-->
 	            </ul>
 	    	</div>
 	    </div>
@@ -154,15 +161,57 @@
 
 	        <div class="content">
 	            <div class="container-fluid">
-	                <div class="row">
-	                    <div class="col-md-8">
+	                <div class="column">
+	                    <div class="col-md-12">
+							<div class="col-md-3">
+								<button type='button' class='btn btn-primary' data-toggle="modal" data-target="#createUserModal">Create user
+							</div>
 	                        <div class="card">
 	                            <div class="card-header" data-background-color="purple">
-	                                <h4 class="title">Edit Profile</h4>
-									<p class="category">Complete your profile</p>
+	                                <h4 class="title">User list</h4>
+									<p class="category">List of existing user</p>
 	                            </div>
-	                            <div class="card-content">
-	                                <form>
+	                            <div class="card-content table-responsive">
+	                                <table class="table">
+	                                    <thead class="text-primary">
+											<th width=20px>ID</th>
+	                                    	<th>Name</th>
+	                                    	<th width=250 align=left>Email</th>
+	                                    	<th>Date registered</th>
+											<th>Action</th>
+	                                    </thead>
+	                                    <tbody>
+											<?php
+												$ch = curl_init();
+
+												$token = $_SESSION['token'];
+												$url = "192.168.1.49:1000/users?token=".$token;
+												curl_setopt($ch, CURLOPT_URL, $url);
+												curl_setopt($ch, CURLOPT_POST, 0);
+												curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+												$server_output = curl_exec ($ch);
+												curl_close ($ch);
+												$resp = json_decode($server_output, true);
+												
+												if($resp!=null){
+													foreach($resp['result'] as $result){
+														echo "<tr><td id=td>".$result['id']."</td>
+															<td>".$result['nama']."</td>
+															<td>".$result['email']."</td>
+															<td>".$result['created_at']."</td>
+															<td><button type='button' class='btn btn-primary'>Modify</td>
+														</tr>";
+													}
+												}
+												else{
+													echo "Data not found";
+												}
+											?>
+	                                    </tbody>
+	                                </table>
+
+	                            </div>
+	                                <!--<form>
 	                                    <div class="row">
 	                                        <div class="col-md-5">
 												<div class="form-group label-floating">
@@ -243,11 +292,11 @@
 
 	                                    <button type="submit" class="btn btn-primary pull-right">Update Profile</button>
 	                                    <div class="clearfix"></div>
-	                                </form>
-	                            </div>
+	                                </form>-->
+	                            <!--</div>-->
 	                        </div>
 	                    </div>
-						<div class="col-md-4">
+						<!--<div class="col-md-4">
     						<div class="card card-profile">
     							<div class="card-avatar">
     								<a href="#pablo">
@@ -264,7 +313,7 @@
     								<a href="#pablo" class="btn btn-primary btn-round">Follow</a>
     							</div>
     						</div>
-		    			</div>
+		    			</div>-->
 	                </div>
 	            </div>
 	        </div>
@@ -302,6 +351,60 @@
 	        </footer>
 	    </div>
 	</div>
+	<div id="createUserModal" class="modal fade" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h4 class="modal-title text-primary" background="green">Create new user</h4>
+						
+					</div>
+					<form method=POST>
+						<div class="modal-body">
+							<div class="column">
+								<div class="col-md-8">
+									<div class="form-group label-floating">
+										<label class="control-label">Name</label>
+										<input type="text" class="form-control" name="nama">
+									</div>
+								</div>
+								<div class="col-md-8">
+									<div class="form-group label-floating">
+										<label class="control-label">Username</label>
+										<input type="text" class="form-control" name="username">
+									</div>
+								</div>
+								<div class="col-md-8">
+									<div class="form-group label-floating">
+										<label class="control-label">Email</label>
+										<input type="text" class="form-control" name="email">
+									</div>
+								</div>
+								<div class="col-md-8">
+									<div class="form-group label-floating">
+										<label class="control-label">Privillege</label>
+										<select class="form-control" name="priv">
+											<option>Karyawan</option>
+											<option>Atasan</option>
+											<option>Admin</option>
+										</select>
+									</div>
+								</div>
+							</div>
+							<div class="clearfix"></div>
+						</div>
+						<div class="modal-footer">
+							<button type="button" class="btn btn-success" name="create">Create</button>
+							<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+						</div>
+					</form>
+					<?php
+						$test = $_POST['priv'];
+						echo $test;
+					?>
+				</div>
+			</div>
+		</div>
+	</div>
 
 </body>
 
@@ -326,3 +429,10 @@
 	<script src="./assets/js/demo.js"></script>
 
 </html>
+
+<?php
+	echo test;
+	}else{
+		echo "Invalid session";
+	}
+?>

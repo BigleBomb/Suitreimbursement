@@ -76,54 +76,61 @@ class ReimburseController extends Controller {
 		}
 	}
 
-	public function get_pending_reimburse(Request $request){
-		$reimburse = Reimburse::where('status', 0)->count();
-		if($reimburse != null){
-			if($reimburse > 0){						
-				$res['success'] = true;
-				$res['result']['count'] = $reimburse;
+	public function get_pending(Request $request, $menu){
+		if($menu === 'totalcount'){
+			$reimburse = Reimburse::where('status', 0)->count();
+			if($reimburse != null){
+				if($reimburse > 0){						
+					$res['success'] = true;
+					$res['result']['count'] = $reimburse;
+
+					return response($res);
+				}else{
+					$res['success'] = false;
+					$res['message'] = "There is no pending Reimbursements";
+
+					return response($res);
+				}
+			}
+			else{
+				$res['success'] = false;
+				$res['message'] = "Failed to get the count";
 
 				return response($res);
+			}	
+		}
+		else if($menu === 'totalamount'){
+			$reimburse = Reimburse::all();
+			if($reimburse !== null){
+				$pend = 0;
+				foreach($reimburse as $reimdata)
+				{
+					if($reimdata->status == 0)
+						$pend += $reimdata->jumlah_pengeluaran;
+					else{}
+				}
+				if($pend > 0){
+					$res['success'] = true;
+					$res['result']['amount'] = $pend;
+
+					return response($res);
+				}
+				else{
+					$res['success'] = false;
+					$res['message'] = "No pending amount";
+
+					return response($res);
+				}
 			}else{
 				$res['success'] = false;
-				$res['message'] = "There is no pending Reimbursements";
+				$res['message'] = "Failed to get the pending amount";
 
 				return response($res);
 			}
 		}
 		else{
 			$res['success'] = false;
-			$res['message'] = "Failed to get the count";
-
-			return response($res);
-		}
-	}
-
-	public function get_pending_amount(Request $request){
-		$reimburse = Reimburse::all();
-		if($reimburse !== null){
-			$pend = 0;
-			foreach($reimburse as $reimdata)
-			{
-				if($reimdata->status == 0)
-					$pend += $reimdata->jumlah_pengeluaran;
-				else{}
-			}
-			if($pend > 0){
-				$res['success'] = true;
-				$res['result']['amount'] = $pend;
-
-				return response($res);
-			}
-			else{
-				$res['success'] = false;
-				$res['message'] = "No pending amount";
-
-				return response($res);
-			}
-		}else{
-			$res['success'] = false;
-			$res['message'] = "Failed to get the pending amount";
+			$res['message'] = "Invalid menu";
 
 			return response($res);
 		}
@@ -149,6 +156,7 @@ class ReimburseController extends Controller {
 	
 	public function update(Request $request, $id)
 	{
+		if($request->has(''))
 		if($request->has('name')){
 			$reimburse = Reimburse::find($id);
 			$reimburse->name = $request->input('name');

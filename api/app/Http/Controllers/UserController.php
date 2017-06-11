@@ -27,10 +27,18 @@ class UserController extends Controller
             return implode($pass);
         }
 
-        $nama = $reques->input('nama');
+        $nama = $request->input('nama');
         $username = $request->input('username');
         $email = $request->input('email');
         $password = randomPassword();
+
+        $user = User::where('email', $email)->first();
+        if($user){
+            $res['success'] = false;
+            $res['message'] = "User with email ".$email." already exist";
+
+            return response($res);
+        }
 
         $register = User::create([
             'nama' => $nama,
@@ -52,11 +60,23 @@ class UserController extends Controller
         }
     }
 
-    /**
-     * Get user by id
-     *
-     * URL /user/{id}
-     */
+    public function index(Request $request){
+        $user = User::all();
+
+        if($user!=null){
+            $res['success'] = true;
+            $res['result'] = $user;
+
+            return response($res);
+        }
+        else{
+            $res['success'] = false;
+            $res['message'] = "Failed to get list of users";
+            
+            return response($res);
+        }
+    }
+
     public function get_user(Request $request, $id)
     {
         $user = User::where('id', $id)->get();
