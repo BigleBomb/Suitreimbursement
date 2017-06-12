@@ -151,7 +151,7 @@
 											$ch = curl_init();
 
 												$token = $_SESSION['token'];
-												$url = "$SERVER:$PORT/reimburse/pending/totalcount?token=".$token;
+												$url = "$SERVER/reimburse/pending/totalcount?token=".$token;
 												curl_setopt($ch, CURLOPT_URL, $url);
 												curl_setopt($ch, CURLOPT_POST, 0);
 												curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -187,7 +187,7 @@
 											$ch = curl_init();
 
 												$token = $_SESSION['token'];
-												$url = "$SERVER:$PORT/reimburse/pending/totalamount?token=".$token;
+												$url = "$SERVER/reimburse/pending/totalamount?token=".$token;
 												curl_setopt($ch, CURLOPT_URL, $url);
 												curl_setopt($ch, CURLOPT_POST, 0);
 												curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -252,7 +252,7 @@
 										<?php
 											$ch = curl_init();
 											$token = $_SESSION['token'];
-											$url = "$SERVER:$PORT/reimburse/latest?token=".$token;
+											$url = "$SERVER/reimburse/latest?token=".$token;
 											curl_setopt($ch, CURLOPT_URL, $url);
 											curl_setopt($ch, CURLOPT_POST, 0);
 											curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -284,7 +284,7 @@
 												$ch = curl_init();
 
 												$token = $_SESSION['token'];
-												$url = "$SERVER:$PORT/reimburse?token=".$token;
+												$url = "$SERVER/reimburse?token=".$token;
 												curl_setopt($ch, CURLOPT_URL, $url);
 												curl_setopt($ch, CURLOPT_POST, 0);
 												curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

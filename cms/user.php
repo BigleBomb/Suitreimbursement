@@ -187,14 +187,13 @@
 												$ch = curl_init();
 
 												$token = $_SESSION['token'];
-												$url = "$SERVER:$PORT/users?token=".$token;
+												$url = "$SERVER/users?token=".$token;
 												curl_setopt($ch, CURLOPT_URL, $url);
 												curl_setopt($ch, CURLOPT_POST, 0);
 												curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 												$server_output = curl_exec ($ch);
 												curl_close ($ch);
 												$resp = json_decode($server_output, true);
-												
 												if($resp!=null){
 													foreach($resp['result'] as $result){
 														echo "<tr><td id=td>".$result['id']."</td>
@@ -425,7 +424,7 @@
 									break;
 							}
 
-							curl_setopt($ch, CURLOPT_URL,"$SERVER:$PORT/register");
+							curl_setopt($ch, CURLOPT_URL,"$SERVER/register");
 							curl_setopt($ch, CURLOPT_POST, 1);
 							curl_setopt($ch, CURLOPT_POSTFIELDS,
 									"nama=$nama&username=$username&email=$email&privilege=$priv");

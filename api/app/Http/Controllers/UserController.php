@@ -50,7 +50,7 @@ class UserController extends Controller
         if ($register) {
             $res['success'] = true;
             $res['message'] = 'Success register! Your password is '.$password.' please change it immediately';
-            $res['message']['password'] = $password;
+            $res['pass'] = $password;
 
             return response($res);
         }else{

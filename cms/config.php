@@ -1,4 +1,3 @@
 <?php
-    $SERVER="localhost";
-    $PORT="1000";
+    $SERVER="http://vixelmedia.com/api/public";
 ?>

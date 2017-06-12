@@ -50,7 +50,7 @@
 					$password = $_POST['password'];
 					$ch = curl_init();
 
-					curl_setopt($ch, CURLOPT_URL,"$SERVER:$PORT/login");
+					curl_setopt($ch, CURLOPT_URL,"$SERVER/login");
 					curl_setopt($ch, CURLOPT_POST, 1);
 					curl_setopt($ch, CURLOPT_POSTFIELDS,
             				"email=$email&password=$password");
