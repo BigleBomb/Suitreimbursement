@@ -358,25 +358,25 @@
 					<div class="modal-header">
 					<h4 class="modal-title text-primary" background="green">Create new user</h4>		
 					</div>
-					<form method=POST id="senddata">
+					<form method=POST>
 						<div class="modal-body">
 							<div class="column">
 								<div class="col-md-8">
 									<div class="form-group label-floating">
 										<label class="control-label">Name</label>
-										<input type="text" class="form-control" name="nama">
+										<input type="text" class="form-control" name="nama" required>
 									</div>
 								</div>
 								<div class="col-md-8">
 									<div class="form-group label-floating">
 										<label class="control-label">Username</label>
-										<input type="text" class="form-control" name="username">
+										<input type="text" class="form-control" name="username" required>
 									</div>
 								</div>
 								<div class="col-md-8">
 									<div class="form-group label-floating">
 										<label class="control-label">Email</label>
-										<input type="text" class="form-control" name="email">
+										<input type="text" class="form-control" name="email" required>
 									</div>
 								</div>
 								<div class="col-md-8">
@@ -393,22 +393,23 @@
 							<div class="clearfix"></div>
 						</div>
 						<div class="modal-footer">
-							<button type="button" class="btn btn-success" name="create">Create</button>
+							<button type="submit" class="btn btn-success" name="create">Create</button>
 							<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 						</div>
 					</form>
-					<script type="text/javascript">
+					<!--<script type="text/javascript">
   						function form_submit() {
 							document.getElementById("senddata").submit();
 					}    
-					</script>
+					</script>-->
 					<?php
-						echo $_POST['priv'];
+						//echo $_POST['priv'];
 						if(isset($_POST['create'])){
-							$nama = $_POST['name'];
+							$nama = $_POST['nama'];
 							$username = $_POST['username'];
 							$email = $_POST['email'];
 							$priv = $_POST['priv'];
+							$ch = curl_init();
 							switch($priv){
 								case "Karyawan":
 									$priv = 0;
@@ -436,7 +437,7 @@
 							if($resp != null){
 								if ($resp->success===true){
 									$message = $resp->message;
-									$password = $resp->message->password;
+									$password = $resp->password;
 
 									echo $password;
 								}
