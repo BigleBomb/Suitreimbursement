@@ -30,3 +30,5 @@ $app->post('/reimburse/new', 'ReimburseController@create');
 $app->post('/reimburse/update/{menu}', 'ReimburseController@update');
 $app->get('/reimburse/pending/{menu}','ReimburseController@get_pending');
 $app->get('/reimburse/latest', 'ReimburseController@get_latest');
+$app->get('/reimburse/accepted', 'ReimburseController@get_accepted');
+$app->get('/reimburse/rejected', 'ReimburseController@get_rejected');
