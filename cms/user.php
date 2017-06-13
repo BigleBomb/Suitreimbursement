@@ -29,6 +29,8 @@
     <link href="./assets/css/demo.css" rel="stylesheet" />
   	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.0/jquery.validate.min.js"></script>
+	<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.0/additional-methods.js"></script>
 
     <!--     Fonts and icons     -->
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
@@ -39,7 +41,7 @@
 
 	<div class="wrapper">
 
-	    <div class="sidebar" data-color="purple" data-image="./assets/img/sidebar-1.jpg">
+	    <div class="sidebar" data-color="orange" data-image="./assets/img/sidebar-1.jpg">
 			<!--
 		        Tip 1: You can change the color of the sidebar using: data-color="purple | blue | green | orange | red"
 
@@ -78,30 +80,6 @@
 	                        <p>Menu tambahan</p>
 	                    </a>
 	                </li>
-	                <!--<li>
-	                    <a href="icons.html">
-	                        <i class="material-icons">bubble_chart</i>
-	                        <p>Icons</p>
-	                    </a>
-	                </li>
-	                <li>
-	                    <a href="maps.html">
-	                        <i class="material-icons">location_on</i>
-	                        <p>Maps</p>
-	                    </a>
-	                </li>
-	                <li>
-	                    <a href="notifications.html">
-	                        <i class="material-icons text-gray">notifications</i>
-	                        <p>Notifications</p>
-	                    </a>
-	                </li>
-					<li class="active-pro">
-	                    <a href="upgrade.html">
-	                        <i class="material-icons">unarchive</i>
-	                        <p>Upgrade to PRO</p>
-	                    </a>
-	                </li>-->
 	            </ul>
 	    	</div>
 	    </div>
@@ -176,11 +154,11 @@
 	                            <div class="card-content table-responsive">
 	                                <table class="table">
 	                                    <thead class="text-primary">
-											<th width=20px>ID</th>
-	                                    	<th>Name</th>
+											<th width=20px>UID</th>
+	                                    	<th class='col-lg-4'>Name</th>
 	                                    	<th width=250 align=left>Email</th>
 	                                    	<th>Date registered</th>
-											<th>Action</th>
+											<th class='text-center'>Action</th>
 	                                    </thead>
 	                                    <tbody>
 											<?php
@@ -196,11 +174,12 @@
 												$resp = json_decode($server_output, true);
 												if($resp!=null){
 													foreach($resp['result'] as $result){
-														echo "<tr><td id=td>".$result['id']."</td>
+														echo "<tr id='tr".$result['id']."'>
+															<td>#".$result['id']."</td>
 															<td>".$result['nama']."</td>
 															<td>".$result['email']."</td>
-															<td>".$result['created_at']."</td>
-															<td><button type='button' class='btn btn-primary'>Modify</td>
+															<td>".date_format(date_create($result['created_at']), 'jS F\,\ Y')."</td>
+															<td class='text-center'><button type='button' class='btn btn-primary modify-user' data-toggle='modal'>Modify<span><button type='button' class='btn btn-primary delete-user' data-toggle='modal'>Delete</td>
 														</tr>";
 													}
 												}
@@ -212,109 +191,8 @@
 	                                </table>
 
 	                            </div>
-	                                <!--<form>
-	                                    <div class="row">
-	                                        <div class="col-md-5">
-												<div class="form-group label-floating">
-													<label class="control-label">Company (disabled)</label>
-													<input type="text" class="form-control" disabled>
-												</div>
-	                                        </div>
-	                                        <div class="col-md-3">
-												<div class="form-group label-floating">
-													<label class="control-label">Username</label>
-													<input type="text" class="form-control" >
-												</div>
-	                                        </div>
-	                                        <div class="col-md-4">
-												<div class="form-group label-floating">
-													<label class="control-label">Email address</label>
-													<input type="email" class="form-control" >
-												</div>
-	                                        </div>
-	                                    </div>
-
-	                                    <div class="row">
-	                                        <div class="col-md-6">
-												<div class="form-group label-floating">
-													<label class="control-label">Fist Name</label>
-													<input type="text" class="form-control" >
-												</div>
-	                                        </div>
-	                                        <div class="col-md-6">
-												<div class="form-group label-floating">
-													<label class="control-label">Last Name</label>
-													<input type="text" class="form-control" >
-												</div>
-	                                        </div>
-	                                    </div>
-
-	                                    <div class="row">
-	                                        <div class="col-md-12">
-												<div class="form-group label-floating">
-													<label class="control-label">Adress</label>
-													<input type="text" class="form-control" >
-												</div>
-	                                        </div>
-	                                    </div>
-
-	                                    <div class="row">
-	                                        <div class="col-md-4">
-												<div class="form-group label-floating">
-													<label class="control-label">City</label>
-													<input type="text" class="form-control" >
-												</div>
-	                                        </div>
-	                                        <div class="col-md-4">
-												<div class="form-group label-floating">
-													<label class="control-label">Country</label>
-													<input type="text" class="form-control" >
-												</div>
-	                                        </div>
-	                                        <div class="col-md-4">
-												<div class="form-group label-floating">
-													<label class="control-label">Postal Code</label>
-													<input type="text" class="form-control" >
-												</div>
-	                                        </div>
-	                                    </div>
-
-	                                    <div class="row">
-	                                        <div class="col-md-12">
-	                                            <div class="form-group">
-	                                                <label>About Me</label>
-													<div class="form-group label-floating">
-									    				<label class="control-label"> Lamborghini Mercy, Your chick she so thirsty, I'm in that two seat Lambo.</label>
-								    					<textarea class="form-control" rows="5"></textarea>
-		                        					</div>
-	                                            </div>
-	                                        </div>
-	                                    </div>
-
-	                                    <button type="submit" class="btn btn-primary pull-right">Update Profile</button>
-	                                    <div class="clearfix"></div>
-	                                </form>-->
-	                            <!--</div>-->
 	                        </div>
 	                    </div>
-						<!--<div class="col-md-4">
-    						<div class="card card-profile">
-    							<div class="card-avatar">
-    								<a href="#pablo">
-    									<img class="img" src="./assets/img/faces/marc.jpg" />
-    								</a>
-    							</div>
-
-    							<div class="content">
-    								<h6 class="category text-gray">CEO / Co-Founder</h6>
-    								<h4 class="card-title">Alec Thompson</h4>
-    								<p class="card-content">
-    									Don't be scared of the truth because we need to restart the human foundation in truth And I love you like Kanye loves Kanye I love Rick Owens’ bed design but the back is...
-    								</p>
-    								<a href="#pablo" class="btn btn-primary btn-round">Follow</a>
-    							</div>
-    						</div>
-		    			</div>-->
 	                </div>
 	            </div>
 	        </div>
@@ -356,10 +234,13 @@
 			<div class="modal-dialog" role="document">
 				<div class="modal-content">
 					<div class="modal-header">
-					<h4 class="modal-title text-primary" background="green">Create new user</h4>		
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title text-primary" background="green">Create new user</h4><br>
+						<div id='alertt'>
+						</div>	
 					</div>
-					<form method=POST>
 						<div class="modal-body">
+						<form class='userreg' method=POST>
 							<div class="column">
 								<div class="col-md-8">
 									<div class="form-group label-floating">
@@ -376,7 +257,7 @@
 								<div class="col-md-8">
 									<div class="form-group label-floating">
 										<label class="control-label">Email</label>
-										<input type="text" class="form-control" name="email" required>
+										<input type="email" class="form-control" name="email" required>
 									</div>
 								</div>
 								<div class="col-md-8">
@@ -392,78 +273,115 @@
 							</div>
 							<div class="clearfix"></div>
 						</div>
+						</form>
 						<div class="modal-footer">
-							<button type="submit" class="btn btn-success" name="create">Create</button>
+							<button class="btn btn-success" id='submit'>Create</button>
 							<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 						</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="modifyUserModal" class="modal fade" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title text-primary" background="green">Modify user</h4><br>
+					</div>
+					<form class='modifyuser' method=POST>
+					<div class="modal-body modify-user-body">
+					<div class="clearfix"></div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-success" id='modify'>modify</button>
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+					</div>
 					</form>
-					<!--<script type="text/javascript">
-  						function form_submit() {
-							document.getElementById("senddata").submit();
-					}    
-					</script>-->
-					<?php
-						//echo $_POST['priv'];
-						if(isset($_POST['create'])){
-							$nama = $_POST['nama'];
-							$username = $_POST['username'];
-							$email = $_POST['email'];
-							$priv = $_POST['priv'];
-							$ch = curl_init();
-							switch($priv){
-								case "Karyawan":
-									$priv = 0;
-									break;
-								case "Atasan":
-									$priv = 1;
-									break;
-								case "Admin":
-									$priv = 2;
-									break;
-								default:
-									$priv = 0;
-									break;
-							}
-
-							curl_setopt($ch, CURLOPT_URL,"$SERVER/register");
-							curl_setopt($ch, CURLOPT_POST, 1);
-							curl_setopt($ch, CURLOPT_POSTFIELDS,
-									"nama=$nama&username=$username&email=$email&privilege=$priv");
-							curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-							$server_output = curl_exec ($ch);
-							curl_close ($ch);
-							$resp = json_decode($server_output);
-
-							if($resp != null){
-								if ($resp->success===true){
-									$message = $resp->message;
-									$password = $resp->password;
-
-									echo $password;
-								}
-								else {
-									echo "<div class='alert alert-danger alert-dismissable'>
-											<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
-											<strong>$message</strong>
-										</div>";
-								}
-							}
-							else{
-								echo "<div class='alert alert-danger alert-dismissable'>
-											<a href='#' class='close' data-dismiss='alert' aria-label='close'>&times;</a>
-											<strong>Could not connect to the server</strong>
-										</div>";
-							}
-						}
-						
-
-					?>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="deleteUserModal" class="modal fade" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title text-primary" background="green">Delete user</h4><br>
+					</div>
+					<div class="modal-body delete-user-body">
+					<div class="clearfix"></div>
+					</div>
+					<div class="modal-footer">
+						<button class="btn btn-danger" id='delete'>Delete</button>
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
 
 </body>
+<script>
+	$(function() {
+		$("button#submit").click(function(){
+			// if($('form.userreg')[0].checkValidity()) {
+				$.ajax({
+					type: "POST",
+					url: "register_user.php",
+					data: $('form.userreg').serialize(),
+						success: function(msg){
+							$("#alertt").html(msg)
+							$("#createUserModal").modal('hide'); 
+						},	
+						error: function(){
+							alert("failure");
+						}
+				});
+			// }
+		});
+	});
+	
+	$(function(){
+		$(".delete-user").click(function() {
+			var trId = $(this).closest('tr').prop('id').substr(2,2);
+			$("#deleteUserModal").modal('show');
+			$('.delete-user-body').show().html("Are you sure you want to delete this user?")
+			$("button#delete").click(function(){
+				$.ajax({
+					type: "POST",
+					url: "delete_user.php",
+					data: 'user_id='+trId,
+					success: function(msg){
+						$('.delete-user-body').show().html(msg);
+						$("#deleteUserModal").modal('hide');
+					},	
+					error: function(){
+						alert("failure");
+					}
+				});
+			});
+		});
+	});
+	
+	$(function(){
+		$('.modify-user').click(function() {
+			var trId = $(this).closest('tr').prop('id').substr(2,2);
+			$.ajax({
+					type: "POST",
+					url: "get_user_info.php",
+					data: 'user_id='+trId,
+					success: function(msg){
+						$("#modifyUserModal").modal('show'); 
+						$('.modify-user-body').show().html(msg);
+					},	
+					error: function(){
+						alert("failure");
+					}
+				});
+		});
+	});
+</script>
 
 	<!--   Core JS Files   -->
 	<script src="./assets/js/jquery-3.1.0.min.js" type="text/javascript"></script>
@@ -488,7 +406,6 @@
 </html>
 
 <?php
-	echo test;
 	}else{
 		echo "Invalid session";
 	}
