@@ -17,20 +17,14 @@ session_start();
             if ($resp->success == true){
                 $message = $resp->message;
 
-                echo "<div class='alert alert-success alert-dismissable'>
-                        <strong>$message</strong>
-                    </div>";
+                echo "$message";
             }
             else {
-                echo "<div class='alert alert-danger alert-dismissable'>=
-                        <strong>Failed to get user id</strong>
-                    </div>";
+                echo "Failed to get user id";
             }
         }
         else{
-                echo "<div class='alert alert-danger alert-dismissable'>
-                        <strong>Could not connect to the server</strong>
-                    </div>";
+                echo "Could not connect to the server";
         }
     }
 ?>
