@@ -199,126 +199,171 @@
 
 	        <div class="content">
 	            <div class="container-fluid">
-	                <div class="row">
-	                    <div class="col-md-12">
-	                        <div class="card">
-	                            <div class="card-header" data-background-color="orange">
-	                                <h4 class="title">Pending Reimbursement</h4>
-	                                <p class="category">List of pending reimbursements</p>
-	                            </div>
-	                            <div class="card-content table-responsive">
-	                                <table class="table">
-	                                    <thead class="text-primary">
-											<th width=20px>ID</th>
-	                                    	<th>Name</th>
-	                                    	<th width=250 align=left>Project name</th>
-											<th>Type</th>
-	                                    	<th>Date</th>
-											<th>Total</th>
-	                                    </thead>
-	                                    <tbody>
-											<?php
-												$ch = curl_init();
+					<div class="row">
+						<div class=" col-md-12">
+							<div class="card card-nav-tabs">
+								<div class="card-header" data-background-color="orange">
+									<div class="nav-tabs-navigation">
+										<div class="nav-tabs-wrapper">
+											<span class="nav-tabs-title">Reimbursements:</span>
+											<ul class="nav nav-tabs" data-tabs="tabs">
+												<li class="active">
+													<a href="#pending" data-toggle="tab">
+														<i class="material-icons">info</i>
+														Pending
+													<div class="ripple-container"></div></a>
+												</li>
+												<li class="">
+													<a href="#accepted" data-toggle="tab">
+														<i class="material-icons">done</i>
+														Accepted
+													<div class="ripple-container"></div></a>
+												</li>
+												<li class="">
+													<a href="#rejected" data-toggle="tab">
+														<i class="material-icons">close</i>
+														Rejected
+													<div class="ripple-container"></div></a>
+												</li>
+											</ul>
+										</div>
+									</div>
+								</div>
 
-												$token = $_SESSION['token'];
-												$url = "$SERVER/reimburse?token=".$token;
-												curl_setopt($ch, CURLOPT_URL, $url);
-												curl_setopt($ch, CURLOPT_POST, 0);
-												curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-												$server_output = curl_exec ($ch);
-												curl_close ($ch);
-												$resp = json_decode($server_output, true);
-												if($resp!=null){
-													foreach($resp['result'] as $result){
-														echo "<tr><td>#".$result['id']."</td>
-															<td>".$result['user_data']['nama']."</td>
-															<td>".$result['nama_proyek']."</td>
-															<td>".$result['jenis_pengeluaran']."</td>
-															<td>".date_format(date_create($result['tanggal']), 'jS F\,\ Y')
-															."</td>
-															<td>Rp ".number_format($result['jumlah_pengeluaran'], 0, ",", ".")."</td>
-															<td><button class='btn btn-primary' data-background-color='green'>More info</td>
-														</tr>";
-													}
-												}
-												else{
-													echo "Data not found";
-												}
-											?><script>
-											$('.table > tbody > tr').on('click', function() {
-												
-											});
-											</script>
-	                                    </tbody>
-	                                </table>
+								<div class="card-content">
+									<div class="tab-content">
+										<div class="tab-pane active" id="pending">
+											<table class="table">
+												<thead class="text-primary">
+													<th width=20px>ID</th>
+													<th class='col-lg-3'>Name</th>
+													<th width=250 align=left>Project name</th>
+													<th class='col-lg-1'>Type</th>
+													<th>Date</th>
+													<th>Total</th>
+													<th>Action</th>
+												</thead>
+												<tbody>
+													<?php
+														$ch = curl_init();
 
-	                            </div>
-	                        </div>
-	                    </div>			
-	                    <!--<div class="col-md-12">
-	                        <div class="card card-plain">
-	                            <div class="card-header" data-background-color="purple">
-	                                <h4 class="title">Table on Plain Background</h4>
-	                                <p class="category">Here is a subtitle for this table</p>
-	                            </div>
-	                            <div class="card-content table-responsive">
-	                                <table class="table table-hover">
-	                                    <thead>
-	                                        <th>ID</th>
-	                                    	<th>Name</th>
-	                                    	<th>Salary</th>
-	                                    	<th>Country</th>
-	                                    	<th>City</th>
-	                                    </thead>
-	                                    <tbody>
-	                                        <tr>
-	                                        	<td>1</td>
-	                                        	<td>Dakota Rice</td>
-	                                        	<td>$36,738</td>
-	                                        	<td>Niger</td>
-	                                        	<td>Oud-Turnhout</td>
-	                                        </tr>
-	                                        <tr>
-	                                        	<td>2</td>
-	                                        	<td>Minerva Hooper</td>
-	                                        	<td>$23,789</td>
-	                                        	<td>Curaçao</td>
-	                                        	<td>Sinaai-Waas</td>
-	                                        </tr>
-	                                        <tr>
-	                                        	<td>3</td>
-	                                        	<td>Sage Rodriguez</td>
-	                                        	<td>$56,142</td>
-	                                        	<td>Netherlands</td>
-	                                        	<td>Baileux</td>
-	                                        </tr>
-	                                        <tr>
-	                                        	<td>4</td>
-	                                        	<td>Philip Chaney</td>
-	                                        	<td>$38,735</td>
-	                                        	<td>Korea, South</td>
-	                                        	<td>Overland Park</td>
-	                                        </tr>
-	                                        <tr>
-	                                        	<td>5</td>
-	                                        	<td>Doris Greene</td>
-	                                        	<td>$63,542</td>
-	                                        	<td>Malawi</td>
-	                                        	<td>Feldkirchen in Kärnten</td>
-	                                        </tr>
-	                                        <tr>
-	                                        	<td>6</td>
-	                                        	<td>Mason Porter</td>
-	                                        	<td>$78,615</td>
-	                                        	<td>Chile</td>
-	                                        	<td>Gloucester</td>
-	                                        </tr>
-	                                    </tbody>
-	                                </table>
-	                            </div>
-	                        </div>
-	                    </div>-->
-	                </div>
+														$token = $_SESSION['token'];
+														$url = "$SERVER/reimburse/pending/all?token=".$token;
+														curl_setopt($ch, CURLOPT_URL, $url);
+														curl_setopt($ch, CURLOPT_POST, 0);
+														curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+														$server_output = curl_exec ($ch);
+														curl_close ($ch);
+														$resp = json_decode($server_output, true);
+														if($resp!=null){
+															foreach($resp['result'] as $result){
+																echo "<tr><td>#".$result['id']."</td>
+																	<td>".$result['user_data']['nama']."</td>
+																	<td>".$result['nama_proyek']."</td>
+																	<td>".$result['jenis_pengeluaran']."</td>
+																	<td>".date_format(date_create($result['tanggal']), 'jS F\,\ Y')
+																	."</td>
+																	<td>Rp ".number_format($result['jumlah_pengeluaran'], 0, ",", ".")."</td>
+																	<td class='text-center'><button class='btn btn-primary text-center' data-background-color='green'>More info</td>
+																</tr>";
+															}
+														}
+														else{
+															echo "Data not found";
+														}
+													?>
+												</tbody>
+											</table>
+										</div>
+										<div class="tab-pane" id="accepted">
+											<table class="table">
+												<thead class="text-primary">
+													<th width=20px>ID</th>
+													<th class='col-lg-3'>Name</th>
+													<th width=250 align=left>Project name</th>
+													<th class='col-lg-1'>Type</th>
+													<th>Date</th>
+													<th>Total</th>
+													<th>Action</th>
+												</thead>
+												<tbody><?php
+														$ch = curl_init();
+
+														$token = $_SESSION['token'];
+														$url = "$SERVER/reimburse/accepted?token=".$token;
+														curl_setopt($ch, CURLOPT_URL, $url);
+														curl_setopt($ch, CURLOPT_POST, 0);
+														curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+														$server_output = curl_exec ($ch);
+														curl_close ($ch);
+														$resp = json_decode($server_output, true);
+														if($resp!=null){
+															foreach($resp['result'] as $result){
+																echo "<tr><td>#".$result['id']."</td>
+																	<td>".$result['user_data']['nama']."</td>
+																	<td>".$result['nama_proyek']."</td>
+																	<td>".$result['jenis_pengeluaran']."</td>
+																	<td>".date_format(date_create($result['tanggal']), 'jS F\,\ Y')
+																	."</td>
+																	<td>Rp ".number_format($result['jumlah_pengeluaran'], 0, ",", ".")."</td>
+																	<td class='text-center'><button class='btn btn-primary' data-background-color='green'>More info</td>
+																</tr>";
+															}
+														}
+														else{
+															echo "Data not found";
+														}
+													?>
+												</tbody>
+											</table>
+										</div>
+										<div class="tab-pane" id="rejected">
+											<table class="table">
+												<thead class="text-primary">
+													<th width=20px>ID</th>
+													<th class='col-lg-3'>Name</th>
+													<th width=250 align=left>Project name</th>
+													<th class='col-lg-1'>Type</th>
+													<th>Date</th>
+													<th>Total</th>
+													<th>Action</th>
+												</thead>
+												<tbody><?php
+														$ch = curl_init();
+
+														$token = $_SESSION['token'];
+														$url = "$SERVER/reimburse/rejected?token=".$token;
+														curl_setopt($ch, CURLOPT_URL, $url);
+														curl_setopt($ch, CURLOPT_POST, 0);
+														curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+														$server_output = curl_exec ($ch);
+														curl_close ($ch);
+														$resp = json_decode($server_output, true);
+														if($resp!=null){
+															foreach($resp['result'] as $result){
+																echo "<tr><td>#".$result['id']."</td>
+																	<td>".$result['user_data']['nama']."</td>
+																	<td>".$result['nama_proyek']."</td>
+																	<td>".$result['jenis_pengeluaran']."</td>
+																	<td>".date_format(date_create($result['tanggal']), 'jS F\,\ Y')
+																	."</td>
+																	<td>Rp ".number_format($result['jumlah_pengeluaran'], 0, ",", ".")."</td>
+																	<td class='text-center'><button class='btn btn-primary text-center' data-background-color='green'>More info</td>
+																</tr>";
+															}
+														}
+														else{
+															echo "Data not found";
+														}
+													?>
+												</tbody>
+											</table>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 	            </div>
 	        </div>
 
