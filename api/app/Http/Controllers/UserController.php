@@ -243,4 +243,23 @@ class UserController extends Controller
             return response($res);
         }
     }
+    public function delete(Request $request, $id){
+		$user = User::find($id);
+        if($user){
+            if($user->delete($id)){
+                $res['success'] = true;
+                $res['message'] = "Success deleting user with id ".$id;
+
+                return response($res);
+            }else{
+                $res['success'] = false;
+                $res['message'] = "Failed to delete user with id ".$id;
+            }
+        }else{
+            $res['success'] = false;
+            $res['message'] = "User with id ".$id." does not exist.";
+
+            return response($res);
+        }
+	}
 }
