@@ -352,9 +352,9 @@
 					});
 				}
 				else{
-						$('#nama').tooltip('show');
-						$('#username').tooltip('show');
-						$('#email').tooltip('show');
+					$('#nama').tooltip('show');
+					$('#username').tooltip('show');
+					$('#email').tooltip('show');
 				}
 			});
 		});
