@@ -92,8 +92,90 @@ class ReimburseController extends Controller {
 		}
 	}
 
+	public function get_accepted(Request $request){
+		$reimburse = Reimburse::where('status', 1)->get();
+		if($reimburse != null){
+			if($reimburse->count() > 0){
+				$res['success'] = true;
+				$res['result'] = $reimburse;
+				$i=0;
+				foreach($reimburse as $userdata)
+				{
+					$user = User::find($userdata->user()->first()->id);
+					$res['result'][$i]['user_data'] = $user;
+					$i++;
+				}
+
+				return response($res);
+				}else{
+				$res['success'] = false;
+				$res['message'] = "No accepted reimbursements";
+
+				return response($res);
+			}
+		}
+		else{
+			$res['success'] = false;
+			$res['message'] = "No accepted reimbursements";
+
+			return response($res);
+		}
+	}
+
+	public function get_rejected(Request $request){
+		$reimburse = Reimburse::where('status', 2)->get();
+		if($reimburse != null){
+			if($reimburse->count() > 0){
+				$res['success'] = true;
+				$res['result'] = $reimburse;
+				$i=0;
+				foreach($reimburse as $userdata)
+				{
+					$user = User::find($userdata->user()->first()->id);
+					$res['result'][$i]['user_data'] = $user;
+					$i++;
+				}
+
+				return response($res);
+				}else{
+				$res['success'] = false;
+				$res['message'] = "No rejected reimbursements";
+
+				return response($res);
+			}
+		}
+		else{
+			$res['success'] = false;
+			$res['message'] = "No rejected reimbursements";
+
+			return response($res);
+		}
+	}
+
 	public function get_pending(Request $request, $menu){
-		if($menu === 'totalcount'){
+		if($menu == 'all'){
+			$reimburse = Reimburse::where('status', 0)->get();
+			if($reimburse != null){
+				$res['success'] = true;
+				$res['result'] = $reimburse;
+				$i=0;
+				foreach($reimburse as $userdata)
+				{
+					$user = User::find($userdata->user()->first()->id);
+					$res['result'][$i]['user_data'] = $user;
+					$i++;
+				}
+
+				return response($res);
+			}
+			else{
+				$res['success'] = false;
+				$res['message'] = "No pending reimbursements";
+
+				return response($res);
+			}
+		}
+		else if($menu === 'totalcount'){
 			$reimburse = Reimburse::where('status', 0)->count();
 			if($reimburse != null){
 				if($reimburse > 0){						
