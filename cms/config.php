@@ -1,3 +1,3 @@
 <?php
-    $SERVER="http://vixelmedia.com/api/public";
+    $SERVER="localhost:1000";
 ?>
