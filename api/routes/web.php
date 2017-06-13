@@ -20,7 +20,8 @@ $app->post('/register', 'UserController@register');
 $app->get('/user/{id}', ['middleware' => 'auth', 'uses' =>  'UserController@get_user']);
 $app->post('/changepass/{id}', 'UserController@changepass');
 $app->post('/set/{menu}/{id}', 'UserController@set');
-$app->get('/users', 'UserController@index');
+$app->get('/users', ['middleware' => 'auth', 'uses' => 'UserController@index']);
+$app->get('/user/delete/{id}', ['middleware' => 'auth', 'uses' => 'UserController@delete']);
 
 $app->get('/reimburse', 'ReimburseController@index');
 $app->get('/reimburse/get/{id}', 'ReimburseController@get_reimburse');
