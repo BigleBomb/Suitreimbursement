@@ -144,7 +144,7 @@
 	                <div class="column">
 	                    <div class="col-md-12">
 							<div class="col-md-3">
-								<button type='button' class='btn btn-primary' data-toggle="modal" data-target="#createUserModal">Create user
+								<button type='button' class='btn btn-primary createuser' data-toggle="modal">Create user
 							</div>
 	                        <div class="card">
 	                            <div class="card-header" data-background-color="purple">
@@ -152,15 +152,15 @@
 									<p class="category">List of existing user</p>
 	                            </div>
 	                            <div class="card-content table-responsive">
-	                                <table class="table">
-	                                    <thead class="text-primary">
+	                                <table id='maintable' class="table">
+	                                    <thead id='tablehead'class="text-primary">
 											<th width=20px>UID</th>
 	                                    	<th class='col-lg-4'>Name</th>
 	                                    	<th width=250 align=left>Email</th>
 	                                    	<th>Date registered</th>
 											<th class='text-center'>Action</th>
 	                                    </thead>
-	                                    <tbody>
+	                                    <tbody id='usertable'>
 											<?php
 												$ch = curl_init();
 
@@ -240,24 +240,24 @@
 						</div>	
 					</div>
 						<div class="modal-body">
-						<form class='userreg' method=POST>
+						<form id='userreg' class='userreg' method=POST>
 							<div class="column">
 								<div class="col-md-8">
 									<div class="form-group label-floating">
 										<label class="control-label">Name</label>
-										<input type="text" class="form-control" name="nama" required>
+										<input type="text" id='nama' class="form-control" name="nama" required data-toggle="tooltip" data-placement="right" title="Masukkan nama">
 									</div>
 								</div>
 								<div class="col-md-8">
 									<div class="form-group label-floating">
 										<label class="control-label">Username</label>
-										<input type="text" class="form-control" name="username" required>
+										<input type="text" id='username' class="form-control" name="username" required data-toggle="tooltip" data-placement="right" title="Masukkan username">
 									</div>
 								</div>
 								<div class="col-md-8">
 									<div class="form-group label-floating">
 										<label class="control-label">Email</label>
-										<input type="email" class="form-control" name="email" required>
+										<input type="email" id='email' class="form-control" name="email" required data-toggle="tooltip" data-placement="right" title="Masukkan email">
 									</div>
 								</div>
 								<div class="col-md-8">
@@ -278,6 +278,7 @@
 							<button class="btn btn-success" id='submit'>Create</button>
 							<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 						</div>
+					</form>
 				</div>
 			</div>
 		</div>
@@ -323,27 +324,44 @@
 
 </body>
 <script>
+	function validate(){
+		justValidate = true
+		if(userreg.checkValidity()){
+			submit.click();
+		}else{
+			submit.click();
+		}
+	}
 	$(function() {
-		$("button#submit").click(function(){
-			// if($('form.userreg')[0].checkValidity()) {
-				$.ajax({
-					type: "POST",
-					url: "register_user.php",
-					data: $('form.userreg').serialize(),
-						success: function(msg){
-							$("#alertt").html(msg)
-							$("#createUserModal").modal('hide'); 
-						},	
-						error: function(){
-							alert("failure");
-						}
-				});
-			// }
+		$(".createuser").click(function(){
+			$("#createUserModal").modal('show'); 
+			$("button#submit").click(function(){
+				if($('form.userreg')[0].checkValidity()) {
+					$.ajax({
+						type: "POST",
+						url: "register_user.php",
+						data: $('form.userreg').serialize(),
+							success: function(msg){
+								$.notify(msg);
+								$("#createUserModal").modal('hide');
+								$('#maintable').load(location.href + ' #maintable')
+							},	
+							error: function(){
+								alert('error');
+							}
+					});
+				}
+				else{
+						$('#nama').tooltip('show');
+						$('#username').tooltip('show');
+						$('#email').tooltip('show');
+				}
+			});
 		});
 	});
 	
 	$(function(){
-		$(".delete-user").click(function() {
+		$(document).on('click', ".delete-user", function() {
 			var trId = $(this).closest('tr').prop('id').substr(2,2);
 			$("#deleteUserModal").modal('show');
 			$('.delete-user-body').show().html("Are you sure you want to delete this user?")
@@ -353,8 +371,9 @@
 					url: "delete_user.php",
 					data: 'user_id='+trId,
 					success: function(msg){
-						$('.delete-user-body').show().html(msg);
-						$("#deleteUserModal").modal('hide');
+						$.notify(msg);
+						$("#deleteUserModal").modal('hide'); 
+						$('#maintable').load(location.href + ' #maintable')
 					},	
 					error: function(){
 						alert("failure");
@@ -365,7 +384,7 @@
 	});
 	
 	$(function(){
-		$('.modify-user').click(function() {
+		$(document).on('click', '.modify-user', function() {
 			var trId = $(this).closest('tr').prop('id').substr(2,2);
 			$.ajax({
 					type: "POST",
