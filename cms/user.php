@@ -337,7 +337,6 @@
 								$('#maintable').load(location.href + ' #maintable');
 								$("button#submit").unbind('click');
 								$.notify(msg);
-								return;
 							},	
 							error: function(){
 								alert('error');
@@ -350,7 +349,6 @@
 					$('#email').tooltip('show');
 				}
 			});
-			return;
 		});
 	});
 	
@@ -390,14 +388,12 @@
 						$("#modifyUserModal").modal('show');
 						$('#maintable').load(location.href + ' #maintable')
 						$('.modify-user-body').show().html(msg);
-						return true;
 					},	
 					error: function(){
 						alert("failure");
 					}
 				});
 		});
-		return true;
 	});
 	$(document).ready(function(){
     	$(".modify-user").ajaxSuccess(function() {
