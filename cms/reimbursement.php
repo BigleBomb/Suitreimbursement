@@ -29,50 +29,17 @@
     <!--  CSS for Demo Purpose, don't include it in your project     -->
     <link href="./assets/css/demo.css" rel="stylesheet" />
 
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+	  
 	<link href="./css/modal.css" rel="stylesheet"/>
 
     <!--     Fonts and icons     -->
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300|Material+Icons' rel='stylesheet' type='text/css'>
-	<script>
-		// Get the modal
-		var modal = document.getElementById('myModal');
-
-		// Get the button that opens the modal
-		var btn = document.getElementById("td5");
-
-		// Get the <span> element that closes the modal
-		var span = document.getElementsByClassName("close")[0];
-
-		function myFunction(){
-			document.getElementById('td2').innerHTML = "Test";
-		}
-		// // When the user clicks on the button, open the modal 
-		// btn.onclick = function() {
-		// 	modal.style.display = "block";
-		// }
-
-		// // When the user clicks on <span> (x), close the modal
-		// span.onclick = function() {
-		// 	modal.style.display = "none";
-		// }
-
-		// // When the user clicks anywhere outside of the modal, close it
-		// window.onclick = function(event) {
-		// 	if (event.target == modal) {
-		// 		modal.style.display = "none";
-		// 	}
-		// }
-	</script>
 </head>
 
 <body>
-	<div id="myModal" class="modal">
-		<div class="modal-content">
-			<span class="close">&times;</span>
-			<p>Some text in the Modal..</p>
-		</div>
-	</div>
 	<div class="wrapper">
 
 	    <div class="sidebar" data-color="purple" data-image="./assets/img/sidebar-1.jpg">
@@ -114,34 +81,10 @@
 	                        <p>Menu tambahan</p>
 	                    </a>
 	                </li>
-	                <!--<li>
-	                    <a href="icons.html">
-	                        <i class="material-icons">bubble_chart</i>
-	                        <p>Icons</p>
-	                    </a>
-	                </li>
-	                <li>
-	                    <a href="maps.html">
-	                        <i class="material-icons">location_on</i>
-	                        <p>Maps</p>
-	                    </a>
-	                </li>
-	                <li>
-	                    <a href="notifications.html">
-	                        <i class="material-icons text-gray">notifications</i>
-	                        <p>Notifications</p>
-	                    </a>
-	                </li>-->
-					<!--<li class="active-pro">
-	                    <a href="upgrade.html">
-	                        <i class="material-icons">unarchive</i>
-	                        <p>Upgrade to PRO</p>
-	                    </a>
-	                </li>-->
 	            </ul>
 	    	</div>
 	    </div>
-
+		
 	    <div class="main-panel">
 			<nav class="navbar navbar-transparent navbar-absolute">
 				<div class="container-fluid">
@@ -201,8 +144,11 @@
 	            <div class="container-fluid">
 					<div class="row">
 						<div class=" col-md-12">
+							<div class="col-md-3">
+								<button type='button' class='btn btn-warning createuser' data-toggle="modal">Add new
+							</div>
 							<div class="card card-nav-tabs">
-								<div class="card-header" data-background-color="orange">
+								<div id='cardheader' class="card-header" data-background-color="orange">
 									<div class="nav-tabs-navigation">
 										<div class="nav-tabs-wrapper">
 											<span class="nav-tabs-title">Reimbursements:</span>
@@ -232,10 +178,10 @@
 
 								<div class="card-content">
 									<div class="tab-content">
-										<div class="tab-pane active" id="pending">
+										<div class="tab-pane fade in active" id="pending">
 											<table class="table">
 												<thead class="text-primary">
-													<th width=20px>ID</th>
+													<th width=20px>RID</th>
 													<th class='col-lg-3'>Name</th>
 													<th width=250 align=left>Project name</th>
 													<th class='col-lg-1'>Type</th>
@@ -257,14 +203,16 @@
 														$resp = json_decode($server_output, true);
 														if($resp!=null){
 															foreach($resp['result'] as $result){
-																echo "<tr><td>#".$result['id']."</td>
+																echo "<tr><tr id='tr".$result['id']."'>
+																	<td>#".$result['id']."</td>
 																	<td>".$result['user_data']['nama']."</td>
 																	<td>".$result['nama_proyek']."</td>
 																	<td>".$result['jenis_pengeluaran']."</td>
 																	<td>".date_format(date_create($result['tanggal']), 'jS F\,\ Y')
 																	."</td>
 																	<td>Rp ".number_format($result['jumlah_pengeluaran'], 0, ",", ".")."</td>
-																	<td class='text-center'><button class='btn btn-primary text-center' data-background-color='green'>More info</td>
+																	<td class='text-center'>
+																	<button type='button' class='btn btn-primary more-info' data-toggle='modal' data-background-color='green'>More info</td>
 																</tr>";
 															}
 														}
@@ -275,10 +223,10 @@
 												</tbody>
 											</table>
 										</div>
-										<div class="tab-pane" id="accepted">
+										<div class="tab-pane fade" id="accepted">
 											<table class="table">
 												<thead class="text-primary">
-													<th width=20px>ID</th>
+													<th width=20px>RID</th>
 													<th class='col-lg-3'>Name</th>
 													<th width=250 align=left>Project name</th>
 													<th class='col-lg-1'>Type</th>
@@ -299,14 +247,16 @@
 														$resp = json_decode($server_output, true);
 														if($resp!=null){
 															foreach($resp['result'] as $result){
-																echo "<tr><td>#".$result['id']."</td>
+																echo "<tr><tr id='tr".$result['id']."'>
+																	<td>#".$result['id']."</td>
 																	<td>".$result['user_data']['nama']."</td>
 																	<td>".$result['nama_proyek']."</td>
 																	<td>".$result['jenis_pengeluaran']."</td>
 																	<td>".date_format(date_create($result['tanggal']), 'jS F\,\ Y')
 																	."</td>
 																	<td>Rp ".number_format($result['jumlah_pengeluaran'], 0, ",", ".")."</td>
-																	<td class='text-center'><button class='btn btn-primary' data-background-color='green'>More info</td>
+																	<td class='text-center'>
+																	<button type='button' class='btn btn-primary more-info' data-toggle='modal' data-background-color='green'>More info</td>
 																</tr>";
 															}
 														}
@@ -317,10 +267,10 @@
 												</tbody>
 											</table>
 										</div>
-										<div class="tab-pane" id="rejected">
+										<div class="tab-pane fade" id="rejected">
 											<table class="table">
 												<thead class="text-primary">
-													<th width=20px>ID</th>
+													<th width=20px>RID</th>
 													<th class='col-lg-3'>Name</th>
 													<th width=250 align=left>Project name</th>
 													<th class='col-lg-1'>Type</th>
@@ -341,14 +291,16 @@
 														$resp = json_decode($server_output, true);
 														if($resp!=null){
 															foreach($resp['result'] as $result){
-																echo "<tr><td>#".$result['id']."</td>
+																echo "<tr id='tr".$result['id']."'>
+																	<td>#".$result['id']."</td>
 																	<td>".$result['user_data']['nama']."</td>
 																	<td>".$result['nama_proyek']."</td>
 																	<td>".$result['jenis_pengeluaran']."</td>
 																	<td>".date_format(date_create($result['tanggal']), 'jS F\,\ Y')
 																	."</td>
 																	<td>Rp ".number_format($result['jumlah_pengeluaran'], 0, ",", ".")."</td>
-																	<td class='text-center'><button class='btn btn-primary text-center' data-background-color='green'>More info</td>
+																	<td class='text-center'>
+																	<button type='button' class='btn btn-primary more-info' data-toggle='modal' data-background-color='green'>More info</td>
 																</tr>";
 															}
 														}
@@ -400,9 +352,53 @@
 	        </footer>
 	    </div>
 	</div>
-
+	<div id="moreInfoModal" class="modal fade" role="dialog">
+		<div class="modal-dialog" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title text-primary" background="green">Reimburse info</h4><br>
+				</div>
+				<form class='modifyuser' method=POST>
+				<div class="modal-body modify-user-body">
+					<div class="clearfix"></div>
+				</div>
+				<div class="modal-footer">
+					<button class="btn btn-success" id='accept'>Accept</button>
+					<button class="btn btn-danger" id='reject'>Reject</button>
+					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+				</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	
 </body>
+	<script>
+	$(function(){
+		$('.more-info').click( function() {
+			var trId = $(this).closest('tr').prop('id').substr(2,2);
+			$("#moreInfoModal").modal('show');
+			//$('.delete-user-body').show().html("Are you sure you want to delete this user?")
+			//$("button#accept").click(function(){
+				// $.ajax({
+				// 	type: "POST",
+				// 	url: "delete_user.php",
+				// 	data: 'user_id='+trId,
+				// 	success: function(msg){
+				// 		$.notify(msg);
+				// 		$("#deleteUserModal").modal('hide'); 
+				// 		$('#maintable').load(location.href + ' #maintable')
+				// 	},	
+				// 	error: function(){
+				// 		alert("failure");
+				// 	}
+				// });
+			// });
+		});
+	});
 
+	</script>
 	<!--   Core JS Files   -->
 	<script src="./assets/js/jquery-3.1.0.min.js" type="text/javascript"></script>
 	<script src="./assets/js/bootstrap.min.js" type="text/javascript"></script>
