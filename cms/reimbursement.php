@@ -145,28 +145,28 @@
 					<div class="row">
 						<div class=" col-md-12">
 							<div class="col-md-3">
-								<button type='button' class='btn btn-warning createuser' data-toggle="modal">Add new
+								<button type='button' id='addnew' class='btn btn-warning createuser' data-toggle="modal">Add new
 							</div>
 							<div class="card card-nav-tabs">
-								<div id='cardheader' class="card-header" data-background-color="orange">
+								<div id='cardheader' class="card-header fade in" data-background-color="orange">
 									<div class="nav-tabs-navigation">
 										<div class="nav-tabs-wrapper">
 											<span class="nav-tabs-title">Reimbursements:</span>
 											<ul class="nav nav-tabs" data-tabs="tabs">
 												<li class="active">
-													<a href="#pending" data-toggle="tab">
-														<i class="material-icons">info</i>
+													<a href="#pending" id='pendingtab' data-toggle="tab">
+														<i class="material-icons">info_outline</i>
 														Pending
 													<div class="ripple-container"></div></a>
 												</li>
 												<li class="">
-													<a href="#accepted" data-toggle="tab">
+													<a href="#accepted" id='acceptedtab' data-toggle="tab">
 														<i class="material-icons">done</i>
 														Accepted
 													<div class="ripple-container"></div></a>
 												</li>
 												<li class="">
-													<a href="#rejected" data-toggle="tab">
+													<a href="#rejected" id='rejectedtab' data-toggle="tab">
 														<i class="material-icons">close</i>
 														Rejected
 													<div class="ripple-container"></div></a>
@@ -212,7 +212,7 @@
 																	."</td>
 																	<td>Rp ".number_format($result['jumlah_pengeluaran'], 0, ",", ".")."</td>
 																	<td class='text-center'>
-																	<button type='button' class='btn btn-primary more-info' data-toggle='modal' data-background-color='green'>More info</td>
+																	<button type='button' class='btn btn-primary more-info' data-toggle='modal' data-background-color='orange'>More info</td>
 																</tr>";
 															}
 														}
@@ -300,7 +300,7 @@
 																	."</td>
 																	<td>Rp ".number_format($result['jumlah_pengeluaran'], 0, ",", ".")."</td>
 																	<td class='text-center'>
-																	<button type='button' class='btn btn-primary more-info' data-toggle='modal' data-background-color='green'>More info</td>
+																	<button type='button' class='btn btn-primary more-info' data-toggle='modal' data-background-color='red'>More info</td>
 																</tr>";
 															}
 														}
@@ -352,21 +352,21 @@
 	        </footer>
 	    </div>
 	</div>
-	<div id="moreInfoModal" class="modal fade" role="dialog">
-		<div class="modal-dialog" role="document">
+
+	<div id="moreInfoModal" class="modal fade" role="dialog" style='z-index:100000'>
+		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
 					<h4 class="modal-title text-primary" background="green">Reimburse info</h4><br>
 				</div>
 				<form class='modifyuser' method=POST>
-				<div class="modal-body modify-user-body">
+				<div class="modal-body">
 					<div class="clearfix"></div>
 				</div>
 				<div class="modal-footer">
 					<button class="btn btn-success" id='accept'>Accept</button>
 					<button class="btn btn-danger" id='reject'>Reject</button>
-					<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 				</div>
 				</form>
 			</div>
@@ -375,8 +375,18 @@
 	
 </body>
 	<script>
+	$('#pendingtab').click(function(){
+		$('#cardheader').attr('data-background-color', 'orange');
+	});
+	$('#acceptedtab').click(function(){
+		$('#cardheader').attr('data-background-color', 'green');
+	});
+	$('#rejectedtab').click(function(){
+		$('#cardheader').attr('data-background-color', 'red');
+	});
+
 	$(function(){
-		$('.more-info').click( function() {
+		$('.more-info').click(function() {
 			var trId = $(this).closest('tr').prop('id').substr(2,2);
 			$("#moreInfoModal").modal('show');
 			//$('.delete-user-body').show().html("Are you sure you want to delete this user?")

@@ -20,20 +20,14 @@ session_start();
                 $username = $resp->result->username;
                 $email = $resp->result->email;
 
-                echo "<div class='alert alert-success alert-dismissable'>
-                        <strong>$nama</strong>
-                    </div>";
+                echo $nama;
             }
             else {
-                echo "<div class='alert alert-danger alert-dismissable'>=
-                        <strong>Failed to get user id</strong>
-                    </div>";
+                echo "Failed to get user id";
             }
         }
         else{
-                echo "<div class='alert alert-danger alert-dismissable'>
-                        <strong>Could not connect to the server</strong>
-                    </div>";
+                echo "Could not connect to server";
         }
     }
 ?>

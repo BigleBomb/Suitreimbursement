@@ -29,8 +29,6 @@
     <link href="./assets/css/demo.css" rel="stylesheet" />
   	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.0/jquery.validate.min.js"></script>
-	<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.0/additional-methods.js"></script>
 
     <!--     Fonts and icons     -->
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
@@ -276,7 +274,7 @@
 						</form>
 						<div class="modal-footer">
 							<button class="btn btn-success" id='submit'>Create</button>
-							<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+							<button type="button" class="btn btn-secondary" data-dismiss="modal" id='cancelcreate'>Cancel</button>
 						</div>
 					</form>
 				</div>
@@ -315,7 +313,7 @@
 					</div>
 					<div class="modal-footer">
 						<button class="btn btn-danger" id='delete'>Delete</button>
-						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+						<button type="button" class="btn btn-secondary" data-dismiss="modal" id='canceldel'>Cancel</button>
 					</div>
 				</div>
 			</div>
@@ -324,17 +322,10 @@
 
 </body>
 <script>
-	function validate(){
-		justValidate = true
-		if(userreg.checkValidity()){
-			submit.click();
-		}else{
-			submit.click();
-		}
-	}
-	$(function() {
+
+	$(document).ready(function() {
 		$(".createuser").click(function(){
-			$("#createUserModal").modal('show'); 
+			$("#createUserModal").modal('show');
 			$("button#submit").click(function(){
 				if($('form.userreg')[0].checkValidity()) {
 					$.ajax({
@@ -342,9 +333,11 @@
 						url: "register_user.php",
 						data: $('form.userreg').serialize(),
 							success: function(msg){
-								$.notify(msg);
 								$("#createUserModal").modal('hide');
-								$('#maintable').load(location.href + ' #maintable')
+								$('#maintable').load(location.href + ' #maintable');
+								$("button#submit").unbind('click');
+								$.notify(msg);
+								return;
 							},	
 							error: function(){
 								alert('error');
@@ -357,23 +350,26 @@
 					$('#email').tooltip('show');
 				}
 			});
+			return;
 		});
 	});
 	
-	$(function(){
+	$(document).ready(function(){
 		$(document).on('click', ".delete-user", function() {
 			var trId = $(this).closest('tr').prop('id').substr(2,2);
+			var t = "";
 			$("#deleteUserModal").modal('show');
-			$('.delete-user-body').show().html("Are you sure you want to delete this user?")
+			$('.delete-user-body').show().html("Are you sure you want to delete this user?");
 			$("button#delete").click(function(){
 				$.ajax({
 					type: "POST",
 					url: "delete_user.php",
 					data: 'user_id='+trId,
 					success: function(msg){
-						$.notify(msg);
 						$("#deleteUserModal").modal('hide'); 
-						$('#maintable').load(location.href + ' #maintable')
+						$('#maintable').load(location.href + ' #maintable');
+						$.notify(msg);
+						$("button#delete").unbind('click');
 					},	
 					error: function(){
 						alert("failure");
@@ -382,8 +378,8 @@
 			});
 		});
 	});
-	
-	$(function(){
+
+	$(document).ready(function(){
 		$(document).on('click', '.modify-user', function() {
 			var trId = $(this).closest('tr').prop('id').substr(2,2);
 			$.ajax({
@@ -391,15 +387,23 @@
 					url: "get_user_info.php",
 					data: 'user_id='+trId,
 					success: function(msg){
-						$("#modifyUserModal").modal('show'); 
+						$("#modifyUserModal").modal('show');
+						$('#maintable').load(location.href + ' #maintable')
 						$('.modify-user-body').show().html(msg);
+						return true;
 					},	
 					error: function(){
 						alert("failure");
 					}
 				});
 		});
+		return true;
 	});
+	$(document).ready(function(){
+    	$(".modify-user").ajaxSuccess(function() {
+        console.log("Hey.")
+    });
+});
 </script>
 
 	<!--   Core JS Files   -->
