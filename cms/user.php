@@ -170,7 +170,7 @@
 												$server_output = curl_exec ($ch);
 												curl_close ($ch);
 												$resp = json_decode($server_output, true);
-												if($resp!=null){
+												if($resp['success'] != false){
 													foreach($resp['result'] as $result){
 														echo "<tr id='tr".$result['id']."'>
 															<td>#".$result['id']."</td>
@@ -182,7 +182,7 @@
 													}
 												}
 												else{
-													echo "Data not found";
+													echo "<tr><h4>".$resp['message']."</h4></tr>";
 												}
 											?>
 	                                    </tbody>
@@ -322,6 +322,17 @@
 
 </body>
 <script>
+	$(document).ready(function(){
+		$('#createUserModal').on('hidden.bs.modal', function () {
+			$('button#submit').unbind('click');
+		})
+	});
+
+	$(document).ready(function(){
+		$('#deleteUserModal').on('hidden.bs.modal', function () {
+			$('button#delete').unbind('click');
+		})
+	});
 
 	$(document).ready(function() {
 		$(".createuser").click(function(){
@@ -355,7 +366,6 @@
 	$(document).ready(function(){
 		$(document).on('click', ".delete-user", function() {
 			var trId = $(this).closest('tr').prop('id').substr(2,2);
-			var t = "";
 			$("#deleteUserModal").modal('show');
 			$('.delete-user-body').show().html("Are you sure you want to delete this user?");
 			$("button#delete").click(function(){
