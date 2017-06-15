@@ -176,8 +176,8 @@
 									</div>
 								</div>
 
-								<div class="card-content">
-									<div class="tab-content">
+								<div  class="card-content">
+									<div id='relist' class="tab-content">
 										<div class="tab-pane fade in active" id="pending">
 											<table class="table">
 												<thead class="text-primary">
@@ -201,7 +201,7 @@
 														$server_output = curl_exec ($ch);
 														curl_close ($ch);
 														$resp = json_decode($server_output, true);
-														if($resp!=null){
+														if($resp['success'] != false){
 															foreach($resp['result'] as $result){
 																echo "<tr><tr id='tr".$result['id']."'>
 																	<td>#".$result['id']."</td>
@@ -217,7 +217,7 @@
 															}
 														}
 														else{
-															echo "Data not found";
+															echo "<tr><h4>".$resp['message']."</h4></tr>";
 														}
 													?>
 												</tbody>
@@ -245,7 +245,7 @@
 														$server_output = curl_exec ($ch);
 														curl_close ($ch);
 														$resp = json_decode($server_output, true);
-														if($resp!=null){
+														if($resp['success']!=false){
 															foreach($resp['result'] as $result){
 																echo "<tr><tr id='tr".$result['id']."'>
 																	<td>#".$result['id']."</td>
@@ -261,7 +261,7 @@
 															}
 														}
 														else{
-															echo "Data not found";
+															echo "<tr><h4>".$resp['message']."</h4></tr>";
 														}
 													?>
 												</tbody>
@@ -289,7 +289,7 @@
 														$server_output = curl_exec ($ch);
 														curl_close ($ch);
 														$resp = json_decode($server_output, true);
-														if($resp!=null){
+														if($resp['success'] != false){
 															foreach($resp['result'] as $result){
 																echo "<tr id='tr".$result['id']."'>
 																	<td>#".$result['id']."</td>
@@ -305,7 +305,7 @@
 															}
 														}
 														else{
-															echo "Data not found";
+															echo "<tr><h4>".$resp['message']."</h4></tr>";
 														}
 													?>
 												</tbody>
@@ -365,8 +365,8 @@
 					<div class="clearfix"></div>
 				</div>
 				<div class="modal-footer">
-					<button class="btn btn-success" id='accept'>Accept</button>
-					<button class="btn btn-danger" id='reject'>Reject</button>
+					<button type='button' class="btn btn-success" id='accept'>Accept</button>
+					<button type='button' class="btn btn-danger" id='reject'>Reject</button>
 				</div>
 				</form>
 			</div>
@@ -386,25 +386,46 @@
 	});
 
 	$(function(){
-		$('.more-info').click(function() {
+		$(document).on('click', '.more-info', function() {
 			var trId = $(this).closest('tr').prop('id').substr(2,2);
 			$("#moreInfoModal").modal('show');
-			//$('.delete-user-body').show().html("Are you sure you want to delete this user?")
-			//$("button#accept").click(function(){
-				// $.ajax({
-				// 	type: "POST",
-				// 	url: "delete_user.php",
-				// 	data: 'user_id='+trId,
-				// 	success: function(msg){
-				// 		$.notify(msg);
-				// 		$("#deleteUserModal").modal('hide'); 
-				// 		$('#maintable').load(location.href + ' #maintable')
-				// 	},	
-				// 	error: function(){
-				// 		alert("failure");
-				// 	}
-				// });
-			// });
+			$.notify('opened');
+			$("button#accept").click(function(){
+				$.ajax({
+					type: "POST",
+					url: "accept_reimburse.php",
+					data: 'reimburse_id='+trId,
+					success: function(msg){
+						$("#moreInfoModal").modal('hide'); 
+						$("#relist").load(location.href + " #relist");
+						$("button#accept").unbind('click');
+						$("button#reject").unbind('click');
+						$.notify(msg);
+					},	
+					error: function(){
+						alert("failure");
+					}
+				});
+				return;
+			});
+			$("button#reject").click(function(){
+				$.ajax({
+					type: "POST",
+					url: "reject_reimburse.php",
+					data: 'reimburse_id='+trId,
+					success: function(msg){
+						$("#moreInfoModal").modal('hide'); 
+						$("#relist").load(location.href + " #relist");
+						$("button#accept").unbind('click');
+						$("button#reject").unbind('click');
+						$.notify(msg);
+					},	
+					error: function(){
+						alert("failure");
+					}
+				});
+				return;
+			});
 		});
 	});
 
