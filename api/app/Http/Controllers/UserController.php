@@ -78,6 +78,14 @@ class UserController extends Controller
         }
     }
 
+    public function get_user_count(Request $request){
+        $user = User::all()->count();
+        $res['success'] = true;
+        $res['result']['count'] = $user;
+
+        return response($res);
+    }
+
     public function get_user(Request $request, $id)
     {
         $user = User::where('id', $id)->get();
