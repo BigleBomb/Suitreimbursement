@@ -437,5 +437,6 @@
 <?php
 	}else{
 		echo "Invalid session";
+		header("Location:login.php");
 	}
 ?>

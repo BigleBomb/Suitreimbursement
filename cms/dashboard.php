@@ -381,6 +381,7 @@
 	<?php } 
 	else{
 		echo "Invalid session. Please login";
+		header("Location: login.php");
 	}
 ?>
 
