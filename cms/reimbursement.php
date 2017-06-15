@@ -374,7 +374,13 @@
 	</div>
 	
 </body>
-	<script>
+	<script>$(document).ready(function(){
+		$('#moreInfoModal').on('hidden.bs.modal', function () {
+			$('button#accept').unbind('click');
+			$('button#reject').unbind('click');
+		})
+	});
+
 	$('#pendingtab').click(function(){
 		$('#cardheader').attr('data-background-color', 'orange');
 	});
