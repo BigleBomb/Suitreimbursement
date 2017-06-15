@@ -251,8 +251,74 @@ class ReimburseController extends Controller {
 			return response($res);
 		}
 	}
+
+	public function accept(Request $request, $id)
+	{
+		$reimburse = Reimburse::find($id);
+		if($reimburse){
+			if($reimburse->status != 1){
+				$reimburse->status = 1;
+				if($reimburse->save()){
+					$res['success'] = true;
+					$res['message'] = "Reimburse ID ".$id." has been accepted.";
+
+					return response($res);
+				}else{
+					$res['succes'] = false;
+					$res['message'] = "Error in saving the query";
+
+					return response($res);
+				}
+			}
+			else{
+				$res['success'] = false;
+				$res['message'] = "Reimburse ID ".$id." is already accepted.";
+
+				return response($res);
+			}
+		}
+		else{
+			$res['success'] = false;
+			$res['message'] = "Could not find reimburse data with id ".$id;
+
+			return response($res);
+		}
+	}
+
+	public function reject(Request $request, $id)
+	{
+		$reimburse = Reimburse::find($id);
+		if($reimburse){
+			if($reimburse->status != 2){
+				$reimburse->status = 2;
+				if($reimburse->save()){
+					$res['success'] = true;
+					$res['message'] = "Reimburse ID ".$id." has been rejected.";
+
+					return response($res);
+				}else{
+					$res['succes'] = false;
+					$res['message'] = "Error in saving the query";
+
+					return response($res);
+				}
+			}
+			else{
+				$res['success'] = false;
+				$res['message'] = "Reimburse ID ".$id." is already rejected.";
+
+				return response($res);
+			}
+		}
+		else{
+			$res['success'] = false;
+			$res['message'] = "Could not find reimburse data with id ".$id;
+
+			return response($res);
+		}
+	}
 	
-	public function update(Request $request, $id)
+	public function update(Request $request, $menu, $id)
 	{
 		if($request->has(''))
 		if($request->has('name')){
