@@ -17,11 +17,12 @@ $app->get('/', function () use ($app) {
 
 $app->post('/login', 'LoginController@index');
 $app->post('/register', 'UserController@register');
-$app->get('/user/{id}', ['middleware' => 'auth', 'uses' =>  'UserController@get_user']);
+$app->get('/user/get/{id}', ['middleware' => 'auth', 'uses' =>  'UserController@get_user']);
 $app->post('/changepass/{id}', 'UserController@changepass');
 $app->post('/set/{menu}/{id}', 'UserController@set');
 $app->get('/users', ['middleware' => 'auth', 'uses' => 'UserController@index']);
 $app->get('/user/delete/{id}', ['middleware' => 'auth', 'uses' => 'UserController@delete']);
+$app->get('/user/count', ['middleware' => 'auth', 'uses' => 'UserController@get_user_count']);
 
 $app->get('/reimburse', 'ReimburseController@index');
 $app->get('/reimburse/get/{id}', 'ReimburseController@get_reimburse');
@@ -32,3 +33,5 @@ $app->get('/reimburse/pending/{menu}','ReimburseController@get_pending');
 $app->get('/reimburse/latest', 'ReimburseController@get_latest');
 $app->get('/reimburse/accepted', 'ReimburseController@get_accepted');
 $app->get('/reimburse/rejected', 'ReimburseController@get_rejected');
+$app->get('/reimburse/accept/{id}', 'ReimburseController@accept');
+$app->get('/reimburse/reject/{id}', 'ReimburseController@reject');
