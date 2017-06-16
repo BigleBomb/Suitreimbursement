@@ -176,8 +176,8 @@
 									</div>
 								</div>
 
-								<div  class="card-content">
-									<div id='relist' class="tab-content">
+								<div id='relist' class="card-content">
+									<div class="tab-content">
 										<div class="tab-pane fade in active" id="pending">
 											<table class="table">
 												<thead class="text-primary">
@@ -374,7 +374,8 @@
 	</div>
 	
 </body>
-	<script>$(document).ready(function(){
+<script>	
+	$(document).ready(function(){
 		$('#moreInfoModal').on('hidden.bs.modal', function () {
 			$('button#accept').unbind('click');
 			$('button#reject').unbind('click');
@@ -395,7 +396,6 @@
 		$(document).on('click', '.more-info', function() {
 			var trId = $(this).closest('tr').prop('id').substr(2,2);
 			$("#moreInfoModal").modal('show');
-			$.notify('opened');
 			$("button#accept").click(function(){
 				$.ajax({
 					type: "POST",

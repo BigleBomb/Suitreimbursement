@@ -173,25 +173,25 @@
 								<div class="card-content">
 									<p class="category">Pending amount</p>
 
-									<h4 class="title"> Rp <?php
-											$ch = curl_init();
-
-												$token = $_SESSION['token'];
-												$url = "$SERVER/reimburse/pending/totalamount?token=".$token;
-												curl_setopt($ch, CURLOPT_URL, $url);
-												curl_setopt($ch, CURLOPT_POST, 0);
-												curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-												$server_output = curl_exec ($ch);
-												curl_close ($ch);
-												$resp = json_decode($server_output, true);
-												
-												if($resp['success']!=false){
-													echo number_format($resp['result']['amount'], 0, ",", ".");
-												}
-												else{
-													echo "<tr><h4>".$resp['message']."</h4></tr>";
-												}
-										?>
+									<h4 class="title"> Rp 
+									<?php
+										$ch = curl_init();
+										$token = $_SESSION['token'];
+										$url = "$SERVER/reimburse/pending/totalamount?token=".$token;
+										curl_setopt($ch, CURLOPT_URL, $url);
+										curl_setopt($ch, CURLOPT_POST, 0);
+										curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+										$server_output = curl_exec ($ch);
+										curl_close ($ch);
+										$resp = json_decode($server_output, true);
+										
+										if($resp['success']!=false){
+											echo number_format($resp['result']['amount'], 0, ",", ".");
+										}
+										else{
+											echo "<tr><h4>".$resp['message']."</h4></tr>";
+										}
+									?>
 									</h4>
 								</div>
 								<div class="card-footer">
@@ -208,19 +208,38 @@
 								</div>
 								<div class="card-content">
 									<p class="category">Registered user</p>
-									<h3 class="title">75</h3>
+									<h3 class="title">
+										<?php
+										$ch = curl_init();
+										$token = $_SESSION['token'];
+										$url = "$SERVER/user/count?token=".$token;
+										curl_setopt($ch, CURLOPT_URL, $url);
+										curl_setopt($ch, CURLOPT_POST, 0);
+										curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+										$server_output = curl_exec ($ch);
+										curl_close ($ch);
+										$resp = json_decode($server_output, true);
+										
+										if($resp['success']!=false){
+											echo $resp['result']['count'];
+										}
+										else{
+											echo $resp['message'];
+										}
+										?>
+									</h3>
 								</div>
-								<div class="card-footer">
+								<!--<div class="card-footer">
 									<div class="stats">
 										<i class="material-icons">local_offer</i> Tracked from Github
 									</div>
-								</div>
+								</div>-->
 							</div>
 						</div>
 						<div class="col-md-12">
 							<div class="card">
 	                            <div class="card-header" data-background-color="orange">
-	                                <h4 class="title">Reimbursement History</h4>
+	                                <h4 class="title">Last 10 Reimbursement History</h4>
 	                                <p class="category">New reimburse on 
 										<?php
 											$ch = curl_init();
@@ -258,7 +277,7 @@
 												$ch = curl_init();
 
 												$token = $_SESSION['token'];
-												$url = "$SERVER/reimburse?token=".$token;
+												$url = "$SERVER/reimburse/last10?token=".$token;
 												curl_setopt($ch, CURLOPT_URL, $url);
 												curl_setopt($ch, CURLOPT_POST, 0);
 												curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
