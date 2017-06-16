@@ -176,7 +176,7 @@
 									</div>
 								</div>
 
-								<div id='relist' class="card-content">
+								<div id ='relist' class="card-content">
 									<div class="tab-content">
 										<div class="tab-pane fade in active" id="pending">
 											<table class="table">
@@ -382,15 +382,17 @@
 		})
 	});
 
-	$('#pendingtab').click(function(){
-		$('#cardheader').attr('data-background-color', 'orange');
-	});
-	$('#acceptedtab').click(function(){
-		$('#cardheader').attr('data-background-color', 'green');
-	});
-	$('#rejectedtab').click(function(){
-		$('#cardheader').attr('data-background-color', 'red');
-	});
+	$(document).ready(function(){
+		$('#pendingtab').click(function(){
+			$('#cardheader').attr('data-background-color', 'orange');
+		});
+		$('#acceptedtab').click(function(){
+			$('#cardheader').attr('data-background-color', 'green');
+		});
+		$('#rejectedtab').click(function(){
+			$('#cardheader').attr('data-background-color', 'red');
+		});
+	})
 
 	$(function(){
 		$(document).on('click', '.more-info', function() {
