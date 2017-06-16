@@ -24,7 +24,7 @@ $app->get('/users', ['middleware' => 'auth', 'uses' => 'UserController@index']);
 $app->get('/user/delete/{id}', ['middleware' => 'auth', 'uses' => 'UserController@delete']);
 $app->get('/user/count', ['middleware' => 'auth', 'uses' => 'UserController@get_user_count']);
 
-$app->get('/reimburse', 'ReimburseController@index');
+$app->get('/reimburse/all', 'ReimburseController@index');
 $app->get('/reimburse/get/{id}', 'ReimburseController@get_reimburse');
 $app->get('/reimburse/delete/{id}', 'ReimburseController@delete');
 $app->post('/reimburse/new', 'ReimburseController@create');
@@ -35,3 +35,8 @@ $app->get('/reimburse/accepted', 'ReimburseController@get_accepted');
 $app->get('/reimburse/rejected', 'ReimburseController@get_rejected');
 $app->get('/reimburse/accept/{id}', 'ReimburseController@accept');
 $app->get('/reimburse/reject/{id}', 'ReimburseController@reject');
+$app->get('/reimburse/last10', 'ReimburseController@get_last10');
+
+$app->get('sendbasicemail','MailController@basic_email');
+$app->get('sendhtmlemail','MailController@html_email');
+$app->get('sendattachmentemail','MailController@attachment_email');
