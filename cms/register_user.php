@@ -24,7 +24,7 @@ include('config.php');
                 break;
         }
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL,"$SERVER/register");
+        curl_setopt($ch, CURLOPT_URL,"$SERVER/user/register");
         curl_setopt($ch, CURLOPT_POST, 1);
         curl_setopt($ch, CURLOPT_POSTFIELDS,
                 "nama=$nama&username=$username&email=$email&privilege=$priv");

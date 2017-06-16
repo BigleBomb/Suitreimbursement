@@ -194,7 +194,7 @@
 														$ch = curl_init();
 
 														$token = $_SESSION['token'];
-														$url = "$SERVER/reimburse/pending/all?token=".$token;
+														$url = "$SERVER/reimburse/list/pending?token=".$token;
 														curl_setopt($ch, CURLOPT_URL, $url);
 														curl_setopt($ch, CURLOPT_POST, 0);
 														curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -238,7 +238,7 @@
 														$ch = curl_init();
 
 														$token = $_SESSION['token'];
-														$url = "$SERVER/reimburse/accepted?token=".$token;
+														$url = "$SERVER/reimburse/list/accepted?token=".$token;
 														curl_setopt($ch, CURLOPT_URL, $url);
 														curl_setopt($ch, CURLOPT_POST, 0);
 														curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -282,7 +282,7 @@
 														$ch = curl_init();
 
 														$token = $_SESSION['token'];
-														$url = "$SERVER/reimburse/rejected?token=".$token;
+														$url = "$SERVER/reimburse/list/rejected?token=".$token;
 														curl_setopt($ch, CURLOPT_URL, $url);
 														curl_setopt($ch, CURLOPT_POST, 0);
 														curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

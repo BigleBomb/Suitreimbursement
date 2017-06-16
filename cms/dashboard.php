@@ -244,7 +244,7 @@
 										<?php
 											$ch = curl_init();
 											$token = $_SESSION['token'];
-											$url = "$SERVER/reimburse/latest?token=".$token;
+											$url = "$SERVER/reimburse/last/1?token=".$token;
 											curl_setopt($ch, CURLOPT_URL, $url);
 											curl_setopt($ch, CURLOPT_POST, 0);
 											curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -252,8 +252,10 @@
 											curl_close ($ch);
 											$resp = json_decode($server_output, true);
 											
-											if($resp!=null){
-												echo date_format(date_create($resp['result']['tanggal']), 'jS F Y');		
+											if($resp['success'] == false){
+												foreach($resp['result'] as $result){
+													echo date_format(date_create($result['tanggal']), 'jS F Y');
+												}		
 											}
 											else{
 												echo "Data not found";
@@ -277,7 +279,7 @@
 												$ch = curl_init();
 
 												$token = $_SESSION['token'];
-												$url = "$SERVER/reimburse/last10?token=".$token;
+												$url = "$SERVER/reimburse/last/10?token=".$token;
 												curl_setopt($ch, CURLOPT_URL, $url);
 												curl_setopt($ch, CURLOPT_POST, 0);
 												curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

@@ -163,7 +163,7 @@
 												$ch = curl_init();
 
 												$token = $_SESSION['token'];
-												$url = "$SERVER/users?token=".$token;
+												$url = "$SERVER/user/all?token=".$token;
 												curl_setopt($ch, CURLOPT_URL, $url);
 												curl_setopt($ch, CURLOPT_POST, 0);
 												curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);

@@ -3,20 +3,17 @@
     session_start();
     $ch = curl_init();
     $type = $_POST['type'];
-    $url;
+    $url = "$SERVER/reimburse/list/$type?token=".$token;
     $color;
     $token = $_SESSION['token'];
     switch($type){
         case 'pending':
-            $url = "$SERVER/reimburse/pending/all?token=".$token;
             $color = 'orange';
             break;
         case 'accepted':
-            $url = "$SERVER/reimburse/accepted?token=".$token;
             $color = 'green';
             break;
         case 'rejected':
-            $url = "$SERVER/reimburse/rejected?token=".$token;
             $color = 'red';
             break;
     }
