@@ -138,6 +138,7 @@
 									<p class="category">Pending reimburse</p>
 									<h4 class="title">
 										<?php
+										echo $_SESSION['token'];
 											$ch = curl_init();
 
 												$token = $_SESSION['token'];
