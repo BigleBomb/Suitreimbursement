@@ -19,10 +19,10 @@ session_start();
                 $nama = $resp->result->nama;
                 $username = $resp->result->username;
                 $email = $resp->result->email;
-                $resp['result']=$result
+                $resp['result']=$result;
                 
-                echo "<table class="table">
-                <thead class="text-primary">
+                echo "<table class='table'>
+                    <thead class='text-primary'>
                     <th width=20px>RID</th>
                     <th class='col-lg-3'>Name</th>
                     <th width=250 align=left>Project name</th>
@@ -30,7 +30,7 @@ session_start();
                     <th>Date</th>
                     <th>Amount</th>
                     <th>Note</th>
-                </thead>"
+                </thead>";
                 echo "<tbody><tr id='tr".$result['id']."'>
                 <td>#".$result['id']."</td>
                 <td>".$result['user_data']['nama']."</td>
