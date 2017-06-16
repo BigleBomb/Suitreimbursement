@@ -29,6 +29,22 @@ class ReimburseController extends Controller {
 		}
 		return response($res);
 	}
+
+	public function get_last10(Request $request)
+	{
+		$reimburse = Reimburse::orderBy('id', 'desc')->take(10)->get();
+
+		$res['success'] = true;
+		$res['result'] = $reimburse;
+		$i=0;
+		foreach($reimburse as $userdata)
+		{
+			$user = User::find($userdata->user()->first()->id);
+			$res['result'][$i]['user_data'] = $user;
+			$i++;
+		}
+		return response($res);
+	}
 	
 	public function create(Request $request)
 	{

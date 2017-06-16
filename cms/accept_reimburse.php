@@ -20,7 +20,7 @@ session_start();
                 echo "$message";
             }
             else {
-                echo "Failed to get reimburse id";
+                echo $resp->message;
             }
         }
         else{
