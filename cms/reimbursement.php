@@ -144,9 +144,6 @@
 	            <div class="container-fluid">
 					<div class="row">
 						<div class=" col-md-12">
-							<div class="col-md-3">
-								<button type='button' id='addnew' class='btn btn-warning createuser' data-toggle="modal">Add new
-							</div>
 							<div class="card card-nav-tabs">
 								<div id='cardheader' class="card-header fade in" data-background-color="orange">
 									<div class="nav-tabs-navigation">
@@ -358,16 +355,16 @@
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title text-primary" background="green">Reimburse info</h4><br>
+					<h4 class="modal-title text-primary reimbursetitle" background="green">Reimburse info</h4><br>
 				</div>
-				<form class='modifyuser' method=POST>
-				<div class="modal-body">
-					<div class="clearfix"></div>
-				</div>
-				<div class="modal-footer">
-					<button type='button' class="btn btn-success" id='accept'>Accept</button>
-					<button type='button' class="btn btn-danger" id='reject'>Reject</button>
-				</div>
+				<form class='grouped' method=POST>
+					<div class="modal-body reimburseinfo">
+						<div class="clearfix"></div>
+					</div>
+					<div class="modal-footer">
+						<button type='button' class="btn btn-success" id='accept'>Accept</button>
+						<button type='button' class="btn btn-danger" id='reject'>Reject</button>
+					</div>
 				</form>
 			</div>
 		</div>
@@ -397,42 +394,58 @@
 	$(function(){
 		$(document).on('click', '.more-info', function() {
 			var trId = $(this).closest('tr').prop('id').substr(2,2);
-			$("#moreInfoModal").modal('show');
-			$("button#accept").click(function(){
-				$.ajax({
-					type: "POST",
-					url: "accept_reimburse.php",
-					data: 'reimburse_id='+trId,
-					success: function(msg){
-						$("#moreInfoModal").modal('hide'); 
-						$("#relist").load(location.href + " #relist");
-						$("button#accept").unbind('click');
-						$("button#reject").unbind('click');
-						$.notify(msg);
-					},	
-					error: function(){
-						alert("failure");
-					}
-				});
-				return;
-			});
-			$("button#reject").click(function(){
-				$.ajax({
-					type: "POST",
-					url: "reject_reimburse.php",
-					data: 'reimburse_id='+trId,
-					success: function(msg){
-						$("#moreInfoModal").modal('hide'); 
-						$("#relist").load(location.href + " #relist");
-						$("button#accept").unbind('click');
-						$("button#reject").unbind('click');
-						$.notify(msg);
-					},	
-					error: function(){
-						alert("failure");
-					}
-				});
-				return;
+			$.ajax({
+				type: "POST",
+				url: "get_reimburse_info.php",
+				data: 'reimburse_id='+trId,
+				success: function(msg){
+					$("#moreInfoModal").modal('show');
+					$('.reimbursetitle').show().html("Reimburse ID #"+trId+" details");
+					$('.grouped').show().html(msg);
+					$("button#accept").click(function(){
+						var reason = $("#reason").val();
+						alert(reason);
+						$.ajax({
+							type: "POST",
+							url: "accept_reimburse.php",
+							data: 'reimburse_id='+trId+'&reason='+reason,
+							success: function(msg){
+								$("#moreInfoModal").modal('hide'); 
+								$("#relist").load(location.href + " #relist");
+								$("button#accept").unbind('click');
+								$("button#reject").unbind('click');
+								$.notify(msg);
+							},	
+							error: function(){
+								alert("failure");
+							}
+						});
+						return;
+					});
+					$("button#reject").click(function(){
+						var reason = $("#reason").val();
+						alert(reason);
+						$.ajax({
+							type: "POST",
+							url: "reject_reimburse.php",
+							data: 'reimburse_id='+trId+'&reason='+reason,
+							success: function(msg){
+								$("#moreInfoModal").modal('hide'); 
+								$("#relist").load(location.href + " #relist");
+								$("button#accept").unbind('click');
+								$("button#reject").unbind('click');
+								$.notify(msg);
+							},	
+							error: function(){
+								alert("failure");
+							}
+						});
+						return;
+					});
+				},	
+				error: function(){
+					alert("failure");
+				}
 			});
 		});
 	});
