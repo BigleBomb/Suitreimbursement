@@ -296,10 +296,14 @@ class ReimburseController extends Controller {
 
 	public function reject(Request $request, $id)
 	{
+		$reason = "";
+		if($request->has('reason'))
+			$reason = $request->input('reason');
 		$reimburse = Reimburse::find($id);
 		if($reimburse){
 			if($reimburse->status != 2){
 				$reimburse->status = 2;
+				$reimburse->alasan = $reason;
 				if($reimburse->save()){
 					$res['success'] = true;
 					$res['message'] = "Reimburse ID ".$id." has been rejected.";
