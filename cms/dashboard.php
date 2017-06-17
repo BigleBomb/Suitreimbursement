@@ -138,7 +138,6 @@
 									<p class="category">Pending reimburse</p>
 									<h4 class="title">
 										<?php
-										echo $_SESSION['token'];
 											$ch = curl_init();
 
 												$token = $_SESSION['token'];
@@ -154,7 +153,7 @@
 													echo $resp['result']['count'];
 												}
 												else{
-													echo "<tr><h4>".$resp['message']."</h4></tr>";
+													echo "<tr><h4>No pending reimbursements</h4></tr>";
 												}
 										?>
 										<small>Request</small></h4>
