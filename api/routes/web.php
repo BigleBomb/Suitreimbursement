@@ -34,10 +34,13 @@ $app->post('/reimburse/new', 'ReimburseController@create');
 $app->post('/reimburse/update/{menu}', 'ReimburseController@update');
 $app->get('/reimburse/pending/{menu}','ReimburseController@get_pending');
 $app->get('/reimburse/list/{menu}', 'ReimburseController@get_list');
-$app->get('/reimburse/accept/{id}', 'ReimburseController@accept');
-$app->get('/reimburse/reject/{id}', 'ReimburseController@reject');
+$app->post('/reimburse/accept/{id}', 'ReimburseController@accept');
+$app->post('/reimburse/reject/{id}', 'ReimburseController@reject');
 $app->get('/reimburse/last/{amount}', 'ReimburseController@get_last');
 
 $app->get('sendbasicemail','MailController@basic_email');
 $app->get('sendhtmlemail','MailController@html_email');
 $app->get('sendattachmentemail','MailController@attachment_email');
+
+$app->get('/uploadfile','UploadFileController@index');
+$app->post('/uploadfile','UploadFileController@showUploadFile');
