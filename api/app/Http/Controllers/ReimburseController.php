@@ -259,10 +259,14 @@ class ReimburseController extends Controller {
 
 	public function accept(Request $request, $id)
 	{
+		$reason = "";
+		if($request->has('reason'))
+			$reason = $request->input('reason');
 		$reimburse = Reimburse::find($id);
 		if($reimburse){
 			if($reimburse->status != 1){
 				$reimburse->status = 1;
+				$reimburse->alasan = $reason;
 				if($reimburse->save()){
 					$res['success'] = true;
 					$res['message'] = "Reimburse ID ".$id." has been accepted.";
