@@ -15,11 +15,17 @@ session_start();
 
         if($resp != null){
             if ($resp->success == true){
+                $imageheight = '75%';
+                $imagewidth = '75%';
+                $imageroot = 'images';
+
+
                 $project = $resp->result->nama_proyek;
                 $date = $resp->result->tanggal;
                 $type = $resp->result->jenis_pengeluaran;
                 $total = $resp->result->jumlah_pengeluaran;
                 $details = $resp->result->keterangan;
+                $pic = $resp->result->foto;
                 $status = $resp->result->status;
                 $reason = $resp->result->alasan;
                 $update = $resp->result->updated_at;
@@ -58,7 +64,7 @@ session_start();
                             </div>
                             ";
                         }
-                        echo "<h4>Requested by $name on ".date_format(date_create($date), 'jS F, Y')."</h4>
+                        echo "<h4>Requested by <strong>$name</strong> on ".date_format(date_create($date), 'jS F, Y')."</h4>
                         <p><i>$email</i></p>
                         <thead>
                             <th class='col-lg-3'></th>
@@ -81,7 +87,7 @@ session_start();
                                 <td>Total</td>
                                 <td>Rp. ".number_format($total, 0, ",", ".");
                                     if($total > $limit)
-                                        echo "<p class='text-danger'> (Exceeding user's limit which is $limit)</a>";
+                                        echo "<p class='text-danger'> (Exceeding user's limit which is ".number_format($limit, 0, ",", ".").")</a>";
                                 echo "</td>
                             </tr>
                             <tr>
@@ -99,7 +105,7 @@ session_start();
                         echo "
                         <div height='10px' width='10px'>
                             <h4>Pictures</h4>
-                            <center><img src='images/photo_bg.jpg' style='max-height:50%; max-width:50%;'></img></center><br>
+                            <center><img src='$imageroot/$pic' style='max-height:$imageheight; max-width:$imagewidth;'></img></center><br>
                             <h4>Reason for accepting/rejecting</h4>
                             <textarea id='reason' class='form-control' style='max-width: 100%; max-height: 100%;'></textarea>
                         </div>
@@ -112,7 +118,7 @@ session_start();
                         echo "
                         <div height='10px' width='10px'>
                             <h4>Pictures</h4>
-                            <center><img src='images/photo_bg.jpg' style='max-height:50%; max-width:50%;'></img></center><br>
+                            <center><img src='$imageroot/$pic' style='max-height:$imageheight; max-width:$imagewidth;'></img></center><br>
                             <h4>Reason of acceptance</h4>
                             <textarea readonly id='reason' class='form-control' style='max-width: 100%; max-height: 100%;'>$reason</textarea>
                         </div>";
@@ -120,7 +126,7 @@ session_start();
                         echo "
                         <div height='10px' width='10px'>
                             <h4>Pictures</h4>
-                            <center><img src='images/photo_bg.jpg' style='max-height:50%; max-width:50%;'></img></center><br>
+                            <center><img src='$imageroot/$pic' style='max-height:$imageheight; max-width:$imagewidth;'></img></center><br>
                             <h4>Reason of rejection</h4>
                             <textarea readonly id='reason' class='form-control' style='max-width: 100%; max-height: 100%;'>$reason</textarea>
                         </div>";
