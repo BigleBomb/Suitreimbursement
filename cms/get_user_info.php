@@ -16,11 +16,54 @@ session_start();
 
         if($resp != null){
             if ($resp->success == true){
+                $id = $resp->result->id;
                 $nama = $resp->result->nama;
                 $username = $resp->result->username;
                 $email = $resp->result->email;
-
-                echo $nama;
+                $limit = $resp->result->limit;
+                echo "<table class='table'>
+                        <thead>
+                            <th></th>
+                            <th></th>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>User ID</td>
+                                <td>$id</td>
+                            </tr>
+                            <tr>
+                                <td>Name</td>
+                                <td id='tdName'>$nama
+                                    <button id='btnuser' type='button' rel='tooltip' title='Edit Task' class='btn btn-primary btn-simple btn-xs buttonedit'>
+										<i class='material-icons'>edit</i>
+									</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Username</td>
+                                <td id='tdUsername'>$username
+                                    <button id='btnuser' type='button' rel='tooltip' title='Edit Task' class='btn btn-primary btn-simple btn-xs buttonedit'>
+										<i class='material-icons'>edit</i>
+									</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Email</td>
+                                <td id='tdEmail'>$email
+                                    <button type='button' rel='tooltip' title='Edit Task' class='btn btn-primary btn-simple btn-xs buttonedit'>
+										<i class='material-icons'>edit</i>
+									</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>Limit</td>
+                                <td id='tdLimit'>".number_format($limit, 0, ",", ".")."
+                                    <button type='button' rel='tooltip' title='Edit Task' class='btn btn-primary btn-simple btn-xs buttonedit'>
+										<i class='material-icons'>edit</i>
+									</button>
+                                </td>
+                            </tr>
+                        </tbody>";
             }
             else {
                 echo "Failed to get user id";
