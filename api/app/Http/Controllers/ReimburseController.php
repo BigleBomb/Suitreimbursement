@@ -48,13 +48,12 @@ class ReimburseController extends Controller {
 	
 	public function create(Request $request)
 	{
-		
 		$user_id = $request->input('user_id');
 		$tanggal = $request->input('tanggal');
 		$nama_proyek = $request->input('nama_proyek');
 		$jenis_pengeluaran = $request->input('jenis_pengeluaran');
 		$jumlah_pengeluaran = $request->input('jumlah_pengeluaran');
-		$foto = $request->input('foto');
+		$file = $request->file('foto');
 		$keterangan = $request->input('keterangan');
 
 		$user = User::where('id', $user_id)->first();
@@ -65,7 +64,6 @@ class ReimburseController extends Controller {
 				'nama_proyek' => $nama_proyek,
 				'jenis_pengeluaran' => $jenis_pengeluaran,
 				'jumlah_pengeluaran' => $jumlah_pengeluaran,
-				'foto' => $foto,
 				'keterangan' => $keterangan,
 				'status' => 0,
 				'alasan' => ''
@@ -75,10 +73,23 @@ class ReimburseController extends Controller {
 				$res['success'] = true;
 				$res['message'] = 'Success adding new reimbursement';
 
-				return response($res);
 			}else{
 				$res['success'] = false;
 				$res['message'] = 'Failed adding new reimbursement';
+
+				return response($res);
+			}
+
+			$re = Reimburse::orderBy('created_at', 'desc')->first();
+			if($re !=null ){
+				$id = $re->id;
+				$filename = "pic".$id.".".$file->getClientOriginalExtension();
+				$re->foto = $filename;
+				$re->save();
+				$destinationPath = '../../cms/images';
+				$file->move($destinationPath,$filename);
+
+				$res['file'] = "Uploaded successfully";
 
 				return response($res);
 			}
@@ -112,23 +123,25 @@ class ReimburseController extends Controller {
 		if($menu == 'pending'){
 			$reimburse = Reimburse::where('status', 0)->get();
 			if($reimburse != null){
-				$res['success'] = true;
-				$res['result'] = $reimburse;
-				$i=0;
-				foreach($reimburse as $userdata)
-				{
-					$user = User::find($userdata->user()->first()->id);
-					$res['result'][$i]['user_data'] = $user;
-					$i++;
+				if($reimburse->count() > 0){
+					$res['success'] = true;
+					$res['result'] = $reimburse;
+					$i=0;
+					foreach($reimburse as $userdata)
+					{
+						$user = User::find($userdata->user()->first()->id);
+						$res['result'][$i]['user_data'] = $user;
+						$i++;
+					}
+
+					return response($res);
 				}
+				else{
+					$res['success'] = false;
+					$res['message'] = "No pending reimbursements";
 
-				return response($res);
-			}
-			else{
-				$res['success'] = false;
-				$res['message'] = "No pending reimbursements";
-
-				return response($res);
+					return response($res);
+				}
 			}
 		}
 		else if($menu == 'accepted'){
