@@ -24,6 +24,7 @@ $app->post('/user/set/{menu}/{id}', 'UserController@set');
 $app->get('/user/all', ['middleware' => 'auth', 'uses' => 'UserController@index']);
 $app->get('/user/delete/{id}', ['middleware' => 'auth', 'uses' => 'UserController@delete']);
 $app->get('/user/count', ['middleware' => 'auth', 'uses' => 'UserController@get_user_count']);
+$app->post('/user/update/{id}', 'UserController@update');
 
 
 // REIMBURSE ROUTES
@@ -41,6 +42,3 @@ $app->get('/reimburse/last/{amount}', 'ReimburseController@get_last');
 $app->get('sendbasicemail','MailController@basic_email');
 $app->get('sendhtmlemail','MailController@html_email');
 $app->get('sendattachmentemail','MailController@attachment_email');
-
-$app->get('/uploadfile','UploadFileController@index');
-$app->post('/uploadfile','UploadFileController@showUploadFile');
