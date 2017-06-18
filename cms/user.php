@@ -286,7 +286,7 @@
 				<div class="modal-content">
 					<div class="modal-header">
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
-						<h4 class="modal-title text-primary" background="green">Modify user</h4><br>
+						<h4 class="modal-title text-primary" background="green" id='modify-header'>Modify user</h4><br>
 					</div>
 					<div class="modal-body modify-user-body">
 					<div class="clearfix"></div>
@@ -412,6 +412,7 @@
 					$("#modifyUserModal").modal('show');
 					$('#maintable').load(location.href + ' #maintable')
 					$('.modify-user-body').show().html(msg);
+					$('#modify-header').html("User ID #"+trId+" details");
 					$(document).on('click', '.buttonedit',function() {
 						var tdId = $(this).closest('td');
 						if (tdId.find('input').length){

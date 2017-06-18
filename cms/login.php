@@ -64,7 +64,7 @@
 					if($resp != null){
 						if ($resp->success===true){
 							session_start();
-							$_SESSION['token']= $resp->token;
+							$_SESSION['token']= $resp->user_data->token;
 							echo $_SESSION['token'];
 							header("Location: dashboard.php");
 						}

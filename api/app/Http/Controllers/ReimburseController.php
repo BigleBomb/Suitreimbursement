@@ -53,7 +53,10 @@ class ReimburseController extends Controller {
 		$nama_proyek = $request->input('nama_proyek');
 		$jenis_pengeluaran = $request->input('jenis_pengeluaran');
 		$jumlah_pengeluaran = $request->input('jumlah_pengeluaran');
-		$file = $request->file('foto');
+		if($request->has('foto'))
+			$file = $request->file('foto');
+		else
+			$file = "";
 		$keterangan = $request->input('keterangan');
 
 		$user = User::where('id', $user_id)->first();
@@ -80,18 +83,24 @@ class ReimburseController extends Controller {
 				return response($res);
 			}
 
-			$re = Reimburse::orderBy('created_at', 'desc')->first();
+			$re = Reimburse::where('id', $reimburse->id)->first();
 			if($re !=null ){
-				$id = $re->id;
-				$filename = "pic".$id.".".$file->getClientOriginalExtension();
-				$re->foto = $filename;
-				$re->save();
-				$destinationPath = '../../cms/images';
-				$file->move($destinationPath,$filename);
+				if($file != ""){
+					$id = $re->id;
+					$filename = "pic".$id.".".$file->getClientOriginalExtension();
+					$re->foto = $filename;
+					$re->save();
+					$destinationPath = '../../cms/images';
+					$file->move($destinationPath,$filename);
 
-				$res['file'] = "Uploaded successfully";
+					$res['file'] = "Uploaded successfully";
 
-				return response($res);
+					return response($res);
+				}
+				else{
+					$res['file'] = "No file attached";
+					return response($res);
+				}
 			}
 		}
 		else

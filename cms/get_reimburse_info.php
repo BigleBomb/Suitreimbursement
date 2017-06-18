@@ -100,7 +100,7 @@ session_start();
                         echo "
                         <div height='10px' width='10px'>
                             <h4>Pictures</h4>
-                            <center><img src='$imageroot/$pic' style='max-height:$imageheight; max-width:$imagewidth;'></img></center><br>
+                            <center><img src='$imageroot/$pic' alt='image not found' style='max-height:$imageheight; max-width:$imagewidth;'></img></center><br>
                             <h4>Reason for accepting/rejecting</h4>
                             <textarea id='reason' class='form-control' style='max-width: 100%; max-height: 100%;'></textarea>
                         </div>
@@ -113,7 +113,7 @@ session_start();
                         echo "
                         <div height='10px' width='10px'>
                             <h4>Pictures</h4>
-                            <center><img src='$imageroot/$pic' style='max-height:$imageheight; max-width:$imagewidth;'></img></center><br>
+                            <center><img src='$imageroot/$pic' alt='image not found' style='max-height:$imageheight; max-width:$imagewidth;'></img></center><br>
                             <h4>Reason of acceptance</h4>
                             <textarea readonly id='reason' class='form-control' style='max-width: 100%; max-height: 100%;'>$reason</textarea>
                         </div>";
@@ -121,7 +121,7 @@ session_start();
                         echo "
                         <div height='10px' width='10px'>
                             <h4>Pictures</h4>
-                            <center><img src='$imageroot/$pic' style='max-height:$imageheight; max-width:$imagewidth;'></img></center><br>
+                            <center><img src='$imageroot/$pic' alt='image not found' style='max-height:$imageheight; max-width:$imagewidth;'></img></center><br>
                             <h4>Reason of rejection</h4>
                             <textarea readonly id='reason' class='form-control' style='max-width: 100%; max-height: 100%;'>$reason</textarea>
                         </div>";
