@@ -105,6 +105,38 @@ class UserController extends Controller
         }
     }
 
+    public function update(Request $request, $id){
+        $user = User::where('id', $id)->first();
+        if($user){
+            $name = $request->input('name');
+            $username = $request->input('username');
+            $email = $request->input('email');
+            $limit = $request->input('limit');
+
+            $user->nama = $name;
+            $user->username = $username;
+            $user->email = $email;
+            $user->limit = $limit;
+
+            if($user->save()){
+                $res['success'] = true;
+                $res['message'] = "User ID ".$id." is successfully updated.";
+
+                return response($res);
+            }else{
+                $res['success'] = false;
+                $res['message'] = "User ID ".$id." failed to be updated.";
+
+                return response($res);
+            }
+        }else{
+            $res['success'] = false;
+            $res['message'] = "Invalid user ID";
+
+            return response($res);
+        }
+    }
+
     public function set(Request $request, $menu, $id){
         if($menu === 'nama'){
             if($request->has('nama')){
@@ -114,20 +146,20 @@ class UserController extends Controller
                     $user->nama = $nama;
                     if($user->save()){
                         $res['success'] = true;
-                        $res['message'] = 'User id '.$id.' name has been changed';
+                        $res['message'] = 'User ID '.$id.' name has been changed';
 
                         return response($res);                        
                     }
                     else{
                         $res['success'] = false;
-                        $res['message'] = 'Error updating id '.$id.' name';
+                        $res['message'] = 'Error updating ID '.$id.' name';
 
                         return response($res);
                     }
                 }
                 else{
                     $res['success'] = false;
-                    $res['message'] = 'Invalid user';
+                    $res['message'] = 'Invalid user ID';
 
                     return response($res);
                 }
@@ -154,7 +186,7 @@ class UserController extends Controller
                 }
                 else{
                     $res['success'] = false;
-                    $res['message'] = 'Unknown user id';
+                    $res['message'] = 'Invalid user ID';
                 }
             }
         }
@@ -179,7 +211,7 @@ class UserController extends Controller
                 }
                 else{
                     $res['success'] = false;
-                    $res['message'] = 'Invalid user id';
+                    $res['message'] = 'Invalid user ID';
 
                     return response($res);
                 }
