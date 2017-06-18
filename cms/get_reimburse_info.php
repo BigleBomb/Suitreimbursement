@@ -15,11 +15,6 @@ session_start();
 
         if($resp != null){
             if ($resp->success == true){
-                $imageheight = '75%';
-                $imagewidth = '75%';
-                $imageroot = 'images';
-
-
                 $project = $resp->result->nama_proyek;
                 $date = $resp->result->tanggal;
                 $type = $resp->result->jenis_pengeluaran;
