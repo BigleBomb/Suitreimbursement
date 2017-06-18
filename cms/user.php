@@ -288,7 +288,6 @@
 						<button type="button" class="close" data-dismiss="modal">&times;</button>
 						<h4 class="modal-title text-primary" background="green">Modify user</h4><br>
 					</div>
-					<form class='modifyuser' method=POST>
 					<div class="modal-body modify-user-body">
 					<div class="clearfix"></div>
 					</div>
@@ -296,7 +295,6 @@
 						<button class="btn btn-success" id='modify'>modify</button>
 						<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 					</div>
-					</form>
 				</div>
 			</div>
 		</div>
@@ -331,6 +329,12 @@
 	$(document).ready(function(){
 		$('#deleteUserModal').on('hidden.bs.modal', function () {
 			$('button#delete').unbind('click');
+		})
+	});
+
+	$(document).ready(function(){
+		$('#modifyUserModal').on('hidden.bs.modal', function () {
+			$(document).off('click', '.buttonedit');
 		})
 	});
 
@@ -386,23 +390,72 @@
 			});
 		});
 	});
+	
+	
 
 	$(document).ready(function(){
+		function justtext() {
+			return $(this).clone()
+				.children()
+				.remove()
+				.end()
+				.text();
+
+		};
 		$(document).on('click', '.modify-user', function() {
 			var trId = $(this).closest('tr').prop('id').substr(2,2);
 			$.ajax({
-					type: "POST",
-					url: "get_user_info.php",
-					data: 'user_id='+trId,
-					success: function(msg){
-						$("#modifyUserModal").modal('show');
-						$('#maintable').load(location.href + ' #maintable')
-						$('.modify-user-body').show().html(msg);
-					},	
-					error: function(){
-						alert("failure");
-					}
-				});
+				type: "POST",
+				url: "get_user_info.php",
+				data: 'user_id='+trId,
+				success: function(msg){
+					$("#modifyUserModal").modal('show');
+					$('#maintable').load(location.href + ' #maintable')
+					$('.modify-user-body').show().html(msg);
+					$(document).on('click', '.buttonedit',function() {
+						var tdId = $(this).closest('td');
+						if (tdId.find('input').length){
+							tdId.text(tdId.find('input').val());
+						}
+						else {
+							tdId.children('.buttonedit').remove();
+							var t = tdId.text().trim();
+							tdId.html($('<input />',{'value' : t}).val(t));
+							tdId.children('input').addClass('form-control');
+							tdId.children('input').focus();
+							tdId.children('input').focusout(function(){
+								var inside = tdId.children('input').val();
+								tdId.children('input').remove();
+								var button = "<button id='btnuser' type='button' rel='tooltip' title='Edit Task' class='btn btn-primary btn-simple btn-xs buttonedit'> <i class='material-icons'>edit</i></button>";
+								tdId.html(inside+button);
+							});
+						}
+					});
+					$('#modify').click(function(){
+						var name = $('#tdName').clone().children().remove().end().text();
+						var username = $('#tdUsername').clone().children().remove().end().text();
+						var email = $('#tdEmail').clone().children().remove().end().text();
+						var limit = $('#tdLimit').clone().children().remove().end().text();
+						$.ajax({
+							type: "POST",
+							url: "update_user.php",
+							data: 'user_id='+trId+'&name='+name+'&username='+username+'&email='+email+'&limit='+limit,
+							success: function(msg){
+								$("#modifyUserModal").modal('hide'); 
+								$('#maintable').load(location.href + ' #maintable');
+								$.notify(msg);
+								$("button#modify").unbind('click');
+							},	
+							error: function(){
+								alert("failure");
+							}
+						});
+					})
+				},	
+				error: function(){
+					alert("failure");
+				}
+			});
 		});
 	});
 	$(document).ready(function(){
