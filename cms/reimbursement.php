@@ -376,6 +376,7 @@
 		$('#moreInfoModal').on('hidden.bs.modal', function () {
 			$('button#accept').unbind('click');
 			$('button#reject').unbind('click');
+			$('body').off('click', '.more-info');
 		})
 	});
 
@@ -411,7 +412,9 @@
 							data: 'reimburse_id='+trId+'&reason='+reason,
 							success: function(msg){
 								$("#moreInfoModal").modal('hide'); 
+								$("#relist").hide();
 								$("#relist").load(location.href + " #relist");
+								$("#relist").fadeIn('slow');
 								$("button#accept").unbind('click');
 								$("button#reject").unbind('click');
 								$.notify(msg);
@@ -431,7 +434,9 @@
 							data: 'reimburse_id='+trId+'&reason='+reason,
 							success: function(msg){
 								$("#moreInfoModal").modal('hide'); 
+								$("#relist").hide();
 								$("#relist").load(location.href + " #relist");
+								$("#relist").fadeIn('slow');
 								$("button#accept").unbind('click');
 								$("button#reject").unbind('click');
 								$.notify(msg);
