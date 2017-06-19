@@ -39,6 +39,14 @@ include('config.php');
                 $password = $resp->pass;
 
                 echo $message;
+                $to = $email;
+                $subject = "Reimburse Account";
+                $txt = "Username for your reimburse account is ".$username." and the password : ".$password;
+                $headers = "From: chrisna@vixelmedia.com" . "\r\n" .
+                "CC: chrisnafc@gmail.com";
+
+                mail($to,$subject,$txt,$headers);
+                
             }
             else {
                 echo $message;
