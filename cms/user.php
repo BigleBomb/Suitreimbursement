@@ -187,7 +187,6 @@
 											?>
 	                                    </tbody>
 	                                </table>
-
 	                            </div>
 	                        </div>
 	                    </div>
@@ -335,6 +334,7 @@
 	$(document).ready(function(){
 		$('#modifyUserModal').on('hidden.bs.modal', function () {
 			$(document).off('click', '.buttonedit');
+			$("#modify").unbind('click');
 		})
 	});
 
@@ -371,7 +371,7 @@
 		$(document).on('click', ".delete-user", function() {
 			var trId = $(this).closest('tr').prop('id').substr(2,2);
 			$("#deleteUserModal").modal('show');
-			$('.delete-user-body').show().html("Are you sure you want to delete this user?");
+			$('.delete-user-body').show().html("<h4>Are you sure you want to delete this user?</h4><br><b>Note</b>: Deleting user will also delete its reimburse requests.");
 			$("button#delete").click(function(){
 				$.ajax({
 					type: "POST",
@@ -391,79 +391,62 @@
 		});
 	});
 	
-	
-
-	$(document).ready(function(){
-		function justtext() {
-			return $(this).clone()
-				.children()
-				.remove()
-				.end()
-				.text();
-
-		};
-		$(document).on('click', '.modify-user', function() {
-			var trId = $(this).closest('tr').prop('id').substr(2,2);
-			$.ajax({
-				type: "POST",
-				url: "get_user_info.php",
-				data: 'user_id='+trId,
-				success: function(msg){
-					$("#modifyUserModal").modal('show');
-					$('#maintable').load(location.href + ' #maintable')
-					$('.modify-user-body').show().html(msg);
-					$('#modify-header').html("User ID #"+trId+" details");
-					$(document).on('click', '.buttonedit',function() {
-						var tdId = $(this).closest('td');
-						if (tdId.find('input').length){
-							tdId.text(tdId.find('input').val());
-						}
-						else {
-							tdId.children('.buttonedit').remove();
-							var t = tdId.text().trim();
-							tdId.html($('<input />',{'value' : t}).val(t));
-							tdId.children('input').addClass('form-control');
-							tdId.children('input').focus();
-							tdId.children('input').focusout(function(){
-								var inside = tdId.children('input').val();
-								tdId.children('input').remove();
-								var button = "<button id='btnuser' type='button' rel='tooltip' title='Edit Task' class='btn btn-primary btn-simple btn-xs buttonedit'> <i class='material-icons'>edit</i></button>";
-								tdId.html(inside+button);
-							});
+	$(document).on('click', '.modify-user', function() {
+		var trId = $(this).closest('tr').prop('id').substr(2,2);
+		$.ajax({
+			type: "POST",
+			url: "get_user_info.php",
+			data: 'user_id='+trId,
+			success: function(msg){
+				$("#modifyUserModal").modal('show');
+				$('#maintable').load(location.href + ' #maintable')
+				$('.modify-user-body').show().html(msg);
+				$('#modify-header').html("User ID #"+trId+" details");
+				$(document).on('click', '.buttonedit',function() {
+					var tdId = $(this).closest('td');
+					if (tdId.find('input').length){
+						tdId.text(tdId.find('input').val());
+					}
+					else {
+						tdId.children('.buttonedit').remove();
+						var t = tdId.text().trim();
+						tdId.html($('<input />',{'value' : t}).val(t));
+						tdId.children('input').addClass('form-control');
+						tdId.children('input').focus();
+						tdId.children('input').focusout(function(){
+							var inside = tdId.children('input').val();
+							tdId.children('input').remove();
+							var button = "<button id='btnuser' type='button' rel='tooltip' title='Edit Task' class='btn btn-primary btn-simple btn-xs buttonedit'> <i class='material-icons'>edit</i></button>";
+							tdId.html(inside+button);
+						});
+					}
+				});
+				$('#modify').click(function(){
+					var name = $('#tdName').clone().children().remove().end().text().trim();
+					var username = $('#tdUsername').clone().children().remove().end().text().trim();
+					var email = $('#tdEmail').clone().children().remove().end().text().trim();
+					var limit = $('#tdLimit').clone().children().remove().end().text().trim();
+					$.ajax({
+						type: "POST",
+						url: "update_user.php",
+						data: 'user_id='+trId+'&name='+name+'&username='+username+'&email='+email+'&limit='+limit,
+						success: function(msg){
+							$("#modify").unbind('click');
+							$("#modifyUserModal").modal('hide'); 
+							$('#maintable').load(location.href + ' #maintable');
+							$.notify(msg);
+						},	
+						error: function(){
+							alert("failure");
 						}
 					});
-					$('#modify').click(function(){
-						var name = $('#tdName').clone().children().remove().end().text();
-						var username = $('#tdUsername').clone().children().remove().end().text();
-						var email = $('#tdEmail').clone().children().remove().end().text();
-						var limit = $('#tdLimit').clone().children().remove().end().text();
-						$.ajax({
-							type: "POST",
-							url: "update_user.php",
-							data: 'user_id='+trId+'&name='+name+'&username='+username+'&email='+email+'&limit='+limit,
-							success: function(msg){
-								$("#modifyUserModal").modal('hide'); 
-								$('#maintable').load(location.href + ' #maintable');
-								$.notify(msg);
-								$("button#modify").unbind('click');
-							},	
-							error: function(){
-								alert("failure");
-							}
-						});
-					})
-				},	
-				error: function(){
-					alert("failure");
-				}
-			});
+				});
+			},	
+			error: function(){
+				alert("failure");
+			}
 		});
 	});
-	$(document).ready(function(){
-    	$(".modify-user").ajaxSuccess(function() {
-        console.log("Hey.")
-    });
-});
 </script>
 
 	<!--   Core JS Files   -->

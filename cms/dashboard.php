@@ -252,7 +252,7 @@
 											curl_close ($ch);
 											$resp = json_decode($server_output, true);
 											
-											if($resp['success'] == false){
+											if($resp['success'] == true){
 												foreach($resp['result'] as $result){
 													echo date_format(date_create($result['tanggal']), 'jS F Y');
 												}		

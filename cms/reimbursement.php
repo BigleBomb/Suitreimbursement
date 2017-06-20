@@ -231,36 +231,37 @@
 													<th>Total</th>
 													<th>Action</th>
 												</thead>
-												<tbody><?php
-														$ch = curl_init();
+												<tbody>
+												<?php
+													$ch = curl_init();
 
-														$token = $_SESSION['token'];
-														$url = "$SERVER/reimburse/list/accepted?token=".$token;
-														curl_setopt($ch, CURLOPT_URL, $url);
-														curl_setopt($ch, CURLOPT_POST, 0);
-														curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-														$server_output = curl_exec ($ch);
-														curl_close ($ch);
-														$resp = json_decode($server_output, true);
-														if($resp['success']!=false){
-															foreach($resp['result'] as $result){
-																echo "<tr><tr id='tr".$result['id']."'>
-																	<td>#".$result['id']."</td>
-																	<td>".$result['user_data']['nama']."</td>
-																	<td>".$result['nama_proyek']."</td>
-																	<td>".$result['jenis_pengeluaran']."</td>
-																	<td>".date_format(date_create($result['tanggal']), 'jS F\,\ Y')
-																	."</td>
-																	<td>Rp ".number_format($result['jumlah_pengeluaran'], 0, ",", ".")."</td>
-																	<td class='text-center'>
-																	<button type='button' class='btn btn-primary more-info' data-toggle='modal' data-background-color='green'>More info</td>
-																</tr>";
-															}
+													$token = $_SESSION['token'];
+													$url = "$SERVER/reimburse/list/accepted?token=".$token;
+													curl_setopt($ch, CURLOPT_URL, $url);
+													curl_setopt($ch, CURLOPT_POST, 0);
+													curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+													$server_output = curl_exec ($ch);
+													curl_close ($ch);
+													$resp = json_decode($server_output, true);
+													if($resp['success']!=false){
+														foreach($resp['result'] as $result){
+															echo "<tr><tr id='tr".$result['id']."'>
+																<td>#".$result['id']."</td>
+																<td>".$result['user_data']['nama']."</td>
+																<td>".$result['nama_proyek']."</td>
+																<td>".$result['jenis_pengeluaran']."</td>
+																<td>".date_format(date_create($result['tanggal']), 'jS F\,\ Y')
+																."</td>
+																<td>Rp ".number_format($result['jumlah_pengeluaran'], 0, ",", ".")."</td>
+																<td class='text-center'>
+																<button type='button' class='btn btn-primary more-info' data-toggle='modal' data-background-color='green'>More info</td>
+															</tr>";
 														}
-														else{
-															echo "<tr><h4>".$resp['message']."</h4></tr>";
-														}
-													?>
+													}
+													else{
+														echo "<tr><h4>".$resp['message']."</h4></tr>";
+													}
+												?>
 												</tbody>
 											</table>
 										</div>
@@ -353,9 +354,9 @@
 	<div id="moreInfoModal" class="modal fade" role="dialog" style='z-index:100000'>
 		<div class="modal-dialog modal-lg" role="document">
 			<div class="modal-content">
-				<div class="modal-header">
+				<div class="modal-header card-header">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title text-primary reimbursetitle" background="green">Reimburse info</h4><br>
+					<h4 class="modal-title text-primary reimbursetitle">Reimburse info</h4><br>
 				</div>
 				<form class='grouped' method=POST>
 					<div class="modal-body reimburseinfo">
@@ -372,6 +373,22 @@
 	
 </body>
 <script>	
+	// $(document).ready(function(){
+	// 	$('#pendingtab').click(function(){
+	// 		var type = $(this).prop('id').substr(0, 7);
+	// 		$.ajax({
+	// 			type: "POST",
+	// 			url: "get_reimburse_tab_data.php",
+	// 			data: 'type='+type,
+	// 			success: function(msg){
+	// 				$("#pending").html(msg);
+	// 				$('#pendintab').unbind('click');
+	// 			}
+
+	// 		})
+	// 	})
+	// });
+
 	$(document).ready(function(){
 		$('#moreInfoModal').on('hidden.bs.modal', function () {
 			$('button#accept').unbind('click');

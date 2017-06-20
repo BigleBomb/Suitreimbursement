@@ -3,9 +3,9 @@
     session_start();
     $ch = curl_init();
     $type = $_POST['type'];
+    $token = $_SESSION['token'];
     $url = "$SERVER/reimburse/list/$type?token=".$token;
     $color;
-    $token = $_SESSION['token'];
     switch($type){
         case 'pending':
             $color = 'orange';
