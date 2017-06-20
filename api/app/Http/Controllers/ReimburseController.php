@@ -53,7 +53,7 @@ class ReimburseController extends Controller {
 		$nama_proyek = $request->input('nama_proyek');
 		$jenis_pengeluaran = $request->input('jenis_pengeluaran');
 		$jumlah_pengeluaran = $request->input('jumlah_pengeluaran');
-		if($request->has('foto'))
+		if($request->hasFile('foto'))
 			$file = $request->file('foto');
 		else
 			$file = "";
@@ -85,12 +85,12 @@ class ReimburseController extends Controller {
 
 			$re = Reimburse::where('id', $reimburse->id)->first();
 			if($re !=null ){
-				if($file != ""){
+				if($file->isValid()){
 					$id = $re->id;
-					$filename = "pic".$id.".".$file->getClientOriginalExtension();
+					$filename = "reimbursePic".$id.".".$file->getClientOriginalExtension();
 					$re->foto = $filename;
 					$re->save();
-					$destinationPath = '../../cms/images';
+					$destinationPath = "../../cms/images/u$user_id/";
 					$file->move($destinationPath,$filename);
 
 					$res['file'] = "Uploaded successfully";

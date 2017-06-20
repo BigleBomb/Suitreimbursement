@@ -42,7 +42,7 @@ session_start();
                 foreach($resp->result->user_data as $user){
                     $name = $user->nama;
                     $limit = $user->limit;
-                    $id = $user->id;
+                    $uid = $user->id;
                     $email = $user->email;
                 }
                 echo "<div class='modal-body '>
@@ -68,7 +68,7 @@ session_start();
                         <tbody>
                             <tr>
                                 <td>User ID</td>
-                                <td>$id</td>
+                                <td>$uid</td>
                             </tr>
                             <tr>
                                 <td>Project</td>
@@ -94,14 +94,14 @@ session_start();
                                 <td><font color=$color><b>$statd</b></font></td>
                             </tr>
                         </tbody>
-                    </table>";
+                    </table>
+                    <div height='10px' width='10px'>
+                            <h4>Pictures</h4>
+                            <center><img src='$imageroot/u$uid/$pic' alt='image not found' style='max-height:$imageheight; max-width:$imagewidth;'></img></center><br>
+                            <h4>Reason for accepting/rejecting</h4>";
 
                     if($status == 0){
                         echo "
-                        <div height='10px' width='10px'>
-                            <h4>Pictures</h4>
-                            <center><img src='$imageroot/$pic' alt='image not found' style='max-height:$imageheight; max-width:$imagewidth;'></img></center><br>
-                            <h4>Reason for accepting/rejecting</h4>
                             <textarea id='reason' class='form-control' style='max-width: 100%; max-height: 100%;'></textarea>
                         </div>
 						<div class='clearfix'></div></div>
@@ -110,20 +110,10 @@ session_start();
 						<button type='button' class='btn btn-danger' id='reject'>Reject</button>
 					</div>";
                     }else if($status == 1){
-                        echo "
-                        <div height='10px' width='10px'>
-                            <h4>Pictures</h4>
-                            <center><img src='$imageroot/$pic' alt='image not found' style='max-height:$imageheight; max-width:$imagewidth;'></img></center><br>
-                            <h4>Reason of acceptance</h4>
-                            <textarea readonly id='reason' class='form-control' style='max-width: 100%; max-height: 100%;'>$reason</textarea>
+                        echo "<textarea readonly id='reason' class='form-control' style='max-width: 100%; max-height: 100%;'>$reason</textarea>
                         </div>";
                     }else if($status == 2){
-                        echo "
-                        <div height='10px' width='10px'>
-                            <h4>Pictures</h4>
-                            <center><img src='$imageroot/$pic' alt='image not found' style='max-height:$imageheight; max-width:$imagewidth;'></img></center><br>
-                            <h4>Reason of rejection</h4>
-                            <textarea readonly id='reason' class='form-control' style='max-width: 100%; max-height: 100%;'>$reason</textarea>
+                        echo "<textarea readonly id='reason' class='form-control' style='max-width: 100%; max-height: 100%;'>$reason</textarea>
                         </div>";
                     }
             }
