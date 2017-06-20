@@ -422,7 +422,6 @@
 					$('.grouped').show().html(msg);
 					$("button#accept").click(function(){
 						var reason = $("#reason").val();
-						alert(reason);
 						$.ajax({
 							type: "POST",
 							url: "accept_reimburse.php",
