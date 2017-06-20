@@ -372,23 +372,7 @@
 	</div>
 	
 </body>
-<script>	
-	// $(document).ready(function(){
-	// 	$('#pendingtab').click(function(){
-	// 		var type = $(this).prop('id').substr(0, 7);
-	// 		$.ajax({
-	// 			type: "POST",
-	// 			url: "get_reimburse_tab_data.php",
-	// 			data: 'type='+type,
-	// 			success: function(msg){
-	// 				$("#pending").html(msg);
-	// 				$('#pendintab').unbind('click');
-	// 			}
-
-	// 		})
-	// 	})
-	// });
-
+<script>
 	$(document).ready(function(){
 		$('#moreInfoModal').on('hidden.bs.modal', function () {
 			$('button#accept').unbind('click');
