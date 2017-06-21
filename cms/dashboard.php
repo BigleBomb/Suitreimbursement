@@ -15,7 +15,7 @@
 	<link rel="icon" type="image/png" href="./assets/img/favicon.png" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
-	<title>Material Dashboard by Creative Tim</title>
+	<title>Suitmedia Reimbursement </title>
 
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
@@ -47,7 +47,7 @@
 
 			<div class="logo">
 				<a href="http://www.suitmedia.com" class="simple-text">
-					Creative Tim
+					Reimbursement
 				</a>
 			</div>
 
@@ -71,12 +71,12 @@
 	                        <p>Reimbursement</p>
 	                    </a>
 	                </li>
-	                <li>
+	                <!--<li>
 	                    <a href="typography.html">
 	                        <i class="material-icons">library_books</i>
 	                        <p>Menu tambahan</p>
 	                    </a>
-	                </li>
+	                </li>-->
 	            </ul>
 	    	</div>
 	    </div>
@@ -95,13 +95,13 @@
 					</div>
 					<div class="collapse navbar-collapse">
 						<ul class="nav navbar-nav navbar-right">
-							<li>
+							<!--<li>
 								<a href="#pablo" class="dropdown-toggle" data-toggle="dropdown">
 									<i class="material-icons">dashboard</i>
 									<p class="hidden-lg hidden-md">Dashboard</p>
 								</a>
-							</li>
-							<li class="dropdown">
+							</li>-->
+							<!--<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 									<i class="material-icons">notifications</i>
 									<span class="notification">5</span>
@@ -114,12 +114,15 @@
 									<li><a href="#">Another Notification</a></li>
 									<li><a href="#">Another One</a></li>
 								</ul>
-							</li>
+							</li>-->
 							<li>
 								<a href="#pablo" class="dropdown-toggle" data-toggle="dropdown">
 	 							   <i class="material-icons">person</i>
 	 							   <p class="hidden-lg hidden-md">Profile</p>
 		 						</a>
+								<ul class="dropdown-menu">
+									<li><a href="#">Log out</a></li>
+								</ul>
 							</li>
 						</ul>
 					</div>
@@ -129,7 +132,7 @@
 			<div class="content">
 				<div class="container-fluid">
 					<div class="row">
-						<div class="col-lg-3 col-md-6 col-sm-6">
+						<div class="col-lg-4 col-md-6 col-sm-6">
 							<div class="card card-stats">
 								<div class="card-header" data-background-color="orange">
 									<i class="material-icons">content_copy</i>
@@ -165,7 +168,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-lg-3 col-md-6 col-sm-6">
+						<div class="col-lg-4 col-md-6 col-sm-6">
 							<div class="card card-stats">
 								<div class="card-header" data-background-color="green">
 									<i class="material-icons">attach_money</i>
@@ -201,14 +204,14 @@
 								</div>
 							</div>
 						</div>
- 						<div class="col-lg-3 col-md-6 col-sm-6">
+ 						<div class="col-lg-4 col-md-6 col-sm-6">
 							<div class="card card-stats">
 								<div class="card-header" data-background-color="red">
 									<i class="material-icons">account_circle</i>
 								</div>
 								<div class="card-content">
 									<p class="category">Registered user</p>
-									<h3 class="title">
+									<h4 class="title">
 										<?php
 										$ch = curl_init();
 										$token = $_SESSION['token'];
@@ -227,13 +230,13 @@
 											echo $resp['message'];
 										}
 										?>
-									</h3>
+									</h4>
 								</div>
-								<!--<div class="card-footer">
+							<div class="card-footer">
 									<div class="stats">
-										<i class="material-icons">local_offer</i> Tracked from Github
+									<i class="material-icons">face</i> <a href="user.php">Manage User...</a>
 									</div>
-								</div>-->
+								</div>
 							</div>
 						</div>
 						<div class="col-md-12">

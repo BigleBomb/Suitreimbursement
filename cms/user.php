@@ -13,7 +13,7 @@
 	<link rel="icon" type="image/png" href="./assets/img/favicon.png" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
-	<title>Material Dashboard by Creative Tim</title>
+	<title>Suitmedia Reimbursement</title>
 
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
@@ -39,7 +39,7 @@
 
 	<div class="wrapper">
 
-	    <div class="sidebar" data-color="orange" data-image="./assets/img/sidebar-1.jpg">
+	    <div class="sidebar" data-color="purple" data-image="./assets/img/sidebar-1.jpg">
 			<!--
 		        Tip 1: You can change the color of the sidebar using: data-color="purple | blue | green | orange | red"
 
@@ -48,7 +48,7 @@
 
 			<div class="logo">
 				<a href="http://www.suitmedia.com" class="simple-text">
-					Creative Tim
+					Reimbursement
 				</a>
 			</div>
 
@@ -72,12 +72,12 @@
 	                        <p>Reimbursement</p>
 	                    </a>
 	                </li>
-	                <li>
+	                <!--<li>
 	                    <a href="typography.html">
 	                        <i class="material-icons">library_books</i>
 	                        <p>Menu tambahan</p>
 	                    </a>
-	                </li>
+	                </li>-->
 	            </ul>
 	    	</div>
 	    </div>
@@ -92,17 +92,17 @@
 							<span class="icon-bar"></span>
 							<span class="icon-bar"></span>
 						</button>
-						<a class="navbar-brand" href="#">Profile</a>
+						<a class="navbar-brand" href="#">Material Dashboard</a>
 					</div>
 					<div class="collapse navbar-collapse">
 						<ul class="nav navbar-nav navbar-right">
-							<li>
+							<!--<li>
 								<a href="#pablo" class="dropdown-toggle" data-toggle="dropdown">
 									<i class="material-icons">dashboard</i>
 									<p class="hidden-lg hidden-md">Dashboard</p>
 								</a>
-							</li>
-							<li class="dropdown">
+							</li>-->
+							<!--<li class="dropdown">
 								<a href="#" class="dropdown-toggle" data-toggle="dropdown">
 									<i class="material-icons">notifications</i>
 									<span class="notification">5</span>
@@ -115,24 +115,17 @@
 									<li><a href="#">Another Notification</a></li>
 									<li><a href="#">Another One</a></li>
 								</ul>
-							</li>
+							</li>-->
 							<li>
 								<a href="#pablo" class="dropdown-toggle" data-toggle="dropdown">
 	 							   <i class="material-icons">person</i>
 	 							   <p class="hidden-lg hidden-md">Profile</p>
-	 						   </a>
+		 						</a>
+								<ul class="dropdown-menu">
+									<li><a href="#">Log out</a></li>
+								</ul>
 							</li>
 						</ul>
-
-						<form class="navbar-form navbar-right" role="search">
-							<div class="form-group  is-empty">
-	                        	<input type="text" class="form-control" placeholder="Search">
-	                        	<span class="material-input"></span>
-							</div>
-							<button type="submit" class="btn btn-white btn-round btn-just-icon">
-								<i class="material-icons">search</i><div class="ripple-container"></div>
-							</button>
-	                    </form>
 					</div>
 				</div>
 			</nav>
@@ -196,33 +189,10 @@
 
 	        <footer class="footer">
 	            <div class="container-fluid">
-	                <nav class="pull-left">
-	                    <ul>
-	                        <li>
-	                            <a href="#">
-	                                Home
-	                            </a>
-	                        </li>
-	                        <li>
-	                            <a href="#">
-	                                Company
-	                            </a>
-	                        </li>
-	                        <li>
-	                            <a href="#">
-	                                Portfolio
-	                            </a>
-	                        </li>
-	                        <li>
-	                            <a href="#">
-	                               Blog
-	                            </a>
-	                        </li>
-	                    </ul>
-	                </nav>
-	                <p class="copyright pull-right">
-	                    &copy; <script>document.write(new Date().getFullYear())</script> <a href="http://www.creative-tim.com">Creative Tim</a>, made with love for a better web
-	                </p>
+
+	                <!--<p class="copyright pull-right">
+	                    &copy; <script>document.write(new Date().getFullYear())</script> <a href="http://www.suitmedia.com">Suitmedia</a>
+	                </p>-->
 	            </div>
 	        </footer>
 	    </div>
