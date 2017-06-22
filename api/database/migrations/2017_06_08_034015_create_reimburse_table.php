@@ -16,14 +16,12 @@ class CreateReimburseTable extends Migration
         Schema::create('reimburse', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('user_id');
-            $table->date('tanggal');
-            $table->string('nama_proyek');
-            $table->string('jenis_pengeluaran');
-            $table->integer('jumlah_pengeluaran');
-            $table->string('foto');
-            $table->string('keterangan');
+            $table->date('date');
+            $table->string('project_name');
+            $table->integer('total_cost');
+            $table->string('details');
             $table->integer('status');
-            $table->string('alasan');
+            $table->string('reason');
             $table->timestamps();
         });
     }
