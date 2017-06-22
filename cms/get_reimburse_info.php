@@ -43,10 +43,12 @@ session_start();
                     $uid = $user->id;
                     $email = $user->email;
                 }
-                echo "<div class='modal-body '>
-					<table class='table'>";
+                echo "<div class='content'>
+                    <div class='row'>
+	                <div class='col-md-12'>";
                         if($status == 1){
-                            echo "<div class='alert alert-success'>
+                            echo "
+                            <div class='alert alert-success'>
                             This request was accepted on ".date_format(date_create($update), 'jS F, Y')."
                             </div>
                             ";
@@ -57,59 +59,135 @@ session_start();
                             </div>
                             ";
                         }
-                        echo "<h4>Requested by <strong>$name</strong> on ".date_format(date_create($date), 'jS F, Y')."</h4>
-                        <p><i>$email</i></p>
-                        <thead>
-                            <th class='col-lg-3'></th>
-                            <th></th>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>User ID</td>
-                                <td>$uid</td>
-                            </tr>
-                            <tr>
-                                <td>Project</td>
-                                <td>$project</td>
-                            </tr>
-                            <tr>
-                                <td>Total</td>
-                                <td>Rp. ".number_format($total, 0, ",", ".");
-                                    if($total > $limit)
-                                        echo "<p class='text-danger'> (Exceeding user's limit which is ".number_format($limit, 0, ",", ".").")</a>";
-                                echo "</td>
-                            </tr>
-                            <tr>
-                                <td>Details</td>
-                                <td>$details</td>
-                            </tr>
-                            <tr>
-                                <td>Status</td>
-                                <td><font color=$color><b>$statd</b></font></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <div height='10px' width='10px'>";
-                            // <h4>Pictures</h4>
-                            // <center><img src='$imageroot/u$uid/$pic' alt='image not found' style='max-height:$imageheight; max-width:$imagewidth;'></img></center><br>
-                            echo "<h4>Reason for accepting/rejecting</h4>";
+                        echo "
+                        <div class='card'> 
+                            <div class='card-header' data-background-color='orange'>
+                                <h4 class='title'>Requested by <strong>$name</strong> on ".date_format(date_create($date), 'jS F, Y')."</h4>
+                                <p class='category'><i>$email</i></p>
+                            </div>
+                            <div class='card-content'>
+                                <div class='container'>
+                                <div class='row'>
+                                <div class='col-lg-6'>
+                                <h4>Reimburse detail</h4>
+                                <table class='table'>
+                                    <thead style='visibility:hidden'>
+                                        <th class='col-lg-3'>header</th>
+                                        <th>header</th>
+                                    </thead>
+                                    
+                                    <tbody>
+                                        <tr>
+                                            <td>User ID</td>
+                                            <td>$uid</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Project</td>
+                                            <td>$project</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total</td>
+                                            <td>Rp. ".number_format($total, 0, ",", ".");
+                                                if($total > $limit)
+                                                    echo "<p class='text-danger'> (Exceeding user's limit which is ".number_format($limit, 0, ",", ".").")</a>";
+                                            echo "</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Details</td>
+                                            <td>$details</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Status</td>
+                                            <td><font color=$color><b>$statd</b></font></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                                </div>
+                                <div class='col-lg-6'>
+                                <h4>Item detail</h4>
+                                <table class='table'>
+                                    <thead>
+                                        <th class='col-lg-3'>Item no.</th>
+                                        <th>Category</th>
+                                        <th>Cost</th>
+                                    </thead>
+                                    <tbody>";
+                                    $ch = curl_init();
+                                    curl_setopt($ch, CURLOPT_URL,"$SERVER/item/getbyreimburse/$id?token=".$token);
+                                    curl_setopt($ch, CURLOPT_POST, 0);
+                                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                                    $server_output = curl_exec ($ch);
+                                    curl_close ($ch);
+                                    $res = json_decode($server_output);
+
+                                    if($res!=null){
+                                        if($res->success != false){
+                                            foreach($res->result as $result){
+                                                echo "<tr><td>$result->id</td>
+                                                    <td>$result->category</td>
+                                                    <td>Rp. ".number_format($result->cost, 0, ",", ".")."</tr>";
+                                            }
+                                        }
+                                        else{
+                                            echo "<tr><td colspan=3 align=center>$res->message</td></tr>";
+                                        }
+                                    }
+                                    else{
+                                        echo "Could not connect to the server";
+                                    }
+                                    
+                                echo "</tbody>
+                                </table>
+                                </div>
+                                </div>
+                                </div>
+                            <div>
+                                <h4>Pictures</h4>
+                                <div class='row'>";
+                                if($res!=null){
+                                    if($res->success != false){
+                                        foreach($res->result as $result2){
+                                            echo "<div class=col-xs-3 col-md-3'>
+                                                    <a href='#' class='thumbnail'>
+                                                        <img src='$imageroot/u$uid/r$id/$result2->picture' alt='...'>
+                                                    </a>
+                                                </div>";
+                                        }   
+                                    }
+                                    else{
+                                        echo "<div align=center>No pictures found</div>";
+                                    }
+                                }
+                                else{
+                                    echo "Could not connect to the server";
+                                }
+                            echo "</div>
+                                <h4>Reason</h4>";
 
                     if($status == 0){
                         echo "
-                            <textarea id='reason' class='form-control' style='max-width: 100%; max-height: 100%;'></textarea>
+                            <textarea id='reason' placeholder='Enter a reason to either accept or reject the request' class='form-control' style='max-width: 100%; max-height: 100%;'></textarea>
                         </div>
 						<div class='clearfix'></div></div>
-					<div class='modal-footer'>
-						<button type='button' class='btn btn-success' id='accept'>Accept</button>
-						<button type='button' class='btn btn-danger' id='reject'>Reject</button>
-					</div>";
+                        <div class='card-footer' align='right'>
+                            <button type='button' style='float:left;' class='btn' id='back'><i class='material-icons'>arrow_back</i>  Back</button>
+						    <button type='button' class='btn btn-success' id='accept'>Accept</button>
+						    <button type='button' class='btn btn-danger' id='reject'>Reject</button>
+                        </div>";
                     }else if($status == 1){
                         echo "<textarea readonly id='reason' class='form-control' style='max-width: 100%; max-height: 100%;'>$reason</textarea>
+                        </div>
+                        <div class='card-footer'>
+                            <button type='button' style='float:left;' class='btn' id='back'><i class='material-icons'>arrow_back</i>  Back</button>
                         </div>";
                     }else if($status == 2){
                         echo "<textarea readonly id='reason' class='form-control' style='max-width: 100%; max-height: 100%;'>$reason</textarea>
+                        </div>
+                        <div class='card-footer'>
+                            <button type='button' style='float:left;' class='btn' id='back'><i class='material-icons'>arrow_back</i>  Back</button>
                         </div>";
                     }
+                    echo "</div></div></div>";
             }
             else {
                 echo "Failed to get user id";

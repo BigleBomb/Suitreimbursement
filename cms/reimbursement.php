@@ -134,7 +134,7 @@
 			</nav>
 
 	        <div class="content">
-	            <div class="container-fluid">
+	            <div id='content' class="container-fluid">
 					<div class="row">
 						<div class=" col-md-12">
 							<div class="card card-nav-tabs">
@@ -337,26 +337,6 @@
 	        </footer>
 	    </div>
 	</div>
-
-	<div id="moreInfoModal" class="modal fade" role="dialog" style='z-index:100000'>
-		<div class="modal-dialog modal-lg" role="document">
-			<div class="modal-content">
-				<div class="modal-header card-header">
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title text-primary reimbursetitle">Reimburse info</h4><br>
-				</div>
-				<form class='grouped' method=POST>
-					<div class="modal-body reimburseinfo">
-						<div class="clearfix"></div>
-					</div>
-					<div class="modal-footer">
-						<button type='button' class="btn btn-success" id='accept'>Accept</button>
-						<button type='button' class="btn btn-danger" id='reject'>Reject</button>
-					</div>
-				</form>
-			</div>
-		</div>
-	</div>
 	
 </body>
 <script>
@@ -369,15 +349,16 @@
 	});
 
 	$(document).ready(function(){
-		$('#pendingtab').click(function(){
+		$('#cardheader').addClass("fade in");
+		$(document).on('click', '#pendingtab', (function(){
 			$('#cardheader').attr('data-background-color', 'orange');
-		});
-		$('#acceptedtab').click(function(){
+		}));
+		$(document).on('click', '#acceptedtab', (function(){
 			$('#cardheader').attr('data-background-color', 'green');
-		});
-		$('#rejectedtab').click(function(){
+		}));
+		$(document).on('click', '#rejectedtab', (function(){
 			$('#cardheader').attr('data-background-color', 'red');
-		});
+		}));
 	})
 
 	$(function(){
@@ -388,22 +369,35 @@
 				url: "get_reimburse_info.php",
 				data: 'reimburse_id='+trId,
 				success: function(msg){
-					$("#moreInfoModal").modal('show');
-					$('.reimbursetitle').show().html("Reimburse ID #"+trId+" details");
-					$('.grouped').show().html(msg);
-					$("button#accept").click(function(){
+					$('#content').fadeOut(500, function(){
+						$('#content').html(msg);
+					});
+					$('#content').fadeIn(500);
+					$(document).on('click', "#back", function(){
+						$('#content').fadeOut(500, function(){
+							$('#content').load(location.href + ' #content', function(){
+								$('#content').fadeIn(500);
+							});
+						});
+						$(document).off('click', "#back");
+						$(document).off('click', "#accept");
+						$(document).off('click', "#reject");
+					});
+					$(document).on('click', "#accept", (function(){
 						var reason = $("#reason").val();
 						$.ajax({
 							type: "POST",
 							url: "accept_reimburse.php",
 							data: 'reimburse_id='+trId+'&reason='+reason,
 							success: function(msg){
-								$("#moreInfoModal").modal('hide'); 
-								$("#relist").hide();
-								$("#relist").load(location.href + " #relist");
-								$("#relist").fadeIn('slow');
-								$("button#accept").unbind('click');
-								$("button#reject").unbind('click');
+								$('#content').fadeOut(500, function(){
+									$('#content').load(location.href + ' #content', function(){
+										$('#content').fadeIn(500);
+									});
+								});
+								$(document).off('click', "#back");
+								$(document).off('click', "#accept");
+								$(document).off('click', "#reject");
 								$.notify(msg);
 							},	
 							error: function(){
@@ -411,21 +405,22 @@
 							}
 						});
 						return;
-					});
-					$("button#reject").click(function(){
+					}));
+					$(document).on('click', "#reject", (function(){
 						var reason = $("#reason").val();
-						alert(reason);
 						$.ajax({
 							type: "POST",
 							url: "reject_reimburse.php",
 							data: 'reimburse_id='+trId+'&reason='+reason,
 							success: function(msg){
-								$("#moreInfoModal").modal('hide'); 
-								$("#relist").hide();
-								$("#relist").load(location.href + " #relist");
-								$("#relist").fadeIn('slow');
-								$("button#accept").unbind('click');
-								$("button#reject").unbind('click');
+								$('#content').fadeOut(500, function(){
+									$('#content').load(location.href + ' #content', function(){
+										$('#content').fadeIn(500);
+									});
+								});
+								$(document).off('click', "#back");
+								$(document).off('click', "#accept");
+								$(document).off('click', "#reject");
 								$.notify(msg);
 							},	
 							error: function(){
@@ -433,7 +428,7 @@
 							}
 						});
 						return;
-					});
+					}));
 				},	
 				error: function(){
 					alert("failure");
