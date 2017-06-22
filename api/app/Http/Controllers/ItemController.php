@@ -14,12 +14,20 @@ class ItemController extends Controller {
 		$this->middleware('auth');
 	}
 
-	public function index(Request $request, $id)
+	public function get(Request $request, $id)
 	{
-		$item = Item::where('reimburse_id', $id)->all();
+		$item = Item::where('reimburse_id', $id)->get();
 
-		$res['success'] = true;
-		$res['result'] = $item;
+		if($item->count() > 0){
+			$res['success'] = true;
+			$res['result'] = $item;
+			return response($res);
+		}
+		else{
+			$res['success'] = false;
+			$res['message'] = "No item for this Reimburse ID";
+			return response($res);
+		}
 		// $i=0;
 		// foreach($item as $itemdata)
 		// {
@@ -27,7 +35,6 @@ class ItemController extends Controller {
 		// 	$res['result'][$i]['user_data'] = $user;
 		// 	$i++;
 		// }
-		return response($res);
 	}
 	
 	public function create(Request $request)
@@ -61,7 +68,7 @@ class ItemController extends Controller {
 				return response($res);
 			}
 
-			$it = Item::where('reimburse_id', $reimburse_id)->first();
+			$it = Item::where('id', $item->id)->first();
 			if($it !=null ){
 				if($file != null){
 					if($file->isValid()){
@@ -79,9 +86,14 @@ class ItemController extends Controller {
 						return response($res);
 					}
 					else{
-						$res['file'] = "No file attached";
+						$res['file'] = "Invalid file";
+						
 						return response($res);
 					}
+				}
+				else{
+					$res['file'] = "No file attached";
+					return response($res);
 				}
 			}
 		}
