@@ -60,7 +60,6 @@ class ReimburseController extends Controller {
 				'user_id' => $user_id,
 				'date' => $date,
 				'project_name' => $project_name,
-				'total_cost' => $total_cost,
 				'details' => $details,
 				'status' => 0,
 				'reason' => ''
@@ -78,9 +77,16 @@ class ReimburseController extends Controller {
 			}
 
 			$re = Reimburse::where('id', $reimburse->id)->first();
+			$id = $re->id;
+			$item = Item::where('reimburse_id', $id)->get();
+			$totalcost = 0;
+			foreach($item as $itemdata){
+				$totalcost += $itemdata->cost;
+			}
+			$re->totalcost = $totalcost;
+			$re->save();
 			if($re !=null ){
 				if($file->isValid()){
-					$id = $re->id;
 					$filename = "reimbursePic".$id.".".$file->getClientOriginalExtension();
 					$re->foto = $filename;
 					$re->save();
@@ -282,7 +288,7 @@ class ReimburseController extends Controller {
 		if($reimburse){
 			if($reimburse->status != 1){
 				$reimburse->status = 1;
-				$reimburse->alasan = $reason;
+				$reimburse->reason = $reason;
 				if($reimburse->save()){
 					$res['success'] = true;
 					$res['message'] = "Reimburse ID ".$id." has been accepted.";
@@ -319,7 +325,7 @@ class ReimburseController extends Controller {
 		if($reimburse){
 			if($reimburse->status != 2){
 				$reimburse->status = 2;
-				$reimburse->alasan = $reason;
+				$reimburse->reason = $reason;
 				if($reimburse->save()){
 					$res['success'] = true;
 					$res['message'] = "Reimburse ID ".$id." has been rejected.";
