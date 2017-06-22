@@ -288,7 +288,6 @@
 												$server_output = curl_exec ($ch);
 												curl_close ($ch);
 												$resp = json_decode($server_output, true);
-												
 												if($resp['success']!=false){
 													foreach($resp['result'] as $result){
 														$status = $result['status'];
