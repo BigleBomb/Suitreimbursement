@@ -49,27 +49,21 @@ class ReimburseController extends Controller {
 	public function create(Request $request)
 	{
 		$user_id = $request->input('user_id');
-		$tanggal = $request->input('tanggal');
-		$nama_proyek = $request->input('nama_proyek');
-		$jenis_pengeluaran = $request->input('jenis_pengeluaran');
-		$jumlah_pengeluaran = $request->input('jumlah_pengeluaran');
-		if($request->hasFile('foto'))
-			$file = $request->file('foto');
-		else
-			$file = "";
-		$keterangan = $request->input('keterangan');
+		$date = $request->input('date');
+		$project_name = $request->input('project_name');
+		$total_cost = $request->input('total_cost');
+		$details = $request->input('details');
 
 		$user = User::where('id', $user_id)->first();
 		if($user){
 			$reimburse = Reimburse::create([
 				'user_id' => $user_id,
-				'tanggal' => $tanggal,
-				'nama_proyek' => $nama_proyek,
-				'jenis_pengeluaran' => $jenis_pengeluaran,
-				'jumlah_pengeluaran' => $jumlah_pengeluaran,
-				'keterangan' => $keterangan,
+				'date' => $date,
+				'project_name' => $project_name,
+				'total_cost' => $total_cost,
+				'details' => $details,
 				'status' => 0,
-				'alasan' => ''
+				'reason' => ''
 			]);
 
 			if($reimburse){
@@ -231,7 +225,7 @@ class ReimburseController extends Controller {
 				foreach($reimburse as $reimdata)
 				{
 					if($reimdata->status == 0)
-						$pend += $reimdata->jumlah_pengeluaran;
+						$pend += $reimdata->total_cost;
 					else{}
 				}
 				if($pend > 0){

@@ -9,10 +9,14 @@ class Reimburse extends Model {
 	protected $table = 'reimburse';
 
     protected $fillable = [
-		'user_id', 'tanggal', 'nama_proyek', 'jenis_pengeluaran', 'jumlah_pengeluaran', 'foto', 'keterangan', 'status', 'alasan'
+		'user_id', 'date', 'project_name', 'category', 'total_cost', 'detail', 'status', 'reason'
 	];
 
 	public function user(){
 		return $this->belongsTo('App\User', 'user_id');
+	}
+
+	public function item(){
+		return $this->hasMany('App\Item');
 	}
 }

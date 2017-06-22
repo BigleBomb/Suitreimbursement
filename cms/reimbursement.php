@@ -181,7 +181,6 @@
 													<th width=20px>RID</th>
 													<th class='col-lg-3'>Name</th>
 													<th width=250 align=left>Project name</th>
-													<th class='col-lg-1'>Type</th>
 													<th>Date</th>
 													<th>Total</th>
 													<th>Action</th>
@@ -203,11 +202,10 @@
 																echo "<tr><tr id='tr".$result['id']."'>
 																	<td>#".$result['id']."</td>
 																	<td>".$result['user_data']['nama']."</td>
-																	<td>".$result['nama_proyek']."</td>
-																	<td>".$result['jenis_pengeluaran']."</td>
-																	<td>".date_format(date_create($result['tanggal']), 'jS F\,\ Y')
+																	<td>".$result['project_name']."</td>
+																	<td>".date_format(date_create($result['date']), 'jS F\,\ Y')
 																	."</td>
-																	<td>Rp ".number_format($result['jumlah_pengeluaran'], 0, ",", ".")."</td>
+																	<td>Rp ".number_format($result['total_cost'], 0, ",", ".")."</td>
 																	<td class='text-center'>
 																	<button type='button' class='btn btn-primary more-info' data-toggle='modal' data-background-color='orange'>More info</td>
 																</tr>";
@@ -226,7 +224,6 @@
 													<th width=20px>RID</th>
 													<th class='col-lg-3'>Name</th>
 													<th width=250 align=left>Project name</th>
-													<th class='col-lg-1'>Type</th>
 													<th>Date</th>
 													<th>Total</th>
 													<th>Action</th>
@@ -248,11 +245,10 @@
 															echo "<tr><tr id='tr".$result['id']."'>
 																<td>#".$result['id']."</td>
 																<td>".$result['user_data']['nama']."</td>
-																<td>".$result['nama_proyek']."</td>
-																<td>".$result['jenis_pengeluaran']."</td>
-																<td>".date_format(date_create($result['tanggal']), 'jS F\,\ Y')
+																<td>".$result['project_name']."</td>
+																<td>".date_format(date_create($result['date']), 'jS F\,\ Y')
 																."</td>
-																<td>Rp ".number_format($result['jumlah_pengeluaran'], 0, ",", ".")."</td>
+																<td>Rp ".number_format($result['total_cost'], 0, ",", ".")."</td>
 																<td class='text-center'>
 																<button type='button' class='btn btn-primary more-info' data-toggle='modal' data-background-color='green'>More info</td>
 															</tr>";
@@ -271,7 +267,6 @@
 													<th width=20px>RID</th>
 													<th class='col-lg-3'>Name</th>
 													<th width=250 align=left>Project name</th>
-													<th class='col-lg-1'>Type</th>
 													<th>Date</th>
 													<th>Total</th>
 													<th>Action</th>
@@ -292,11 +287,10 @@
 																echo "<tr id='tr".$result['id']."'>
 																	<td>#".$result['id']."</td>
 																	<td>".$result['user_data']['nama']."</td>
-																	<td>".$result['nama_proyek']."</td>
-																	<td>".$result['jenis_pengeluaran']."</td>
-																	<td>".date_format(date_create($result['tanggal']), 'jS F\,\ Y')
+																	<td>".$result['project_name']."</td>
+																	<td>".date_format(date_create($result['date']), 'jS F\,\ Y')
 																	."</td>
-																	<td>Rp ".number_format($result['jumlah_pengeluaran'], 0, ",", ".")."</td>
+																	<td>Rp ".number_format($result['total_cost'], 0, ",", ".")."</td>
 																	<td class='text-center'>
 																	<button type='button' class='btn btn-primary more-info' data-toggle='modal' data-background-color='red'>More info</td>
 																</tr>";

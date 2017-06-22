@@ -15,14 +15,12 @@ session_start();
 
         if($resp != null){
             if ($resp->success == true){
-                $project = $resp->result->nama_proyek;
-                $date = $resp->result->tanggal;
-                $type = $resp->result->jenis_pengeluaran;
-                $total = $resp->result->jumlah_pengeluaran;
-                $details = $resp->result->keterangan;
-                $pic = $resp->result->foto;
+                $project = $resp->result->project_name;
+                $date = $resp->result->date;
+                $total = $resp->result->total_cost;
+                $details = $resp->result->details;
                 $status = $resp->result->status;
-                $reason = $resp->result->alasan;
+                $reason = $resp->result->reason;
                 $update = $resp->result->updated_at;
                 $statd;
                 $color;
@@ -75,10 +73,6 @@ session_start();
                                 <td>$project</td>
                             </tr>
                             <tr>
-                                <td>Type</td>
-                                <td>$type</td>
-                            </tr>
-                            <tr>
                                 <td>Total</td>
                                 <td>Rp. ".number_format($total, 0, ",", ".");
                                     if($total > $limit)
@@ -95,10 +89,10 @@ session_start();
                             </tr>
                         </tbody>
                     </table>
-                    <div height='10px' width='10px'>
-                            <h4>Pictures</h4>
-                            <center><img src='$imageroot/u$uid/$pic' alt='image not found' style='max-height:$imageheight; max-width:$imagewidth;'></img></center><br>
-                            <h4>Reason for accepting/rejecting</h4>";
+                    <div height='10px' width='10px'>";
+                            // <h4>Pictures</h4>
+                            // <center><img src='$imageroot/u$uid/$pic' alt='image not found' style='max-height:$imageheight; max-width:$imagewidth;'></img></center><br>
+                            echo "<h4>Reason for accepting/rejecting</h4>";
 
                     if($status == 0){
                         echo "
