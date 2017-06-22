@@ -27,7 +27,7 @@ $app->get('/user/count', ['middleware' => 'auth', 'uses' => 'UserController@get_
 $app->post('/user/update/{id}', 'UserController@update');
 
 // ITEM ROUTES
-$app->get('/item/all', 'ItemController@index');
+$app->get('/item/getbyreimburse/{id}', 'ItemController@get');
 $app->post('/item/new', 'ItemController@create');
 
 
