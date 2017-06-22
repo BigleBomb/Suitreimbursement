@@ -254,7 +254,7 @@
 											
 											if($resp['success'] == true){
 												foreach($resp['result'] as $result){
-													echo date_format(date_create($result['tanggal']), 'jS F Y');
+													echo date_format(date_create($result['date']), 'jS F Y');
 												}		
 											}
 											else{
@@ -269,7 +269,6 @@
 	                                        <th class="col-lg-1">RID</th>
 	                                    	<th>Name</th>
 	                                    	<th class="col-sm-2">Project name</th>
-											<th>Type</th>
 	                                    	<th>Date</th>
 											<th>Total</th>
 											<th class='col-sm-2 text-center'>Status</th>
@@ -310,11 +309,10 @@
 
 														echo "<tr><td>#".$result['id']."</td>
 															<td>".$result['user_data']['nama']."</td>
-															<td>".$result['nama_proyek']."</td>
-															<td>".$result['jenis_pengeluaran']."</td>
-															<td>".date_format(date_create($result['tanggal']), 'jS F\,\ Y')
+															<td>".$result['project_name']."</td>
+															<td>".date_format(date_create($result['date']), 'jS F\,\ Y')
 															."</td>
-															<td>Rp ".number_format($result['jumlah_pengeluaran'], 0, ",", ".")."</td>
+															<td>Rp ".number_format($result['total_cost'], 0, ",", ".")."</td>
 															<td class='text-center'><font class='material-icons' color='$color'>$label</font></td>
 														</tr>";
 													}
