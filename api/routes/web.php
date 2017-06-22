@@ -26,6 +26,10 @@ $app->get('/user/delete/{id}', ['middleware' => 'auth', 'uses' => 'UserControlle
 $app->get('/user/count', ['middleware' => 'auth', 'uses' => 'UserController@get_user_count']);
 $app->post('/user/update/{id}', 'UserController@update');
 
+// ITEM ROUTES
+$app->get('/item/all', 'ItemController@index');
+$app->post('/item/new', 'ItemController@create');
+
 
 // REIMBURSE ROUTES
 $app->get('/reimburse/all', 'ReimburseController@index');
