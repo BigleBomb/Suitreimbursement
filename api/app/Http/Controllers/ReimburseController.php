@@ -203,16 +203,16 @@ class ReimburseController extends Controller {
 
 	public function get_pending(Request $request, $menu){
 		if($menu === 'totalcount'){
-			$reimburse = Reimburse::where('status', 0)->count();
-			if($reimburse != null){
-				if($reimburse > 0){						
+			$reimburse = Reimburse::where('status', 0)->get();
+			if($reimburse){
+				if($reimburse->count() > 0){						
 					$res['success'] = true;
-					$res['result']['count'] = $reimburse;
+					$res['result']['count'] = $reimburse->count();
 
 					return response($res);
 				}else{
 					$res['success'] = false;
-					$res['message'] = "There is no pending Reimbursements";
+					$res['message'] = "No pending reimbursements";
 
 					return response($res);
 				}
