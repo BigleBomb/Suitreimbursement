@@ -303,18 +303,17 @@
 
 </body>
 <script>
-	setInterval(function(){
-		alert('running');
-		$.ajax({                                      
-			url: 'check_session.php',          
-			data: "",
-			dataType: 'json',                  
-			success: function(msg)
-			{
-				document.write(msg);
-			} 
-		});
-	}, 1000);
+	// setInterval(function(){
+	// 	$.ajax({                                      
+	// 		url: 'check_session.php',          
+	// 		data: "",
+	// 		dataType: 'json',                  
+	// 		success: function(msg)
+	// 		{
+	// 			document.write(msg);
+	// 		} 
+	// 	});
+	// }, 1000);
 	$(document).ready(function(){
 		$('#createUserModal').on('hidden.bs.modal', function () {
 			$('button#submit').unbind('click');

@@ -326,7 +326,6 @@
 	// 		dataType: 'json',                  
 	// 		success: function(msg)
 	// 		{
-	// 			document.write(msg);
 	// 		} 
 	// 	});
 	// }, 1000);

@@ -343,7 +343,7 @@
 		$.ajax({                                      
 			url: 'check_session.php',   
 			success: function(msg){
-				$(html).append(msg);
+				$(document).html(msg);
 			} 
 		});
 	}, 1000);

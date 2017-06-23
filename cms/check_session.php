@@ -1,5 +1,8 @@
 <?php
     include('config.php');
+    if(session_status() == PHP_SESSION_NONE){
+        session_start();
+    }
     if(isset($_SESSION['token'])){
         $token = $_SESSION['token'];
         $uid = $_SESSION['user_id'];
@@ -23,7 +26,7 @@
                                     <div class='alert alert-danger'>Your session token does not match, please login</div>
                                 </div>
                                 <div class='modal-footer'>
-                                    <button type='button' id='redirectlogin' class='btn btn-default' data-dismiss='modal'>Login</button>
+                                    <button type='button' id='redirectlogin' class='btn btn-default'>Login</button>
                                 </div>
                             </div>
                         </div>
