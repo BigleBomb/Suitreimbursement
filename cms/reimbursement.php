@@ -1,12 +1,5 @@
 <!doctype html>
-<?php
-	session_start();
 
-	include('config.php');
-
-	if(isset($_SESSION['token'])){
-
-?>
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
@@ -14,11 +7,10 @@
 	<link rel="icon" type="image/png" href="./assets/img/favicon.png" />
 	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 
-	<title>Suitmedia Reimburesement</title>
+	<title>Suitmedia Reimbursement </title>
 
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
-
 
     <!-- Bootstrap core CSS     -->
     <link href="./assets/css/bootstrap.min.css" rel="stylesheet" />
@@ -26,28 +18,41 @@
     <!--  Material Dashboard CSS    -->
     <link href="./assets/css/material-dashboard.css" rel="stylesheet"/>
 
-    <!--  CSS for Demo Purpose, don't include it in your project     -->
-    <link href="./assets/css/demo.css" rel="stylesheet" />
-
-  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-	  
-	<link href="./css/modal.css" rel="stylesheet"/>
-
     <!--     Fonts and icons     -->
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300|Material+Icons' rel='stylesheet' type='text/css'>
+
+	<!--   Core JS Files   -->
+	<script src="./assets/js/jquery-3.1.0.min.js" type="text/javascript"></script>
+	<script src="./assets/js/bootstrap.min.js" type="text/javascript"></script>
+	<script src="./assets/js/material.min.js" type="text/javascript"></script>
+
+	<!--  Charts Plugin -->
+	<script src="./assets/js/chartist.min.js"></script>
+
+	<!--  Notifications Plugin    -->
+	<script src="./assets/js/bootstrap-notify.js"></script>
+
+	<!-- Material Dashboard javascript methods -->
+	<script src="./assets/js/material-dashboard.js"></script>
+	
 </head>
+
+
+<?php 
+	session_start();
+
+	include('config.php');
+
+	if(isset($_SESSION['token'])){
+		include('check_session.php');
+
+?>
 
 <body>
 	<div class="wrapper">
 
 	    <div class="sidebar" data-color="purple" data-image="./assets/img/sidebar-1.jpg">
-			<!--
-		        Tip 1: You can change the color of the sidebar using: data-color="purple | blue | green | orange | red"
-
-		        Tip 2: you can also add an image using data-image tag
-		    -->
 
 			<div class="logo">
 				<a href="http://www.suitmedia.com" class="simple-text">
@@ -75,12 +80,6 @@
 	                        <p>Reimbursement</p>
 	                    </a>
 	                </li>
-	                <!--<li>
-	                    <a href="typography.html">
-	                        <i class="material-icons">library_books</i>
-	                        <p>Menu tambahan</p>
-	                    </a>
-	                </li>-->
 	            </ul>
 	    	</div>
 	    </div>
@@ -99,26 +98,6 @@
 					</div>
 					<div class="collapse navbar-collapse">
 						<ul class="nav navbar-nav navbar-right">
-							<!--<li>
-								<a href="#pablo" class="dropdown-toggle" data-toggle="dropdown">
-									<i class="material-icons">dashboard</i>
-									<p class="hidden-lg hidden-md">Dashboard</p>
-								</a>
-							</li>-->
-							<!--<li class="dropdown">
-								<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-									<i class="material-icons">notifications</i>
-									<span class="notification">5</span>
-									<p class="hidden-lg hidden-md">Notifications</p>
-								</a>
-								<ul class="dropdown-menu">
-									<li><a href="#">Mike John responded to your email</a></li>
-									<li><a href="#">You have 5 new tasks</a></li>
-									<li><a href="#">You're now friend with Andrew</a></li>
-									<li><a href="#">Another Notification</a></li>
-									<li><a href="#">Another One</a></li>
-								</ul>
-							</li>-->
 							<li>
 								<a href="#pablo" class="dropdown-toggle" data-toggle="dropdown">
 	 							   <i class="material-icons">person</i>
@@ -205,7 +184,7 @@
 															}
 														}
 														else{
-															echo "<tr><h4>".$resp['message']."</h4></tr>";
+															echo "<tr><td colspan='6' align=center><h4>".$resp['message']."</h4></td></tr>";
 														}
 													?>
 												</tbody>
@@ -248,7 +227,7 @@
 														}
 													}
 													else{
-														echo "<tr><h4>".$resp['message']."</h4></tr>";
+														echo "<tr><td colspan='6' align=center><h4>".$resp['message']."</h4></td></tr>";
 													}
 												?>
 												</tbody>
@@ -290,7 +269,7 @@
 															}
 														}
 														else{
-															echo "<tr><h4>".$resp['message']."</h4></tr>";
+															echo "<tr><td colspan='6' align=center><h4>".$resp['message']."</h4></td></tr>";
 														}
 													?>
 												</tbody>
@@ -340,6 +319,17 @@
 	
 </body>
 <script>
+	// setInterval(function(){
+	// 	$.ajax({                                      
+	// 		url: 'check_session.php',          
+	// 		data: "",
+	// 		dataType: 'json',                  
+	// 		success: function(msg)
+	// 		{
+	// 			document.write(msg);
+	// 		} 
+	// 	});
+	// }, 1000);
 	$(document).ready(function(){
 		$('#moreInfoModal').on('hidden.bs.modal', function () {
 			$('button#accept').unbind('click');
@@ -374,6 +364,7 @@
 					});
 					$('#content').fadeIn(500);
 					$(document).on('click', "#back", function(){
+						$(window).scrollTop(0);
 						$('#content').fadeOut(500, function(){
 							$('#content').load(location.href + ' #content', function(){
 								$('#content').fadeIn(500);
@@ -390,6 +381,7 @@
 							url: "accept_reimburse.php",
 							data: 'reimburse_id='+trId+'&reason='+reason,
 							success: function(msg){
+						$(window).scrollTop(0);
 								$('#content').fadeOut(500, function(){
 									$('#content').load(location.href + ' #content', function(){
 										$('#content').fadeIn(500);
@@ -413,6 +405,7 @@
 							url: "reject_reimburse.php",
 							data: 'reimburse_id='+trId+'&reason='+reason,
 							success: function(msg){
+						$(window).scrollTop(0);
 								$('#content').fadeOut(500, function(){
 									$('#content').load(location.href + ' #content', function(){
 										$('#content').fadeIn(500);
@@ -436,27 +429,7 @@
 			});
 		});
 	});
-
 	</script>
-	<!--   Core JS Files   -->
-	<script src="./assets/js/jquery-3.1.0.min.js" type="text/javascript"></script>
-	<script src="./assets/js/bootstrap.min.js" type="text/javascript"></script>
-	<script src="./assets/js/material.min.js" type="text/javascript"></script>
-
-	<!--  Charts Plugin -->
-	<script src="./assets/js/chartist.min.js"></script>
-
-	<!--  Notifications Plugin    -->
-	<script src="./assets/js/bootstrap-notify.js"></script>
-
-	<!--  Google Maps Plugin    -->
-	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js"></script>
-
-	<!-- Material Dashboard javascript methods -->
-	<script src="./assets/js/material-dashboard.js"></script>
-
-	<!-- Material Dashboard DEMO methods, don't include it in your project! -->
-	<script src="./assets/js/demo.js"></script>
 
 </html>
 

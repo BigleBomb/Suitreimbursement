@@ -1,13 +1,5 @@
 <!doctype html>
 
-<?php 
-	session_start();
-
-	include('config.php');
-
-	if(isset($_SESSION['token'])){
-
-?>
 <html lang="en">
 <head>
 	<meta charset="utf-8" />
@@ -26,24 +18,42 @@
     <!--  Material Dashboard CSS    -->
     <link href="./assets/css/material-dashboard.css" rel="stylesheet"/>
 
-    <!--  CSS for Demo Purpose, don't include it in your project     -->
-    <link href="./assets/css/demo.css" rel="stylesheet" />
-
     <!--     Fonts and icons     -->
     <link href="http://maxcdn.bootstrapcdn.com/font-awesome/latest/css/font-awesome.min.css" rel="stylesheet">
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,700,300|Material+Icons' rel='stylesheet' type='text/css'>
+
+	<!--   Core JS Files   -->
+	<script src="./assets/js/jquery-3.1.0.min.js" type="text/javascript"></script>
+	<script src="./assets/js/bootstrap.min.js" type="text/javascript"></script>
+	<script src="./assets/js/material.min.js" type="text/javascript"></script>
+
+	<!--  Charts Plugin -->
+	<script src="./assets/js/chartist.min.js"></script>
+
+	<!--  Notifications Plugin    -->
+	<script src="./assets/js/bootstrap-notify.js"></script>
+
+	<!-- Material Dashboard javascript methods -->
+	<script src="./assets/js/material-dashboard.js"></script>
+	
 </head>
+
+
+<?php 
+	session_start();
+
+	include('config.php');
+
+	if(isset($_SESSION['token'])){
+		include('check_session.php');
+
+?>
 
 <body>
 
 	<div class="wrapper">
 
 	    <div class="sidebar" data-color="purple" data-image="./assets/img/sidebar-1.jpg">
-			<!--
-		        Tip 1: You can change the color of the sidebar using: data-color="purple | blue | green | orange | red"
-
-		        Tip 2: you can also add an image using data-image tag
-		    -->
 
 			<div class="logo">
 				<a href="http://www.suitmedia.com" class="simple-text">
@@ -71,12 +81,6 @@
 	                        <p>Reimbursement</p>
 	                    </a>
 	                </li>
-	                <!--<li>
-	                    <a href="typography.html">
-	                        <i class="material-icons">library_books</i>
-	                        <p>Menu tambahan</p>
-	                    </a>
-	                </li>-->
 	            </ul>
 	    	</div>
 	    </div>
@@ -95,26 +99,6 @@
 					</div>
 					<div class="collapse navbar-collapse">
 						<ul class="nav navbar-nav navbar-right">
-							<!--<li>
-								<a href="#pablo" class="dropdown-toggle" data-toggle="dropdown">
-									<i class="material-icons">dashboard</i>
-									<p class="hidden-lg hidden-md">Dashboard</p>
-								</a>
-							</li>-->
-							<!--<li class="dropdown">
-								<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-									<i class="material-icons">notifications</i>
-									<span class="notification">5</span>
-									<p class="hidden-lg hidden-md">Notifications</p>
-								</a>
-								<ul class="dropdown-menu">
-									<li><a href="#">Mike John responded to your email</a></li>
-									<li><a href="#">You have 5 new tasks</a></li>
-									<li><a href="#">You're now friend with Andrew</a></li>
-									<li><a href="#">Another Notification</a></li>
-									<li><a href="#">Another One</a></li>
-								</ul>
-							</li>-->
 							<li>
 								<a href="#pablo" class="dropdown-toggle" data-toggle="dropdown">
 	 							   <i class="material-icons">person</i>
@@ -152,14 +136,19 @@
 												curl_close ($ch);
 												$resp = json_decode($server_output, true);
 												
-												if($resp['success']!=false){
-													echo $resp['result']['count'];
-												}
-												else{
-													echo "<tr><h4>No pending reimbursements</h4></tr>";
+												if($resp!=null){
+													if($resp['success']!=false){
+														echo $resp['result']['count'];
+														echo " <small>Request(s)</small>";
+													}
+													else{
+														echo $resp['message'];
+													}
+												}else{
+													echo "Cannot get data from the server.";
 												}
 										?>
-										<small>Request</small></h4>
+										</h4>
 								</div>
 								<div class="card-footer">
 									<div class="stats">
@@ -175,8 +164,7 @@
 								</div>
 								<div class="card-content">
 									<p class="category">Pending amount</p>
-
-									<h4 class="title"> Rp 
+									<h4 class=title>		
 									<?php
 										$ch = curl_init();
 										$token = $_SESSION['token'];
@@ -188,11 +176,17 @@
 										curl_close ($ch);
 										$resp = json_decode($server_output, true);
 										
-										if($resp['success']!=false){
-											echo number_format($resp['result']['amount'], 0, ",", ".");
+										if($resp != null){
+											if($resp['success']!=false){
+												echo "Rp ";
+												echo number_format($resp['result']['amount'], 0, ",", ".")."</h4>";
+											}
+											else{
+												echo $resp['message'];
+											}
 										}
 										else{
-											echo "<tr><h4>".$resp['message']."</h4></tr>";
+											echo "Cannot get data from the server.";
 										}
 									?>
 									</h4>
@@ -223,11 +217,15 @@
 										curl_close ($ch);
 										$resp = json_decode($server_output, true);
 										
-										if($resp['success']!=false){
-											echo $resp['result']['count'];
-										}
-										else{
-											echo $resp['message'];
+										if($resp != null){
+											if($resp['success']!=false){
+												echo $resp['result']['count'];
+											}
+											else{
+												echo $resp['message'];
+											}
+										}else{
+											echo "Cannot get data from the server.";
 										}
 										?>
 									</h4>
@@ -257,7 +255,7 @@
 											
 											if($resp['success'] == true){
 												foreach($resp['result'] as $result){
-													echo date_format(date_create($result['date']), 'jS F Y');
+													echo date_format(date_create($result['created_at']), 'jS F Y');
 												}		
 											}
 											else{
@@ -293,19 +291,23 @@
 														$status = $result['status'];
 														$label;
 														$color;
+														$title;
 														
 														switch($status){
 															case 0:
 																$label = 'info_outline';
 																$color = 'orange';
+																$title = 'Pending';
 																break;
 															case 1:
 																$label = 'done';
 																$color = 'green';
+																$title = 'Accepted';
 																break;
 															case 2:
 																$label = 'clear';
 																$color = 'red';
+																$title = 'Rejected';
 																break;
 														}
 
@@ -315,12 +317,12 @@
 															<td>".date_format(date_create($result['date']), 'jS F\,\ Y')
 															."</td>
 															<td>Rp ".number_format($result['total_cost'], 0, ",", ".")."</td>
-															<td class='text-center'><font class='material-icons' color='$color'>$label</font></td>
+															<td class='text-center'><font title='$title' class='material-icons' color='$color'>$label</font></td>
 														</tr>";
 													}
 												}
 												else{
-													echo "<tr><h4>".$resp['message']."</h4></tr>";
+													echo "<tr><td colspan=6 align=center><h4>".$resp['message']."</h4></td></tr>";
 												}
 											?>
 	                                    </tbody>
@@ -331,70 +333,20 @@
 					</div> 
 				</div>
 			</div>
-
-			<!--<footer class="footer">
-				<div class="container-fluid">
-					<nav class="pull-left">
-						<ul>
-							<li>
-								<a href="#">
-									Home
-								</a>
-							</li>
-							<li>
-								<a href="#">
-									Company
-								</a>
-							</li>
-							<li>
-								<a href="#">
-									Portfolio
-								</a>
-							</li>
-							<li>
-								<a href="#">
-								   Blog
-								</a>
-							</li>
-						</ul>
-					</nav>
-					<p class="copyright pull-right">
-						&copy; <script>document.write(new Date().getFullYear())</script> <a href="http://www.creative-tim.com">Creative Tim</a>, made with love for a better web
-					</p>
-				</div>
-			</footer>-->
 		</div>
 	</div>
 
 </body>
 
-	<!--   Core JS Files   -->
-	<script src="./assets/js/jquery-3.1.0.min.js" type="text/javascript"></script>
-	<script src="./assets/js/bootstrap.min.js" type="text/javascript"></script>
-	<script src="./assets/js/material.min.js" type="text/javascript"></script>
-
-	<!--  Charts Plugin -->
-	<script src="./assets/js/chartist.min.js"></script>
-
-	<!--  Notifications Plugin    -->
-	<script src="./assets/js/bootstrap-notify.js"></script>
-
-	<!--  Google Maps Plugin    -->
-	<script type="text/javascript" src="https://maps.googleapis.com/maps/api/js"></script>
-
-	<!-- Material Dashboard javascript methods -->
-	<script src="./assets/js/material-dashboard.js"></script>
-
-	<!-- Material Dashboard DEMO methods, don't include it in your project! -->
-	<script src="./assets/js/demo.js"></script>
-
-	<script type="text/javascript">
-    	$(document).ready(function(){
-
-			// Javascript method's body can be found in assets/js/demos.js
-        	demo.initDashboardPageCharts();
-
-    	});
+<script>
+	setInterval(function(){
+		$.ajax({                                      
+			url: 'check_session.php',   
+			success: function(msg){
+				$(html).append(msg);
+			} 
+		});
+	}, 1000);
 	</script>
 
 </html>
