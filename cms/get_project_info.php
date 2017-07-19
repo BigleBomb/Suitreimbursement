@@ -63,8 +63,9 @@ if(isset($_POST['project_id']))
                                             </div>
                                         </div>
                                         <hr style='color:#000000'>
+
                                         <div class='row'>
-                                            <div class='col-lg-4'>
+                                            <div class='col-lg-4 table-responsive'>
                                                 <h4>Users list</h4>
                                                 <table class='table'>
                                                     <thead>
@@ -91,8 +92,29 @@ if(isset($_POST['project_id']))
                                                     </tbody>
                                                 </table>
                                             </div>
-                                            <div class='col-lg-8'>
-                                                <h4>Reimburse list</h4>
+                                            <div class='col-lg-8 table-responsive'>
+                                            <h4>Reimburse list</h4>
+                                             <ul class='nav nav-tabs' data-tabs='tabs'>
+												<li class='active'>
+													<a href='#pending' id='pendingtab' data-toggle='tab'>
+														<i class='material-icons'>info_outline</i>
+														Pending
+													<div class='ripple-container'></div></a>
+												</li>
+												<li class=''>
+													<a href='#accepted' id='acceptedtab' data-toggle='tab'>
+														<i class='material-icons'>done</i>
+														Accepted
+													<div class='ripple-container'></div></a>
+												</li>
+												<li class=''>
+													<a href='#rejected' id='rejectedtab' data-toggle='tab'>
+														<i class='material-icons'>close</i>
+														Rejected
+													<div class='ripple-container'></div></a>
+												</li>
+											</ul>
+                                            
                                                 <table class='table'>
                                                     <thead style='border:none'>
                                                         <th class='col-lg-1'>RID</th>

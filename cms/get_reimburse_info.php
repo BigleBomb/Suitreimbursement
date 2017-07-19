@@ -67,7 +67,7 @@ if(isset($_POST['reimburse_id']))
                             <p class='category'><i>$email</i></p>
                         </div>
                         <div class='card-content'>
-                            <div class='container'>
+                            <div class='container-fluid'>
                             <div class='row'>
                             <div class='col-lg-6'>
                             <h4>Reimburse detail</h4>
