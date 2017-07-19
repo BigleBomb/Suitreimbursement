@@ -33,6 +33,6 @@ class User extends Model implements AuthenticatableContract, AuthorizableContrac
 
     public function reimburse(){
 
-        return $this->hasMany('App\Reimburse');
+        return $this->belongsToMany('App\Reimburse', 'project_user_list', 'user_id', 'project_id');
     }
 }

@@ -15,13 +15,14 @@ if(isset($_POST['reimburse_id']))
 
     if($resp != null){
         if ($resp->success == true){
-            $project = $resp->result->project_name;
+            // $project = $resp->result->project_name;
             $date = $resp->result->date;
-            $total = $resp->result->total_cost;
-            $details = $resp->result->details;
+            // $total = $resp->result->total_cost;
+            // $details = $resp->result->details;
             $status = $resp->result->status;
             $reason = $resp->result->reason;
-            $update = $resp->result->updated_at;
+            // $update = $resp->result->updated_at;
+            // $item_data = $resp->result->item_data;
             $statd;
             $color;
             switch($status){
@@ -75,7 +76,6 @@ if(isset($_POST['reimburse_id']))
                                     <th class='col-lg-3'>header</th>
                                     <th>header</th>
                                 </thead>
-                                
                                 <tbody>
                                     <tr>
                                         <td>User ID</td>
@@ -104,38 +104,20 @@ if(isset($_POST['reimburse_id']))
                             </table>
                             </div>
                             <div class='col-lg-6'>
-                            <h4>Item detail</h4>
-                            <table class='table'>
-                                <thead>
-                                    <th class='col-lg-3'>Item no.</th>
-                                    <th>Category</th>
-                                    <th>Cost</th>
-                                </thead>
-                                <tbody>";
-                                $ch = curl_init();
-                                curl_setopt($ch, CURLOPT_URL,"$SERVER/item/getbyreimburse/$id?token=".$token);
-                                curl_setopt($ch, CURLOPT_POST, 0);
-                                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-                                $server_output = curl_exec ($ch);
-                                curl_close ($ch);
-                                $res = json_decode($server_output);
-
-                                if($res!=null){
-                                    if($res->success != false){
-                                        foreach($res->result as $result){
-                                            echo "<tr><td>$result->id</td>
-                                                <td>$result->category</td>
-                                                <td>Rp. ".number_format($result->cost, 0, ",", ".")."</tr>";
-                                        }
-                                    }
-                                    else{
-                                        echo "<tr><td colspan=3 align=center>$res->message</td></tr>";
-                                    }
-                                }
-                                else{
-                                    echo "Could not connect to the server";
-                                }
-                                
+                            <h4>Pictures</h4>
+                            <div class='row'>";
+                            if($item_data!=null){
+                                foreach($item_data as $item){
+                                    echo "<div class=col-md-4'>
+                                            <a href='#' class='thumbnail'>
+                                                <img src='$imageroot/u$uid/r$id/$item->picture' alt='...'>
+                                            </a>
+                                        </div>";
+                                }   
+                            }
+                            else{
+                                echo "<div align=center>No pictures found</div>";
+                            }
                             echo "</tbody>
                             </table>
                             </div>
@@ -144,22 +126,17 @@ if(isset($_POST['reimburse_id']))
                         <div>
                             <h4>Pictures</h4>
                             <div class='row'>";
-                            if($res!=null){
-                                if($res->success != false){
-                                    foreach($res->result as $result2){
-                                        echo "<div class=col-xs-3 col-md-3'>
-                                                <a href='#' class='thumbnail'>
-                                                    <img src='$imageroot/u$uid/r$id/$result2->picture' alt='...'>
-                                                </a>
-                                            </div>";
-                                    }   
-                                }
-                                else{
-                                    echo "<div align=center>No pictures found</div>";
-                                }
+                            if($item_data!=null){
+                                foreach($item_data as $item){
+                                    echo "<div class=col-xs-3 col-md-3'>
+                                            <a href='#' class='thumbnail'>
+                                                <img src='$imageroot/u$uid/r$id/$item->picture' alt='...'>
+                                            </a>
+                                        </div>";
+                                }   
                             }
                             else{
-                                echo "Could not connect to the server";
+                                echo "<div align=center>No pictures found</div>";
                             }
                         echo "</div>
                             <h4>Reason</h4>";
@@ -170,21 +147,21 @@ if(isset($_POST['reimburse_id']))
                     </div>
                     <div class='clearfix'></div></div>
                     <div class='card-footer' align='right'>
-                        <button type='button' style='float:left;' class='btn' id='back'><i class='material-icons'>arrow_back</i>  Back</button>
+                        <button type='button' style='float:left;' class='btn' id='back-to-project'><i class='material-icons'>arrow_back</i>  Back</button>
                         <button type='button' class='btn btn-success' id='accept'>Accept</button>
                         <button type='button' class='btn btn-danger' id='reject'>Reject</button>
                     </div>";
                 }else if($status == 1){
-                    echo "<textarea readonly id='reason' class='form-control' style='max-width: 100%; max-height: 100%;'>$reason</textarea>
+                    echo "<textarea readonly id='reason' class='form-control' style='max-width: 100%; max-height: 100%;' disabled>$reason</textarea>
                     </div>
                     <div class='card-footer'>
-                        <button type='button' style='float:left;' class='btn' id='back'><i class='material-icons'>arrow_back</i>  Back</button>
+                        <button type='button' style='float:left;' class='btn' id='back-to-project'><i class='material-icons'>arrow_back</i>  Back</button>
                     </div>";
                 }else if($status == 2){
-                    echo "<textarea readonly id='reason' class='form-control' style='max-width: 100%; max-height: 100%;'>$reason</textarea>
+                    echo "<textarea readonly id='reason' class='form-control' style='max-width: 100%; max-height: 100%;' disabled>$reason</textarea>
                     </div>
                     <div class='card-footer'>
-                        <button type='button' style='float:left;' class='btn' id='back'><i class='material-icons'>arrow_back</i>  Back</button>
+                        <button type='button' style='float:left;' class='btn' id='back-to-project'><i class='material-icons'>arrow_back</i>  Back</button>
                     </div>";
                 }
                 echo "</div></div></div>";

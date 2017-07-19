@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use App\Project;
 use App\Reimburse;
 use App\User;
 
@@ -14,129 +15,67 @@ class ReimburseController extends Controller {
 		$this->middleware('auth');
 	}
 
-	public function index(Request $request)
+	public function get(Request $request, $id)
 	{
-		$reimburse = Reimburse::all();
+		$reimburse = Reimburse::where('reimburse_id', $id)->get();
 
-		$res['success'] = true;
-		$res['result'] = $reimburse;
-		$i=0;
-		foreach($reimburse as $userdata)
-		{
-			$user = User::find($userdata->user()->first()->id);
-			$res['result'][$i]['user_data'] = $user;
-			$i++;
-		}
-		return response($res);
-	}
-
-	public function get_last(Request $request, $amount)
-	{
-		$reimburse = Reimburse::orderBy('id', 'desc')->take($amount)->get();
-
-		$res['success'] = true;
-		$res['result'] = $reimburse;
-		$i=0;
-		foreach($reimburse as $userdata)
-		{
-			$user = User::find($userdata->user()->first()->id);
-			$res['result'][$i]['user_data'] = $user;
-			$i++;
-		}
-		return response($res);
-	}
-	
-	public function create(Request $request)
-	{
-		$user_id = $request->input('user_id');
-		$date = $request->input('date');
-		$project_name = $request->input('project_name');
-		$total_cost = $request->input('total_cost');
-		$details = $request->input('details');
-
-		$user = User::where('id', $user_id)->first();
-		if($user){
-			$reimburse = Reimburse::create([
-				'user_id' => $user_id,
-				'date' => $date,
-				'project_name' => $project_name,
-				'details' => $details,
-				'status' => 0,
-				'reason' => ''
-			]);
-
-			if($reimburse){
-				$res['success'] = true;
-				$res['message'] = 'Success adding new reimbursement';
-
-			}else{
-				$res['success'] = false;
-				$res['message'] = 'Failed adding new reimbursement';
-
-				return response($res);
-			}
-
-			$re = Reimburse::where('id', $reimburse->id)->first();
-			$id = $re->id;
-			$item = Item::where('reimburse_id', $id)->get();
-			$totalcost = 0;
-			foreach($item as $itemdata){
-				$totalcost += $itemdata->cost;
-			}
-			$re->totalcost = $totalcost;
-			$re->save();
-			if($re !=null ){
-				if($file->isValid()){
-					$filename = "reimbursePic".$id.".".$file->getClientOriginalExtension();
-					$re->foto = $filename;
-					$re->save();
-					$destinationPath = "../../cms/images/u$user_id/";
-					$file->move($destinationPath,$filename);
-
-					$res['file'] = "Uploaded successfully";
-
-					return response($res);
-				}
-				else{
-					$res['file'] = "No file attached";
-					return response($res);
-				}
-			}
-		}
-		else
-		{
-			$res['success'] = false;
-			$res['message'] = 'Invalid user id';
-			
-			return response($res);
-		}
-	}
-
-	public function get_latest(Request $request){
-		$reimburse = Reimburse::orderBy('created_at', 'desc')->first();
-		if($reimburse != null){
+		if($reimburse->count() > 0){
 			$res['success'] = true;
 			$res['result'] = $reimburse;
-
 			return response($res);
 		}
 		else{
 			$res['success'] = false;
-			$res['message'] = "Failed to get reimburse data";
-
+			$res['message'] = "No reimburse for this Project ID";
 			return response($res);
 		}
 	}
 
+	public function get_reimburse(Request $request, $id){
+		$reimburse = Reimburse::find($id)->first();
+
+		if($reimburse){
+			$user = $reimburse->user()->get();
+			$res['success'] = true;
+			$res['result'] = $reimburse;
+			$res['result']['user_data'] = $user;
+			return response($res);
+		}
+		else{
+			$res['success'] = false;
+			$res['message'] = "No reimburse for this ID";
+			return response($res);
+		}
+
+	}
+
+	public function get_last(Request $request, $count)
+	{
+		$reimburse = Reimburse::orderBy('id', 'desc')->take($count)->get();
+
+		$res['success'] = true;
+		$res['result'] = $reimburse;
+		$i=0;
+		foreach($reimburse as $reimbursedata)
+		{
+			$reimburse = Project::find($reimbursedata->project()->first()->id);
+			$user = User::find($reimbursedata->user()->first()->id);
+			$res['result'][$i]['project_name'] = $reimburse->project_name;
+			$res['result'][$i]['user_name'] = $user->nama;
+			$i++;
+		}
+		return response($res);
+	}
+
 	public function get_list(Request $request, $menu){
 		if($menu == 'pending'){
-			$reimburse = Reimburse::where('status', 0)->get();
-			if($reimburse != null){
-				if($reimburse->count() > 0){
+			$project = Project::where('status', 0)->get();
+			if($project != null){
+				if($project->count() > 0){
 					$res['success'] = true;
-					$res['result'] = $reimburse;
+					$res['result'] = $project;
 					$i=0;
-					foreach($reimburse as $userdata)
+					foreach($project as $userdata)
 					{
 						$user = User::find($userdata->user()->first()->id);
 						$res['result'][$i]['user_data'] = $user;
@@ -147,20 +86,20 @@ class ReimburseController extends Controller {
 				}
 				else{
 					$res['success'] = false;
-					$res['message'] = "No pending reimbursements";
+					$res['message'] = "No pending projectments";
 
 					return response($res);
 				}
 			}
 		}
 		else if($menu == 'accepted'){
-			$reimburse = Reimburse::where('status', 1)->get();
-			if($reimburse != null){
-				if($reimburse->count() > 0){
+			$project = Project::where('status', 1)->get();
+			if($project != null){
+				if($project->count() > 0){
 					$res['success'] = true;
-					$res['result'] = $reimburse;
+					$res['result'] = $project;
 					$i=0;
-					foreach($reimburse as $userdata)
+					foreach($project as $userdata)
 					{
 						$user = User::find($userdata->user()->first()->id);
 						$res['result'][$i]['user_data'] = $user;
@@ -170,20 +109,20 @@ class ReimburseController extends Controller {
 					return response($res);
 					}else{
 					$res['success'] = false;
-					$res['message'] = "No accepted reimbursements";
+					$res['message'] = "No accepted projectments";
 
 					return response($res);
 				}
 			}
 		}
 		else if($menu == 'rejected'){
-			$reimburse = Reimburse::where('status', 2)->get();
-			if($reimburse != null){
-				if($reimburse->count() > 0){
+			$project = Project::where('status', 2)->get();
+			if($project != null){
+				if($project->count() > 0){
 					$res['success'] = true;
-					$res['result'] = $reimburse;
+					$res['result'] = $project;
 					$i=0;
-					foreach($reimburse as $userdata)
+					foreach($project as $userdata)
 					{
 						$user = User::find($userdata->user()->first()->id);
 						$res['result'][$i]['user_data'] = $user;
@@ -193,7 +132,7 @@ class ReimburseController extends Controller {
 					return response($res);
 					}else{
 					$res['success'] = false;
-					$res['message'] = "No rejected reimbursements";
+					$res['message'] = "No rejected projectments";
 
 					return response($res);
 				}
@@ -212,7 +151,7 @@ class ReimburseController extends Controller {
 					return response($res);
 				}else{
 					$res['success'] = false;
-					$res['message'] = "No pending reimbursements";
+					$res['message'] = "No pending reimburses";
 
 					return response($res);
 				}
@@ -227,16 +166,18 @@ class ReimburseController extends Controller {
 		else if($menu === 'totalamount'){
 			$reimburse = Reimburse::all();
 			if($reimburse !== null){
-				$pend = 0;
-				foreach($reimburse as $reimdata)
+				$totalcost = 0;
+				foreach($reimburse as $reimbursedata)
 				{
-					if($reimdata->status == 0)
-						$pend += $reimdata->total_cost;
-					else{}
+					if($reimbursedata->status == 1)
+						$totalcost += $reimbursedata->total_cost;
+					else{
+
+					}
 				}
-				if($pend > 0){
+				if($totalcost > 0){
 					$res['success'] = true;
-					$res['result']['amount'] = $pend;
+					$res['result']['amount'] = $totalcost;
 
 					return response($res);
 				}
@@ -260,125 +201,102 @@ class ReimburseController extends Controller {
 			return response($res);
 		}
 	}
-
-	public function get_reimburse(Request $request, $id){
-		$reimburse = Reimburse::where('id', $id)->first();
-		if($reimburse !== null){
-			$reimburse = Reimburse::find($id);
-			$user = $reimburse->user()->get();
-			$res['success'] = true;
-			$res['result'] = $reimburse;
-			$res['result']['user_data'] = $user;
-
-			return response($res);
-		}else{
-			$res['success'] = false;
-			$res['message'] = 'Reimburse with id ' . $id . ' not found';
-
-			return response($res);
-		}
-	}
-
-	public function accept(Request $request, $id)
-	{
-		$reason = "";
-		if($request->has('reason'))
-			$reason = $request->input('reason');
-		$reimburse = Reimburse::find($id);
-		if($reimburse){
-			if($reimburse->status != 1){
-				$reimburse->status = 1;
-				$reimburse->reason = $reason;
-				if($reimburse->save()){
-					$res['success'] = true;
-					$res['message'] = "Reimburse ID ".$id." has been accepted.";
-
-					return response($res);
-				}else{
-					$res['succes'] = false;
-					$res['message'] = "Error in saving the query";
-
-					return response($res);
-				}
-			}
-			else{
-				$res['success'] = false;
-				$res['message'] = "Reimburse ID ".$id." is already accepted.";
-
-				return response($res);
-			}
-		}
-		else{
-			$res['success'] = false;
-			$res['message'] = "Could not find reimburse data with id ".$id;
-
-			return response($res);
-		}
-	}
-
-	public function reject(Request $request, $id)
-	{
-		$reason = "";
-		if($request->has('reason'))
-			$reason = $request->input('reason');
-		$reimburse = Reimburse::find($id);
-		if($reimburse){
-			if($reimburse->status != 2){
-				$reimburse->status = 2;
-				$reimburse->reason = $reason;
-				if($reimburse->save()){
-					$res['success'] = true;
-					$res['message'] = "Reimburse ID ".$id." has been rejected.";
-
-					return response($res);
-				}else{
-					$res['succes'] = false;
-					$res['message'] = "Error in saving the query";
-
-					return response($res);
-				}
-			}
-			else{
-				$res['success'] = false;
-				$res['message'] = "Reimburse ID ".$id." is already rejected.";
-
-				return response($res);
-			}
-		}
-		else{
-			$res['success'] = false;
-			$res['message'] = "Could not find reimburse data with id ".$id;
-
-			return response($res);
-		}
-	}
 	
-	public function update(Request $request, $menu, $id)
+	public function create(Request $request)
 	{
-		if($request->has(''))
-		if($request->has('name')){
-			$reimburse = Reimburse::find($id);
-			$reimburse->name = $request->input('name');
-			if($reimburse->save()){
+		$reimburse_id = $request->input('reimburse_id');
+		$date = $request->input('date');
+		$category = $request->input('category');
+		$cost = $request->input('cost');
+		if($request->hasFile('picture'))
+			$file = $request->file('picture');
+		else
+			$file = null;
+
+		$reimburse = Reimburse::where('id', $reimburse_id)->first();
+		if($reimburse){
+			$reimburse = Reimburse::create([
+				'reimburse_id' => $reimburse_id,
+				'date' => $date,
+				'category' => $category,
+				'cost' => $cost,
+			]);
+
+			if($reimburse){
 				$res['success'] = true;
-				$res['message'] = 'Success update '.$request->input('name');
+				$res['message'] = 'Success adding new reimburse';
+
+			}else{
+				$res['success'] = false;
+				$res['message'] = 'Failed adding new reimburse';
 
 				return response($res);
 			}
-		}else{
+
+			$it = Reimburse::where('id', $reimburse->id)->first();
+			if($it !=null ){
+				if($file != null){
+					if($file->isValid()){
+						$user_id = $reimburse->user_id;
+						$reimburse_id = $it->reimburse_id;
+						$id = $it->id;
+						$filename = "reimbursePic".$id.".".$file->getClientOriginalExtension();
+						$it->picture = $filename;
+						$it->save();
+						$destinationPath = "../../cms/images/u$user_id/r$reimburse_id/";
+						$file->move($destinationPath,$filename);
+
+						$res['file'] = "Uploaded successfully";
+
+						return response($res);
+					}
+					else{
+						$res['file'] = "Invalid file";
+						
+						return response($res);
+					}
+				}
+				else{
+					$res['file'] = "No file attached";
+					return response($res);
+				}
+			}
+		}
+		else
+		{
 			$res['success'] = false;
-			$res['message'] = 'Please fill name Reimburse';
+			$res['message'] = 'Invalid reimburse id';
+			
 			return response($res);
 		}
 	}
 
-	public function delete(Request $request, $id){
-		$reimburse = Reimburse::find($id);
-		if($reimburse->delete($id)){
-			$res['success'] = true;
-			$res['message'] = "Success deleting Reimburse with id ".$id;
+	// public function update(Request $request, $menu, $id)
+	// {
+	// 	if($request->has(''))
+	// 	if($request->has('name')){
+	// 		$reimburse = Reimburse::find($id);
+	// 		$reimburse->name = $request->input('name');
+	// 		if($reimburse->save()){
+	// 			$res['success'] = true;
+	// 			$res['message'] = 'Success update '.$request->input('name');
 
-			return response($res);
-		}
-	}
+	// 			return response($res);
+	// 		}
+	// 	}else{
+	// 		$res['success'] = false;
+	// 		$res['message'] = 'Please fill name Reimburse';
+	// 		return response($res);
+	// 	}
+	// }
+
+	// public function delete(Request $request, $id){
+	// 	$reimburse = Reimburse::find($id);
+	// 	if($reimburse->delete($id)){
+	// 		$res['success'] = true;
+	// 		$res['message'] = "Success deleting Reimburse with id ".$id;
+
+	// 		return response($res);
+	// 	}
+	// }
 }

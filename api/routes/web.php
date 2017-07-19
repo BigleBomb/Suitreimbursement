@@ -27,21 +27,25 @@ $app->get('/user/count', ['middleware' => 'auth', 'uses' => 'UserController@get_
 $app->post('/user/update/{id}', 'UserController@update');
 
 // ITEM ROUTES
-$app->get('/item/getbyreimburse/{id}', 'ItemController@get');
-$app->post('/item/new', 'ItemController@create');
-
+$app->get('/reimburse/getbyproject/{id}', 'ReimburseController@get');
+$app->post('/reimburse/new', 'ReimburseController@create');
+$app->get('/reimburse/last/{count}', 'ReimburseController@get_last');
+$app->get('/reimburse/pending/{menu}','ReimburseController@get_pending');
+$app->get('/reimburse/pending/{menu}','ReimburseController@get_pending');
+$app->get('/reimburse/get/{id}', 'ReimburseController@get_reimburse');
 
 // REIMBURSE ROUTES
-$app->get('/reimburse/all', 'ReimburseController@index');
-$app->get('/reimburse/get/{id}', 'ReimburseController@get_reimburse');
-$app->get('/reimburse/delete/{id}', 'ReimburseController@delete');
-$app->post('/reimburse/new', 'ReimburseController@create');
-$app->post('/reimburse/update/{menu}', 'ReimburseController@update');
-$app->get('/reimburse/pending/{menu}','ReimburseController@get_pending');
-$app->get('/reimburse/list/{menu}', 'ReimburseController@get_list');
-$app->post('/reimburse/accept/{id}', 'ReimburseController@accept');
-$app->post('/reimburse/reject/{id}', 'ReimburseController@reject');
-$app->get('/reimburse/last/{amount}', 'ReimburseController@get_last');
+$app->get('/project/all', 'ProjectController@index');
+$app->get('/project/getuserlist/{id}', 'ProjectController@get_user_list');
+$app->get('/project/getusercount/{id}', 'ProjectController@get_user_count');
+$app->get('/project/get/{id}', 'ProjectController@get_project');
+$app->get('/project/delete/{id}', 'ProjectController@delete');
+$app->post('/project/new', 'ProjectController@create');
+$app->post('/project/update/{menu}', 'ProjectController@update');
+$app->get('/project/list/{menu}', 'ProjectController@get_list');
+$app->post('/project/accept/{id}', 'ProjectController@accept');
+$app->post('/project/reject/{id}', 'ProjectController@reject');
+$app->get('/project/last/{count}', 'ProjectController@get_last');
 
 $app->get('sendbasicemail','MailController@basic_email');
 $app->get('sendhtmlemail','MailController@html_email');

@@ -36,6 +36,53 @@
 	<!-- Material Dashboard javascript methods -->
 	<script src="./assets/js/material-dashboard.js"></script>
 	
+
+	<style>
+	.unselectable {
+		-webkit-touch-callout: none;
+		-webkit-user-select: none;
+		-khtml-user-select: none;
+		-moz-user-select: none;
+		-ms-user-select: none;
+		user-select: none;
+	}
+	.scrollbar
+	{
+		margin-left: 30px;
+		float: left;
+		height: 300px;
+		width: 65px;
+		background: #F5F5F5;
+		overflow-y: scroll;
+		margin-bottom: 25px;
+	}
+	#style-10::-webkit-scrollbar-track
+	{
+		-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+		background-color: #F5F5F5;
+		border-radius: 10px;
+	}
+
+	#style-10::-webkit-scrollbar
+	{
+		width: 10px;
+		background-color: #F5F5F5;
+	}
+
+	#style-10::-webkit-scrollbar-thumb
+	{
+		background-color: #AAA;
+		border-radius: 10px;
+		background-image: -webkit-linear-gradient(90deg,
+												rgba(0, 0, 0, .2) 25%,
+												transparent 25%,
+												transparent 50%,
+												rgba(0, 0, 0, .2) 50%,
+												rgba(0, 0, 0, .2) 75%,
+												transparent 75%,
+												transparent)
+	}
+	</style>
 </head>
 
 
@@ -115,7 +162,7 @@
 	        <div class="content">
 	            <div id='content' class="container-fluid">
 					<div class="row">
-						<div class=" col-md-12">
+						<!--<div class=" col-md-12">
 							<div class="card card-nav-tabs">
 								<div id='cardheader' class="card-header fade in" data-background-color="orange">
 									<div class="nav-tabs-navigation">
@@ -162,7 +209,7 @@
 														$ch = curl_init();
 
 														$token = $_SESSION['token'];
-														$url = "$SERVER/reimburse/list/pending?token=".$token;
+														$url = "$SERVER/project/list/pending?token=".$token;
 														curl_setopt($ch, CURLOPT_URL, $url);
 														curl_setopt($ch, CURLOPT_POST, 0);
 														curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -179,7 +226,7 @@
 																	."</td>
 																	<td>Rp ".number_format($result['total_cost'], 0, ",", ".")."</td>
 																	<td class='text-center'>
-																	<button type='button' class='btn btn-primary more-info' data-toggle='modal' data-background-color='orange'>More info</td>
+																	<button type='button' class='btn btn-primary more-info' data-background-color='orange'>More info</td>
 																</tr>";
 															}
 														}
@@ -205,7 +252,7 @@
 													$ch = curl_init();
 
 													$token = $_SESSION['token'];
-													$url = "$SERVER/reimburse/list/accepted?token=".$token;
+													$url = "$SERVER/project/list/accepted?token=".$token;
 													curl_setopt($ch, CURLOPT_URL, $url);
 													curl_setopt($ch, CURLOPT_POST, 0);
 													curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -247,7 +294,7 @@
 														$ch = curl_init();
 
 														$token = $_SESSION['token'];
-														$url = "$SERVER/reimburse/list/rejected?token=".$token;
+														$url = "$SERVER/project/list/rejected?token=".$token;
 														curl_setopt($ch, CURLOPT_URL, $url);
 														curl_setopt($ch, CURLOPT_POST, 0);
 														curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -278,57 +325,87 @@
 									</div>
 								</div>
 							</div>
+						</div>-->
+						<div class="col-md-12">
+							<div class="card">
+	                            <div class="card-header" data-background-color="orange">
+	                                <h4 class="title">Reimbursements request list</h4>
+	                                <p class="category">New reimburse on 
+										<?php
+											$ch = curl_init();
+											$token = $_SESSION['token'];
+											$url = "$SERVER/project/last/1?token=".$token;
+											curl_setopt($ch, CURLOPT_URL, $url);
+											curl_setopt($ch, CURLOPT_POST, 0);
+											curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+											$server_output = curl_exec ($ch);
+											curl_close ($ch);
+											$resp = json_decode($server_output, true);
+											
+											if($resp['success'] == true){
+												foreach($resp['result'] as $result){
+													echo date_format(date_create($result['created_at']), 'jS F Y');
+												}		
+											}
+											else{
+												echo "Data not found";
+											}
+										?>
+									</p>
+	                            </div>
+	                            <div class="card-content table-responsive">
+	                                <table class="table table-hover">
+	                                    <thead class="text-warning">
+	                                        <th class="col-lg-1">RID</th>
+	                                    	<th class="col-lg-3">Project name</th>
+											<th class="col-lg-2">User count</th>
+	                                    	<th>Date</th>
+											<th>Total</th>
+											<th style='visibility:hidden'>Action</th>
+	                                    </thead>
+	                                    <tbody>
+											<?php
+												$ch = curl_init();
+
+												$token = $_SESSION['token'];
+												$url = "$SERVER/project/all?token=".$token;
+												curl_setopt($ch, CURLOPT_URL, $url);
+												curl_setopt($ch, CURLOPT_POST, 0);
+												curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+												$server_output = curl_exec ($ch);
+												curl_close ($ch);
+												$resp = json_decode($server_output, true);
+												if($resp['success']!=false){
+													foreach($resp['result'] as $result){
+
+														echo "<tr id='tr".$result['id']."'><td>#".$result['id']."</td>
+															<td>".$result['project_name']."</td>
+															<td>".$result['user_count']."</td>
+															<td>".date_format(date_create($result['date']), 'jS F\,\ Y')
+															."</td>
+															<td>Rp ".number_format($result['total_cost'], 0, ",", ".")."</td>
+															<td><button type='button' class='btn btn-primary more-info' data-toggle='modal' data-background-color='orange'>More info</td>
+															
+														</tr>";
+													}
+												}
+												else{
+													echo "<tr><td colspan=6 align=center><h4>".$resp['message']."</h4></td></tr>";
+												}
+											?>
+	                                    </tbody>
+	                                </table>
+	                            </div>
+	                        </div>
 						</div>
 					</div>
 	            </div>
 	        </div>
-
-	        <footer class="footer">
-	            <div class="container-fluid">
-	                <nav class="pull-left">
-	                    <ul>
-	                        <li>
-	                            <a href="#">
-	                                Home
-	                            </a>
-	                        </li>
-	                        <li>
-	                            <a href="#">
-	                                Company
-	                            </a>
-	                        </li>
-	                        <li>
-	                            <a href="#">
-	                                Portfolio
-	                            </a>
-	                        </li>
-	                        <li>
-	                            <a href="#">
-	                               Blog
-	                            </a>
-	                        </li>
-	                    </ul>
-	                </nav>
-	                <p class="copyright pull-right">
-	                    &copy; <script>document.write(new Date().getFullYear())</script> <a href="http://www.creative-tim.com">Creative Tim</a>, made with love for a better web
-	                </p>
-	            </div>
-	        </footer>
 	    </div>
 	</div>
 	
 </body>
 <script>
-	// setInterval(function(){
-	// 	$.ajax({                                      
-	// 		url: 'check_session.php',          
-	// 		data: "",
-	// 		dataType: 'json',                  
-	// 		success: function(msg)
-	// 		{
-	// 		} 
-	// 	});
-	// }, 1000);
 	$(document).ready(function(){
 		$('#moreInfoModal').on('hidden.bs.modal', function () {
 			$('button#accept').unbind('click');
@@ -351,7 +428,7 @@
 	})
 
 	$(function(){
-		$(document).on('click', '.more-info', function() {
+		$(document).on('click', '.reimburse-info', function() {
 			var trId = $(this).closest('tr').prop('id').substr(2,2);
 			$.ajax({
 				type: "POST",
@@ -362,14 +439,18 @@
 						$('#content').html(msg);
 					});
 					$('#content').fadeIn(500);
-					$(document).on('click', "#back", function(){
-						$(window).scrollTop(0);
-						$('#content').fadeOut(500, function(){
-							$('#content').load(location.href + ' #content', function(){
-								$('#content').fadeIn(500);
-							});
+					$(document).on('click', "#back-to-project", function(){
+						$.ajax({
+							type: "POST",
+							url: "get_project_info.php",
+							data: 'project_id',
+							success: function(msg){
+								$('#content').fadeOut(500, function(){
+									$('#content').html(msg);
+								});
+							}
 						});
-						$(document).off('click', "#back");
+						$(document).off('click', "#back-to-project");
 						$(document).off('click', "#accept");
 						$(document).off('click', "#reject");
 					});
@@ -421,6 +502,35 @@
 						});
 						return;
 					}));
+				},	
+				error: function(){
+					alert("failure");
+				}
+			});
+		});
+	});
+
+	$(function(){
+		$(document).on('click', '.more-info', function() {
+			var trId = $(this).closest('tr').prop('id').substr(2,2);
+			$.ajax({
+				type: "POST",
+				url: "get_project_info.php",
+				data: 'project_id='+trId,
+				success: function(msg){
+					$('#content').fadeOut(500, function(){
+						$('#content').html(msg);
+					});
+					$('#content').fadeIn(500);
+					$(document).on('click', "#back", function(){
+						$(window).scrollTop(0);
+						$('#content').fadeOut(500, function(){
+							$('#content').load(location.href + ' #content', function(){
+								$('#content').fadeIn(500);
+								$(document).off('click', "#back");
+							});
+						});
+					});
 				},	
 				error: function(){
 					alert("failure");

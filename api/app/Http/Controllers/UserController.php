@@ -91,10 +91,10 @@ class UserController extends Controller
         $user = User::where('id', $id)->get();
         if ($user) {
             $user = User::find($id);
-            $reimburse = $user->reimburse()->get();  
+            // $reimburse = $user->reimburse()->get();  
             $res['success'] = true;
             $res['result'] = $user;
-            $res['result']['reimburse_data'] = $reimburse;
+            // $res['result']['reimburse_data'] = $reimburse;
             
             return response($res);
         }else{

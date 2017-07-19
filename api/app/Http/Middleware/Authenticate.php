@@ -42,7 +42,7 @@ class Authenticate
                 $check_token = User::where('token', $token)->first();
                 if ($check_token == null) {
                     $res['success'] = false;
-                    $res['message'] = 'Permission not allowed!';
+                    $res['message'] = 'Token does not match, please relogin!';
 
                     return response($res);
                 }

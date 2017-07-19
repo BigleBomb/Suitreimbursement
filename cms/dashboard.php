@@ -12,7 +12,7 @@
 	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0' name='viewport' />
     <meta name="viewport" content="width=device-width" />
 
-    <!-- Bootstrap core CSS     -->
+    <!--  Bootstrap core CSS     -->
     <link href="./assets/css/bootstrap.min.css" rel="stylesheet" />
 
     <!--  Material Dashboard CSS    -->
@@ -95,7 +95,7 @@
 							<span class="icon-bar"></span>
 							<span class="icon-bar"></span>
 						</button>
-						<a class="navbar-brand" href="#">Dashboard</a>
+						<a class="navbar-brand" href="#">Dashboard<		a>
 					</div>
 					<div class="collapse navbar-collapse">
 						<ul class="nav navbar-nav navbar-right">
@@ -105,7 +105,9 @@
 	 							   <p class="hidden-lg hidden-md">Profile</p>
 		 						</a>
 								<ul class="dropdown-menu">
-									<li><a href="#">Log out</a></li>
+									<form method=post>
+										<li><a id='logout' href="#">Log out</a></li>
+									</form>
 								</ul>
 							</li>
 						</ul>
@@ -116,7 +118,7 @@
 			<div class="content">
 				<div class="container-fluid">
 					<div class="row">
-						<div class="col-lg-4 col-md-6 col-sm-6">
+						<div class="col-lg-3 col-md-6 col-sm-6">
 							<div class="card card-stats">
 								<div class="card-header" data-background-color="orange">
 									<i class="material-icons">content_copy</i>
@@ -157,7 +159,7 @@
 								</div>
 							</div>
 						</div>
-						<div class="col-lg-4 col-md-6 col-sm-6">
+						<div class="col-lg-3 col-md-6 col-sm-6">
 							<div class="card card-stats">
 								<div class="card-header" data-background-color="green">
 									<i class="material-icons">attach_money</i>
@@ -198,7 +200,46 @@
 								</div>
 							</div>
 						</div>
- 						<div class="col-lg-4 col-md-6 col-sm-6">
+ 						<div class="col-lg-3 col-md-6 col-sm-6">
+							<div class="card card-stats">
+								<div class="card-header" data-background-color="blue">
+									<i class="material-icons">work</i>
+								</div>
+								<div class="card-content">
+									<p class="category">Total project</p>
+									<h4 class="title">
+										<?php
+										$ch = curl_init();
+										$token = $_SESSION['token'];
+										$url = "$SERVER/user/count?token=".$token;
+										curl_setopt($ch, CURLOPT_URL, $url);
+										curl_setopt($ch, CURLOPT_POST, 0);
+										curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+										$server_output = curl_exec ($ch);
+										curl_close ($ch);
+										$resp = json_decode($server_output, true);
+										
+										if($resp != null){
+											if($resp['success']!=false){
+												echo $resp['result']['count'];
+											}
+											else{
+												echo $resp['message'];
+											}
+										}else{
+											echo "Cannot get data from the server.";
+										}
+										?>
+									</h4>
+								</div>
+							<div class="card-footer">
+									<div class="stats">
+									<i class="material-icons">content_paste</i> <a href="reimbursement.php">Manage Project...</a>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="col-lg-3 col-md-6 col-sm-6">
 							<div class="card card-stats">
 								<div class="card-header" data-background-color="red">
 									<i class="material-icons">account_circle</i>
@@ -240,7 +281,7 @@
 						<div class="col-md-12">
 							<div class="card">
 	                            <div class="card-header" data-background-color="orange">
-	                                <h4 class="title">Last 10 Reimbursement History</h4>
+	                                <h4 class="title">Last 10 Reimbursement Request History</h4>
 	                                <p class="category">New reimburse on 
 										<?php
 											$ch = curl_init();
@@ -267,10 +308,11 @@
 	                            <div class="card-content table-responsive">
 	                                <table class="table table-hover">
 	                                    <thead class="text-warning">
-	                                        <th class="col-lg-1">RID</th>
+	                                        <th class="col-lg-1">Request ID</th>
 	                                    	<th>Name</th>
 	                                    	<th class="col-sm-2">Project name</th>
 	                                    	<th>Date</th>
+											<th>Category</th>
 											<th>Total</th>
 											<th class='col-sm-2 text-center'>Status</th>
 	                                    </thead>
@@ -312,11 +354,12 @@
 														}
 
 														echo "<tr><td>#".$result['id']."</td>
-															<td>".$result['user_data']['nama']."</td>
+															<td>".$result['user_name']."</td>
 															<td>".$result['project_name']."</td>
 															<td>".date_format(date_create($result['date']), 'jS F\,\ Y')
 															."</td>
-															<td>Rp ".number_format($result['total_cost'], 0, ",", ".")."</td>
+															<td>".$result['category']."</td>
+															<td>Rp ".number_format($result['cost'], 0, ",", ".")."</td>
 															<td class='text-center'><font title='$title' class='material-icons' color='$color'>$label</font></td>
 														</tr>";
 													}
@@ -335,19 +378,7 @@
 			</div>
 		</div>
 	</div>
-
 </body>
-
-<script>
-	setInterval(function(){
-		$.ajax({                                      
-			url: 'check_session.php',   
-			success: function(msg){
-				$(document).html(msg);
-			} 
-		});
-	}, 1000);
-	</script>
 
 </html>
 
