@@ -15,7 +15,7 @@ if(isset($_POST['reimburse_id']))
 
     if($resp != null){
         if ($resp->success == true){
-            // $project = $resp->result->project_name;
+            $project = $resp->result->reimburse_data->project_name;
             $date = $resp->result->date;
             // $total = $resp->result->total_cost;
             // $details = $resp->result->details;
@@ -93,8 +93,8 @@ if(isset($_POST['reimburse_id']))
                                         echo "</td>
                                     </tr>
                                     <tr>
-                                        <td>Details</td>
-                                        <td>$details</td>
+                                        <td>Reason</td>
+                                        <td>$reason</td>
                                     </tr>
                                     <tr>
                                         <td>Status</td>

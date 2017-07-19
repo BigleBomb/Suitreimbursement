@@ -209,8 +209,8 @@ class ProjectController extends Controller {
 		$project = Project::where('id', $id)->first();
 		if($project !== null){
 			$project = Project::find($id);
-			$user = $project->user()->get();
-			$reimburse = $project->reimburse()->get();
+			$user = $project->user()->first();
+			$reimburse = $project->reimburse()->get()->first();
 			$res['success'] = true;
 			$res['result'] = $project;
 			$res['result']['user_data'] = $user;

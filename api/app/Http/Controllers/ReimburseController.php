@@ -36,9 +36,11 @@ class ReimburseController extends Controller {
 
 		if($reimburse){
 			$user = $reimburse->user()->get();
+			$project = $reimburse->project()->get();
 			$res['success'] = true;
 			$res['result'] = $reimburse;
 			$res['result']['user_data'] = $user;
+			$res['result']['reimburse_data'] = $project;
 			return response($res);
 		}
 		else{
