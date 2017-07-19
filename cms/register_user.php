@@ -42,7 +42,7 @@ include('config.php');
                 $to = $email;
                 $subject = "Reimburse Account";
                 $txt = "Username for your reimburse account is ".$username." and the password : ".$password;
-                $headers = "From: chrisna@vixelmedia.com" . "\r\n" .
+                $headers = "From: noreply@vixelmedia.com" . "\r\n" .
                 "CC: chrisnafc@gmail.com";
 
                 mail($to,$subject,$txt,$headers);

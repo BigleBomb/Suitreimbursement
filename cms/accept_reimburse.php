@@ -21,6 +21,14 @@ session_start();
                 $message = $resp->message;
 
                 echo "$message";
+                $to = $email;
+                $subject = "Reimburse Accepted";
+                $txt = "Your reimbursement request with ID ".$id." has been accepted.";
+                $headers = "From: noreply@vixelmedia.com" . "\r\n" .
+                "CC: chrisnafc@gmail.com";
+
+                mail($to,$subject,$txt,$headers);
+                
             }
             else {
                 echo $resp->message;
