@@ -81,17 +81,11 @@
 	                    </a>
 	                </li>
 	                <li>
-	                    <a href="reimbursement.php">
+	                    <a href="Projects.php">
 	                        <i class="material-icons">content_paste</i>
-	                        <p>Reimbursement</p>
+	                        <p>Projects</p>
 	                    </a>
 	                </li>
-	                <!--<li>
-	                    <a href="typography.html">
-	                        <i class="material-icons">library_books</i>
-	                        <p>Menu tambahan</p>
-	                    </a>
-	                </li>-->
 	            </ul>
 	    	</div>
 	    </div>

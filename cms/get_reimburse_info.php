@@ -15,14 +15,14 @@ if(isset($_POST['reimburse_id']))
 
     if($resp != null){
         if ($resp->success == true){
-            $project = $resp->result->reimburse_data->project_name;
+            $project = $resp->result->project_data->project_name;
+            $pid = $resp->result->project_data->id;
             $date = $resp->result->date;
-            // $total = $resp->result->total_cost;
-            // $details = $resp->result->details;
+            $cost = $resp->result->cost;
             $status = $resp->result->status;
             $reason = $resp->result->reason;
-            // $update = $resp->result->updated_at;
-            // $item_data = $resp->result->item_data;
+            $picture = $resp->result->picture;
+            $update = $resp->result->updated_at;
             $statd;
             $color;
             switch($status){
@@ -38,12 +38,11 @@ if(isset($_POST['reimburse_id']))
                     $statd = "Rejected";
                     $color = 'red';
             }
-            foreach($resp->result->user_data as $user){
-                $name = $user->nama;
-                $limit = $user->limit;
-                $uid = $user->id;
-                $email = $user->email;
-            }
+            $user = $resp->result->user_data;
+            $name = $user->nama;
+            $limit = $user->limit;
+            $uid = $user->id;
+            $email = $user->email;
             echo "<div class='content'>
                 <div class='row'>
                 <div class='col-md-12'>";
@@ -78,23 +77,22 @@ if(isset($_POST['reimburse_id']))
                                 </thead>
                                 <tbody>
                                     <tr>
-                                        <td>User ID</td>
-                                        <td>$uid</td>
-                                    </tr>
+                                        <td>Reimburse ID</td>
+                                        <td class='rid' id=r$id>$id</td>
                                     <tr>
+                                    <tr>
+                                        <td>Name</td>
+                                        <td>$name (ID:$uid)</td>
+                                    </tr>
                                         <td>Project</td>
-                                        <td>$project</td>
+                                        <td class='projectid' id=pr$pid>$project (ID:$pid)</td>
                                     </tr>
                                     <tr>
                                         <td>Total</td>
-                                        <td>Rp. ".number_format($total, 0, ",", ".");
-                                            if($total > $limit)
+                                        <td>Rp. ".number_format($cost, 0, ",", ".");
+                                            if($cost > $limit)
                                                 echo "<p class='text-danger'> (Exceeding user's limit which is ".number_format($limit, 0, ",", ".").")</a>";
                                         echo "</td>
-                                    </tr>
-                                    <tr>
-                                        <td>Reason</td>
-                                        <td>$reason</td>
                                     </tr>
                                     <tr>
                                         <td>Status</td>
@@ -106,14 +104,12 @@ if(isset($_POST['reimburse_id']))
                             <div class='col-lg-6'>
                             <h4>Pictures</h4>
                             <div class='row'>";
-                            if($item_data!=null){
-                                foreach($item_data as $item){
-                                    echo "<div class=col-md-4'>
-                                            <a href='#' class='thumbnail'>
-                                                <img src='$imageroot/u$uid/r$id/$item->picture' alt='...'>
-                                            </a>
-                                        </div>";
-                                }   
+                            if($picture!=null){
+                                echo "<div class=col-md-4'>
+                                        <a href='#' class='thumbnail'>
+                                            <img src='$imageroot/p$pid/$picture' alt='...'>
+                                        </a>
+                                    </div>";
                             }
                             else{
                                 echo "<div align=center>No pictures found</div>";
@@ -124,21 +120,6 @@ if(isset($_POST['reimburse_id']))
                             </div>
                             </div>
                         <div>
-                            <h4>Pictures</h4>
-                            <div class='row'>";
-                            if($item_data!=null){
-                                foreach($item_data as $item){
-                                    echo "<div class=col-xs-3 col-md-3'>
-                                            <a href='#' class='thumbnail'>
-                                                <img src='$imageroot/u$uid/r$id/$item->picture' alt='...'>
-                                            </a>
-                                        </div>";
-                                }   
-                            }
-                            else{
-                                echo "<div align=center>No pictures found</div>";
-                            }
-                        echo "</div>
                             <h4>Reason</h4>";
 
                 if($status == 0){

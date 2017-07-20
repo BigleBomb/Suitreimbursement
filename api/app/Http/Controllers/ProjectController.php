@@ -56,77 +56,90 @@ class ProjectController extends Controller {
 		$i=0;
 		foreach($project as $userdata)
 		{
-			$user = User::find($userdata->user()->first()->id);
+			$user = $userdata->user()->get();
 			$res['result'][$i]['user_data'] = $user;
 			$i++;
 		}
 		return response($res);
 	}
+
+	public function get_available_user($pid){
+		$project = Project::find($pid);
+		$users = $project->user()->get();
+		$res['success'] = true;
+		$res['result'] = $project;
+		$i=0;
+		foreach($users as $userlist){
+			$res['userid'][$i] = $userlist->id;
+			$user = User::where('id', '!=', $userlist->id)->get();
+			$res['available_user'][$i] = $user;
+			$i++;
+		}
+		return response($res);
+	}
+
+	public function add_user(Request $request){
+		$pid = $request->project_id;
+		$uid = $request->user_id;
+		if($pid || $uid != null){
+			$project = Project::find($pid);
+			if($project){
+				$user = User::find($uid);
+				if($user){
+					$project_user = $project->user()->attach($user);
+					$res['success'] = true;
+					$res['message'] = "Success adding User ID $uid to Project ID $pid";
+
+					return response($res);
+				}
+				else{
+					$res['success'] = false;
+					$res['message'] = "User ID $uid is not found";
+
+					return response($res);
+				}
+			}
+			else{
+				$res['success'] = false;
+				$res['message'] = "Project ID $uid is not found";
+
+				return response($res);
+			}
+		}
+		else{
+			$res['success'] = false;
+			$res['message'] = "User ID or Project ID cannot be empty";
+
+			return response($res);
+		}
+
+	}
 	
 	public function create(Request $request)
 	{
-		$user_id = $request->input('user_id');
 		$date = $request->input('date');
 		$project_name = $request->input('project_name');
 		$total_cost = $request->input('total_cost');
 		$details = $request->input('details');
 
-		$user = User::where('id', $user_id)->first();
-		if($user){
-			$project = Project::create([
-				'user_id' => $user_id,
-				'date' => $date,
-				'project_name' => $project_name,
-				'details' => $details,
-				'status' => 0,
-				'reason' => ''
-			]);
+		$project = Project::create([
+			'date' => $date,
+			'project_name' => $project_name,
+			'details' => $details,
+		]);
 
-			if($project){
-				$res['success'] = true;
-				$res['message'] = 'Success adding new projectment';
+		if($project){
+			$res['success'] = true;
+			$res['message'] = 'Success adding new project';
 
-			}else{
-				$res['success'] = false;
-				$res['message'] = 'Failed adding new projectment';
-
-				return response($res);
-			}
-
-			$re = Project::where('id', $project->id)->first();
-			$id = $re->id;
-			$reimburse = Item::where('project_id', $id)->get();
-			$totalcost = 0;
-			foreach($reimburse as $itemdata){
-				$totalcost += $itemdata->cost;
-			}
-			$re->totalcost = $totalcost;
-			$re->save();
-			if($re !=null ){
-				if($file->isValid()){
-					$filename = "projectPic".$id.".".$file->getClientOriginalExtension();
-					$re->foto = $filename;
-					$re->save();
-					$destinationPath = "../../cms/images/u$user_id/";
-					$file->move($destinationPath,$filename);
-
-					$res['file'] = "Uploaded successfully";
-
-					return response($res);
-				}
-				else{
-					$res['file'] = "No file attached";
-					return response($res);
-				}
-			}
-		}
-		else
-		{
+		}else{
 			$res['success'] = false;
-			$res['message'] = 'Invalid user id';
-			
+			$res['message'] = 'Failed adding new project';
+
 			return response($res);
 		}
+
+		return response($res);
 	}
 
 	public function get_latest(Request $request){
@@ -209,19 +222,14 @@ class ProjectController extends Controller {
 		$project = Project::where('id', $id)->first();
 		if($project !== null){
 			$project = Project::find($id);
-			$user = $project->user()->first();
-			$reimburse = $project->reimburse()->get()->first();
+			$user = $project->user()->get();
+			$reimburse = $project->reimburse()->get();
 			$res['success'] = true;
 			$res['result'] = $project;
 			$res['result']['user_data'] = $user;
 			$res['result']['reimburse_data'] = $reimburse;
-			$user_count=0;
-			foreach($user as $user_data){
-				$users = User::where('id', $user_data->id)->count();
-				if($users){
-					$user_count++;
-				}
-			}
+			$user_count=$project->user()->count();;
+			$reimburse_count=$project->reimburse()->count();
 			$i=0;
 			foreach($reimburse as $user_data){
 				$user_reimburse = User::where('id', $user_data->user_id)->first();
@@ -230,6 +238,7 @@ class ProjectController extends Controller {
 				$i++;
 			}
 			$res['result']['user_count'] = $user_count;
+			$res['result']['reimburse_count'] = $reimburse_count;
 
 			return response($res);
 		}else{
@@ -240,96 +249,121 @@ class ProjectController extends Controller {
 		}
 	}
 
-	public function accept(Request $request, $id)
-	{
-		$reason = "";
-		if($request->has('reason'))
-			$reason = $request->input('reason');
-		$project = Project::find($id);
-		if($project){
-			if($project->status != 1){
-				$project->status = 1;
-				$project->reason = $reason;
-				if($project->save()){
+	public function get_reimburse_list(Request $request, $id, $menu){
+		if($menu == 'pending'){
+			$project = Project::find($id);
+			$reimburse = $project->reimburse()->where('status', 0)->get();
+			if($reimburse != null){
+				if($reimburse->count() > 0){
 					$res['success'] = true;
-					$res['message'] = "Project ID ".$id." has been accepted.";
+					$res['result'] = $reimburse;
+					$i=0;
+					foreach($reimburse as $userdata)
+					{
+						$user = User::find($userdata->user()->first()->id);
+						$res['result'][$i]['user_name'] = $user->nama;
+						$i++;
+					}
 
 					return response($res);
-				}else{
-					$res['succes'] = false;
-					$res['message'] = "Error in saving the query";
+				}
+				else{
+					$res['success'] = false;
+					$res['message'] = "No pending reimbursements";
 
 					return response($res);
 				}
 			}
 			else{
 				$res['success'] = false;
-				$res['message'] = "Project ID ".$id." is already accepted.";
+				$res['message'] = "No project with ID $id";
 
 				return response($res);
 			}
 		}
-		else{
-			$res['success'] = false;
-			$res['message'] = "Could not find project data with id ".$id;
+		else if($menu == 'accepted'){
+			$project = Project::find($id);
 
-			return response($res);
-		}
-	}
-
-	public function reject(Request $request, $id)
-	{
-		$reason = "";
-		if($request->has('reason'))
-			$reason = $request->input('reason');
-		$project = Project::find($id);
-		if($project){
-			if($project->status != 2){
-				$project->status = 2;
-				$project->reason = $reason;
-				if($project->save()){
+			$reimburse = $project->reimburse()->where('status', 1)->get();
+			if($reimburse != null){
+				if($reimburse->count() > 0){
 					$res['success'] = true;
-					$res['message'] = "Project ID ".$id." has been rejected.";
+					$res['result'] = $reimburse;
+					$i=0;
+					foreach($reimburse as $userdata)
+					{
+						$user = User::find($userdata->user()->first()->id);
+						$res['result'][$i]['user_name'] = $user->nama;
+						$i++;
+					}
 
 					return response($res);
-				}else{
-					$res['succes'] = false;
-					$res['message'] = "Error in saving the query";
+					}else{
+					$res['success'] = false;
+					$res['message'] = "No accepted reimbursements";
 
 					return response($res);
 				}
 			}
 			else{
 				$res['success'] = false;
-				$res['message'] = "Project ID ".$id." is already rejected.";
+				$res['message'] = "No project with ID $id";
 
 				return response($res);
 			}
 		}
-		else{
-			$res['success'] = false;
-			$res['message'] = "Could not find project data with id ".$id;
+		else if($menu == 'rejected'){
+			$project = Project::find($id);
 
-			return response($res);
+			$reimburse = $project->reimburse()->where('status', 2)->get();
+			if($reimburse != null){
+				if($reimburse->count() > 0){
+					$res['success'] = true;
+					$res['result'] = $reimburse;
+					$i=0;
+					foreach($reimburse as $userdata)
+					{
+						$user = User::find($userdata->user()->first()->id);
+						$res['result'][$i]['user_name'] = $user->nama;
+						$i++;
+					}
+
+					return response($res);
+					}else{
+					$res['success'] = false;
+					$res['message'] = "No rejected reimbursements";
+
+					return response($res);
+				}
+			}
+			else{
+				$res['success'] = false;
+				$res['message'] = "No project with ID $id";
+
+				return response($res);
+			}
 		}
 	}
 	
-	public function update(Request $request, $menu, $id)
+	public function update(Request $request)
 	{
-		if($request->has(''))
-		if($request->has('name')){
-			$project = Project::find($id);
-			$project->name = $request->input('name');
-			if($project->save()){
-				$res['success'] = true;
-				$res['message'] = 'Success update '.$request->input('name');
-
-				return response($res);
+		$project = Project::all();
+		if($project){
+			foreach($project as $project_data){
+				$reimburse = $project_data->reimburse()->get();
+				$totalcost = 0;
+				foreach($reimburse as $reimburse_data){
+					$totalcost += $reimburse_data->cost;
+				}
+				$project_data->total_cost = $totalcost;
+				$project_data->save();
 			}
-		}else{
+			$res['success'] = true;
+			return $res;
+		}
+		else{
 			$res['success'] = false;
-			$res['message'] = 'Please fill name Project';
-			return response($res);
+			return $res;
 		}
 	}
 
