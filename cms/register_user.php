@@ -1,9 +1,6 @@
 <?php
 include('config.php');
     if(isset($_POST['nama'])
-            //&& ($_POST['nama']!=null)
-            //&& ($_POST['email']!=null)
-            //&& ($_POST['priv']!=null)
     ){
         $nama = $_POST['nama'];
         $username = $_POST['username'];

@@ -44,9 +44,10 @@ $app->get('/project/getreimburselist/{id}/{menu}', 'ProjectController@get_reimbu
 $app->get('/project/get/{id}', 'ProjectController@get_project');
 $app->get('/project/delete/{id}', 'ProjectController@delete');
 $app->post('/project/new', 'ProjectController@create');
-$app->get('/project/update', 'ProjectController@update');
+$app->get('/project/updatecost/{pid}', 'ProjectController@update_cost');
 $app->get('/project/last/{count}', 'ProjectController@get_last');
 $app->post('/project/adduser', 'ProjectController@add_user');
+$app->post('/project/deleteuser', 'ProjectController@delete_user');
 $app->get('/project/getavailableuser/{pid}', 'ProjectController@get_available_user');
 
 $app->get('sendbasicemail','MailController@basic_email');

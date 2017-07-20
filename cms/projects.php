@@ -40,39 +40,39 @@
 	<style>
 	.scrollbar
 	{
-		margin-left: 30px;
-		float: left;
-		height: 300px;
-		width: 65px;
+		height: 258px;
 		background: #F5F5F5;
-		overflow-y: scroll;
-		margin-bottom: 25px;
+		overflow-y: hidden;
+		margin-bottom:25px;
+		padding-right:5px;
+	}
+	.scrollbar:hover
+	{
+		overflow-y:scroll;
+		padding-right:0px;
 	}
 	#style-10::-webkit-scrollbar-track
 	{
-		-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
 		background-color: #F5F5F5;
-		border-radius: 10px;
 	}
 
 	#style-10::-webkit-scrollbar
 	{
-		width: 10px;
+		width: 5px;
 		background-color: #F5F5F5;
 	}
 
 	#style-10::-webkit-scrollbar-thumb
 	{
 		background-color: #AAA;
-		border-radius: 10px;
-		background-image: -webkit-linear-gradient(90deg,
+		/*background-image: -webkit-linear-gradient(90deg,
 												rgba(0, 0, 0, .2) 25%,
 												transparent 25%,
 												transparent 50%,
 												rgba(0, 0, 0, .2) 50%,
 												rgba(0, 0, 0, .2) 75%,
 												transparent 75%,
-												transparent)
+												transparent)*/
 	}
 	</style>
 </head>
@@ -152,7 +152,7 @@
 			</nav>
 
 	        <div class="content">
-	            <div id='content' class="container-fluid">
+	            <div id='content-in' class="container-fluid">
 					<div class="row">
 						<div class="col-md-12">
 							<div class="card">
@@ -255,21 +255,17 @@
 		}));
 	})
 
-	// $('#content').on('click', '.add-user', function(){
-		
-	// });
-
-	$('#content').on('click', '.reimburse-info', function() {
+	$('#content-in').on('click', '.reimburse-info', function() {
 		var rid = $(this).closest('tr').prop('id').substr(2,2);
 		$.ajax({
 			type: "POST",
 			url: "get_reimburse_info.php",
 			data: 'reimburse_id='+rid,
 			success: function(msg){
-				$('#content').fadeOut(500, function(){
-					$('#content').html(msg);
+				$('#content-in').fadeOut(500, function(){
+					$('#content-in').html(msg);
 				});
-				$('#content').fadeIn(500);					
+				$('#content-in').fadeIn(500);					
 			},	
 			error: function(){
 				alert("failure");
@@ -277,7 +273,7 @@
 		});
 	});
 
-	$('#content').on('click', "#accept", (function(){
+	$('#content-in').on('click', "#accept", (function(){
 		var reason = $("#reason").val();
 		var id = $('.rid').prop('id').substr(1,2);
 		var pid = $('.projectid').prop('id').substr(2,2);
@@ -296,7 +292,7 @@
 		});
 	}));
 
-	$('#content').on('click', "#reject", (function(){
+	$('#content-in').on('click', "#reject", (function(){
 		var reason = $("#reason").val();
 		var id = $('.rid').prop('id').substr(1,2);
 		var pid = $('.projectid').prop('id').substr(2,2);
@@ -315,58 +311,174 @@
 		});
 	}));
 
-	$('#content').on('click', "#back-to-project", function(){
+	$('#content-in').on('click', "#back-to-project", function(){
 		var pid = $('.projectid').prop('id').substr(2,2);
 		getProjectInfo(pid);
 		$(document).off('click', "#back-to-project");
 	});
 
-	$('#content').on('click', '.more-info', function() {
+	$('#content-in').on('click', '.more-info', function() {
 		var trId = $(this).closest('tr').prop('id').substr(2,2);
 		getProjectInfo(trId);
 	});
 
-	function getProjectInfo(id){
-		$.ajax({
-				type: "POST",
-				url: "get_project_info.php",
-				data: 'project_id='+id,
+	$('#content-in').on('click', "#back", function(){
+		$('#content-in').fadeOut(500, function(){
+			$.ajax({
+				type: "GET",
+				url: "get_project_page.php",
 				success: function(msg){
-					$('#content').fadeOut(500, function(){
-						$('#content').html(msg);
-					});
-					$('#content').fadeIn(500);
-					$(document).on('click', "#back", function(){
-						$(window).scrollTop(0);
-						$('#content').fadeOut(500, function(){
-							$('#content').load(location.href + ' #content', function(){
-								$('#content').fadeIn(500);
-								$(document).off('click', "#back");
-							});
-						});
-					});
-				},	
-				error: function(){
-					alert("failure");
+				$('#content-in').fadeOut(500, function(){
+					$('#content-in').html(msg);
+				});
+				$('#content-in').fadeIn(500);
 				}
 			});
+		});
+	});
+
+	$('#content-in').on('click', '.delete-user', function(){
+		var pid = $('.projectid').prop('id').substr(2,2);
+		var uid = $(this).closest('tr').prop('id').substr(3,2);
+		deleteUser(uid, pid);
+	})
+
+	$(document).on("click", "#display-user-list", function(){
+		var pid = $('.projectid').prop('id').substr(2,2);
+		getAvailableUserList(pid);		
+	});
+
+	$(document).on("click", "#proccess-add-user", function(){
+		var pid = $('.projectid').prop('id').substr(2,2);
+		var uid = $('#user-list-dropdown').val();
+		addUser(uid, pid);		
+	});
+
+	function scrollEvent(){
+		alert('scrolled');
+		var mainHeight = $(this).height();
+		var mainTop = $(this).offset().top;
+		$('tr', this).each(function () {
+
+			var $this = $(this);
+			var rowTop = $this.offset().top - mainTop;
+			var rowHeight = $this.height();
+			var rowBottom = rowTop + rowHeight;
+
+
+			// the row is fully off the screen
+			if (rowBottom < 0 || rowTop > mainHeight) {
+				//$(this).css({
+				//    opacity: 0
+				//});
+				return;
+			}
+
+			// the row is fully visible
+			if (rowTop >= 0 && rowBottom <= mainHeight) {
+				$this.css({
+					opacity: 1
+				});
+				return;
+			}
+
+			// fade out, in ratio
+			if (rowTop < 0) 
+				$this.css({ opacity: rowBottom / rowHeight});
+			else if (rowBottom > mainHeight) 
+				$this.css({ opacity: (mainHeight - rowTop) / rowHeight});
+		});
+	}
+
+	function addUser(uid, pid){
+		$.ajax({
+			type: "POST",
+			url: "add_user_to_project.php",
+			data: {
+				'project_id':pid, 
+				'user_id':uid
+			},
+			success: function(msg){
+				$.notify(msg);
+				$('#addUserModal').modal('hide');
+				getProjectInfo(pid);
+			},	
+			error: function(){
+				$.notify(msg);
+			}
+		});
+	}
+
+	function deleteUser(uid, pid){
+		$.ajax({
+			type: "POST",
+			url: "delete_user_from_project.php",
+			data: {
+				'project_id':pid, 
+				'user_id':uid
+			},
+			success: function(msg){
+				$.notify(msg);
+				getProjectInfo(pid);
+			},	
+			error: function(){
+				$.notify(msg);
+			}
+		});
+	}
+
+	function getAvailableUserList(id){
+		$.ajax({
+			type: "POST",
+			url: "get_available_user.php",
+			data: 'project_id='+id,
+			success: function(msg){
+				$('#user-list-dropdown').html(msg);
+			},	
+			error: function(){
+				alert("failure");
+			}
+		});
+	}
+
+	function getProjectInfo(id){
+		$.ajax({
+			type: "POST",
+			url: "get_project_info.php",
+			data: 'project_id='+id,
+			success: function(msg){
+				$('#content-in').fadeOut(500, function(){
+					$('#content-in').html(msg);
+				});
+				$('#content-in').fadeIn(500);
+			},	
+			error: function(){
+				alert("failure");
+			}
+		});
 	}
 	</script>
 
 	<div id="addUserModal" class="modal fade" role="dialog">
 		<div class="modal-dialog">
 
-			<!-- Modal content-->
 			<div class="modal-content">
 				<div class="modal-header">
 					<button type="button" class="close" data-dismiss="modal">&times;</button>
-					<h4 class="modal-title">Modal Header</h4>
+					<h4 class="modal-title">Add user</h4>
 				</div>
+				<form method=POST>
 				<div class="modal-body">
-					<p>Some text in the modal.</p>
+					<div class='form-group label-floating is-empty'>
+						<label class='control-label'>User ID</label>
+						<select class='form-control' id='user-list-dropdown'>
+							<option selected value=''></option>
+						</select>
+					</div>
 				</div>
+				</form>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" id="proccess-add-user" class="process-add-user btn btn-default" data-background-color="green">Add user</button>
 				</div>
 			</div>
 

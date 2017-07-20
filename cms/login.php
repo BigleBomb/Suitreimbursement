@@ -59,7 +59,7 @@
 					curl_close ($ch);
 					$resp = json_decode($server_output);			
 
-					// Store Session Data
+					var_dump($resp);
 
 					if($resp != null){
 						if ($resp->success===true){

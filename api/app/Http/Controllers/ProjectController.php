@@ -65,17 +65,78 @@ class ProjectController extends Controller {
 
 	public function get_available_user($pid){
 		$project = Project::find($pid);
-		$users = $project->user()->get();
-		$res['success'] = true;
-		$res['result'] = $project;
-		$i=0;
-		foreach($users as $userlist){
-			$res['userid'][$i] = $userlist->id;
-			$user = User::where('id', '!=', $userlist->id)->get();
-			$res['available_user'][$i] = $user;
-			$i++;
+		if($project){
+			$users = $project->user()->get();
+			$user = User::all();
+			$user = $user->keyBy('id');
+			foreach($users as $userlist){
+				$user->forget($userlist->id);
+			}
+			$user = $user->values();
+			if($user->count() == 0){
+				$res['success'] = false;
+				$res['message'] = "No available user for this project";
+
+				return response($res);
+			}
+			else{
+				$res['success'] = true;
+				$res['result'] = $user;
+				
+				return response($res);
+			}
 		}
-		return response($res);
+		else{
+			$res['success'] = false;
+			$res['message'] = "No project with ID $pid found";
+
+			return response($res);
+		}
+	}
+
+	public function delete_user(Request $request){
+		$pid = $request->project_id;
+		$uid = $request->user_id;
+		if($pid || $uid != null){
+			$project = Project::find($pid);
+			if($project){
+				if($project->user()->find($uid)!=false){
+					$user = User::find($uid);
+					if($user){
+						$project_user = $project->user()->detach($user);
+						$res['success'] = true;
+						$res['message'] = "Success deleting User ID $uid from Project ID $pid";
+
+						return response($res);
+					}
+					else{
+						$res['success'] = false;
+						$res['message'] = "User ID $uid is not found";
+
+						return response($res);
+					}
+				}
+				else{
+					$res['success'] = false;
+					$res['message'] = "User ID $uid is already not in this project";
+
+					return response($res);
+				}
+			}
+			else{
+				$res['success'] = false;
+				$res['message'] = "Project ID $uid is not found";
+
+				return response($res);
+			}
+		}
+		else{
+			$res['success'] = false;
+			$res['message'] = "User ID or Project ID cannot be empty";
+
+			return response($res);
+		}
+
 	}
 
 	public function add_user(Request $request){
@@ -84,17 +145,25 @@ class ProjectController extends Controller {
 		if($pid || $uid != null){
 			$project = Project::find($pid);
 			if($project){
-				$user = User::find($uid);
-				if($user){
-					$project_user = $project->user()->attach($user);
-					$res['success'] = true;
-					$res['message'] = "Success adding User ID $uid to Project ID $pid";
+				if($project->user()->find($uid)!=true){
+					$user = User::find($uid);
+					if($user){
+						$project_user = $project->user()->attach($user);
+						$res['success'] = true;
+						$res['message'] = "Success adding User ID $uid to Project ID $pid";
 
-					return response($res);
+						return response($res);
+					}
+					else{
+						$res['success'] = false;
+						$res['message'] = "User ID $uid is not found";
+
+						return response($res);
+					}
 				}
 				else{
 					$res['success'] = false;
-					$res['message'] = "User ID $uid is not found";
+					$res['message'] = "User ID $uid is already in this project";
 
 					return response($res);
 				}
@@ -226,6 +295,9 @@ class ProjectController extends Controller {
 			$reimburse = $project->reimburse()->get();
 			$res['success'] = true;
 			$res['result'] = $project;
+			$user = $user->keyBy('id');
+			$user = $user->sortBy('id');
+			$user = $user->values();
 			$res['result']['user_data'] = $user;
 			$res['result']['reimburse_data'] = $reimburse;
 			$user_count=$project->user()->count();;
@@ -345,24 +417,24 @@ class ProjectController extends Controller {
 		}
 	}
 	
-	public function update(Request $request)
+	public function update_cost(Request $request, $pid)
 	{
-		$project = Project::all();
+		$project = Project::find($pid);
 		if($project){
-			foreach($project as $project_data){
-				$reimburse = $project_data->reimburse()->get();
-				$totalcost = 0;
-				foreach($reimburse as $reimburse_data){
-					$totalcost += $reimburse_data->cost;
-				}
-				$project_data->total_cost = $totalcost;
-				$project_data->save();
+			$reimburse = $project->reimburse()->get();
+			$totalcost = 0;
+			foreach($reimburse as $reimburse_data){
+				$totalcost += $reimburse_data->cost;
 			}
+			$project->total_cost = $totalcost;
+			$project->save();
 			$res['success'] = true;
+			$res['message'] = "Success updating the total cost of Project ID $pid";
 			return $res;
 		}
 		else{
 			$res['success'] = false;
+			$res['message'] = "Failed updating the total cost of Project ID $pid";
 			return $res;
 		}
 	}
