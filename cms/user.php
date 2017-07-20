@@ -405,7 +405,7 @@
 						tdId.children('input').focusout(function(){
 							var inside = tdId.children('input').val();
 							tdId.children('input').remove();
-							var button = "<button id='btnuser' type='button' rel='tooltip' title='Edit Task' class='btn btn-primary btn-simple btn-xs buttonedit'> <i class='material-icons'>edit</i></button>";
+							var button = "<button id='btnuser' type='button' rel='tooltip' class='btn btn-primary btn-simple btn-xs buttonedit'> <i class='material-icons'>edit</i></button>";
 							tdId.html(inside+button);
 						});
 					}

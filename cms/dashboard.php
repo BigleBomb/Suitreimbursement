@@ -76,9 +76,9 @@
 	                    </a>
 	                </li>
 	                <li>
-	                    <a href="reimbursement.php">
+	                    <a href="projects.php">
 	                        <i class="material-icons">content_paste</i>
-	                        <p>Reimbursement</p>
+	                        <p>Projects</p>
 	                    </a>
 	                </li>
 	            </ul>
@@ -234,7 +234,7 @@
 								</div>
 							<div class="card-footer">
 									<div class="stats">
-									<i class="material-icons">content_paste</i> <a href="reimbursement.php">Manage Project...</a>
+									<i class="material-icons">content_paste</i> <a href="projects.php">Manage Project...</a>
 									</div>
 								</div>
 							</div>
