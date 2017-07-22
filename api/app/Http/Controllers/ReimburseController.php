@@ -41,6 +41,10 @@ class ReimburseController extends Controller {
 			$res['result'] = $reimburse;
 			$res['result']['user_data'] = $user;
 			$res['result']['project_data'] = $project;
+			$image = app('App\Http\Controllers\ReimburseController')->getImagePath($project->id, $reimburse->id);
+			$fileData = file_get_contents($image);
+     		$ImgfileEncode = base64_encode($fileData);
+			$res['result']['image'] = $ImgfileEncode;
 			return response($res);
 		}
 		else{
@@ -386,6 +390,16 @@ class ReimburseController extends Controller {
 		}
 	}
 
+	public function getImagePath($pid, $rid){
+		$path = "../../cms/images/p$pid/reimbursePic$rid";
+
+		$matching = glob($path . ".*");
+		
+		$info = pathinfo($matching[0]);
+		$ext = $info['extension'];
+
+		return $path.'.'.$ext;
+	}
 	// public function update(Request $request, $menu, $id)
 	// {
 	// 	if($request->has(''))

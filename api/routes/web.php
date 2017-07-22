@@ -36,6 +36,7 @@ $app->get('/reimburse/get/{id}', 'ReimburseController@get_reimburse');
 $app->post('/reimburse/accept/{id}', 'ReimburseController@accept');
 $app->post('/reimburse/reject/{id}', 'ReimburseController@reject');
 $app->get('/reimburse/getfromprojectbyuserid/{pid}/{id}', 'ReimburseController@get_reimburse_from_project_by_user_id');
+$app->get('/reimburse/getimagepath/{pid}/{rid}', 'ReimburseController@getImagePath');
 
 // PROJECT ROUTES
 $app->get('/project/all', 'ProjectController@index');
