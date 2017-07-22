@@ -278,6 +278,33 @@ class ReimburseController extends Controller {
 		}
 	}
 	
+	public function get_reimburse_from_project_by_user_id($pid, $id){
+		$user = User::find($id);
+		if($user){
+			$project = $user->project()->find($pid);
+			if($project){
+				$res['success'] = true;
+				$reimburse = $project->reimburse()->get()->where('user_id', $id);
+				$reimburse = $reimburse->values();
+				$res['result'] = $reimburse;
+
+				return response($res);
+			}
+			else{
+				$res['success'] = false;
+				$res['message'] = "No project is associated with this user";
+
+				return response($res);
+			}
+		}
+		else{
+			$res['success'] = false;
+			$res['message'] = "No user with ID $id found";
+
+			return response($res);
+		}
+	}
+	
 	public function create(Request $request)
 	{
 		$project_id = $request->input('project_id');
@@ -285,6 +312,7 @@ class ReimburseController extends Controller {
 		$date = $request->input('date');
 		$category = $request->input('category');
 		$cost = $request->input('cost');
+		$details = $request->input('details');
 		if($request->hasFile('picture'))
 			$file = $request->file('picture');
 		else
@@ -292,57 +320,67 @@ class ReimburseController extends Controller {
 
 		$project = Project::where('id', $project_id)->first();
 		if($project){
-			$reimburse = Reimburse::create([
-				'project_id' => $project_id,
-				'user_id' => $user_id,
-				'date' => $date,
-				'category' => $category,
-				'cost' => $cost,
-			]);
+			if($project->user()->find($user_id)==true){
+				$reimburse = Reimburse::create([
+					'project_id' => $project_id,
+					'user_id' => $user_id,
+					'date' => $date,
+					'category' => $category,
+					'cost' => $cost,
+					'details' => $details
+				]);
 
-			if($reimburse){
-				$res['success'] = true;
-				$res['message'] = 'Success adding new reimburse';
+				if($reimburse){
+					$res['success'] = true;
+					$res['message'] = 'Success adding new reimburse';
+					app('App\Http\Controllers\ProjectController')->update_cost($project_id);
 
-			}else{
-				$res['success'] = false;
-				$res['message'] = 'Failed adding new reimburse';
+				}else{
+					$res['success'] = false;
+					$res['message'] = 'Failed adding new reimburse';
 
-				return response($res);
-			}
-
-			$re = Reimburse::where('id', $reimburse->id)->first();
-			if($re !=null ){
-				if($file != null){
-					if($file->isValid()){
-						$project_id = $reimburse->project_id;
-						$id = $re->id;
-						$filename = "reimbursePic".$id.".".$file->getClientOriginalExtension();
-						$re->picture = $filename;
-						$re->save();
-						$destinationPath = "../../cms/images/p$project_id/";
-						$file->move($destinationPath,$filename);
-
-						$res['file'] = "Uploaded successfully";
-
-						return response($res);
-					}
-					else{
-						$res['file'] = "Invalid file";
-						
-						return response($res);
-					}
-				}
-				else{
-					$res['file'] = "No file attached";
 					return response($res);
 				}
+
+				$re = Reimburse::where('id', $reimburse->id)->first();
+				if($re !=null ){
+					if($file != null){
+						if($file->isValid()){
+							$project_id = $reimburse->project_id;
+							$id = $re->id;
+							$filename = "reimbursePic".$id.".".$file->getClientOriginalExtension();
+							$re->picture = $filename;
+							$re->save();
+							$destinationPath = "../../cms/images/p$project_id/";
+							$file->move($destinationPath,$filename);
+
+							$res['file'] = "Uploaded successfully";
+
+							return response($res);
+						}
+						else{
+							$res['file'] = "Invalid file";
+							
+							return response($res);
+						}
+					}
+					else{
+						$res['file'] = "No file attached";
+						return response($res);
+					}
+				}
+			}
+			else{
+				$res['success'] = false;
+				$res['message'] = "User ID $user_id is not registered to Project ID $project_id";
+
+				return response($res);
 			}
 		}
 		else
 		{
 			$res['success'] = false;
-			$res['message'] = 'Invalid reimburse id';
+			$res['message'] = 'Invalid Project ID';
 			
 			return response($res);
 		}

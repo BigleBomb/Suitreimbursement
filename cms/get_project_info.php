@@ -37,16 +37,21 @@ if(isset($_POST['project_id']))
                                     <div class='container-fluid'>
                                         <div class='row'>
                                             <div class='col-lg-12'>
-                                                <h4>Project Details</h4>
+                                                <h4 class='col-lg-10' style='padding-left:0px'>Project Details</h4>
+                                                <button style='float:right' id='edit-project' class='btn' data-background-color='blue'>Edit</button>
                                                 <table class='table'>
-                                                    <thead style='visibility:hidden'>
+                                                    <!--<thead style='visibility:hidden'>
                                                         <th class='col-lg-3'>header</th>
                                                         <th>header</th
-                                                    </thead>
+                                                    </thead>-->
                                                     <tbody>
                                                         <tr>
-                                                            <td>Project Name</td>
-                                                            <td class='projectid' id=pr$id>$project</td>
+                                                            <td class='col-lg-3'>Project Name</td>
+                                                            <td class='project-name' id=pr$id>$project (PID:$id)</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Project Details</td>
+                                                            <td class='project-details'>$details</td>
                                                         </tr>
                                                         <tr>
                                                             <td>User count</td>
@@ -88,8 +93,8 @@ if(isset($_POST['project_id']))
                                                     <tr>
                                                         <table class='table'>
                                                         <thead>
-                                                            <th class='col-lg-1'>UID</th>
-                                                            <th class='col-lg-6'>Name</th>
+                                                            <th class='col-lg-2'>UID</th>
+                                                            <th class='col-lg-7'>Name</th>
                                                             <th class='col-lg-4'>Action</th>
                                                         </thead>
                                                         </table>

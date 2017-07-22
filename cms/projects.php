@@ -185,8 +185,9 @@
 	                                <table class="table table-hover">
 	                                    <thead class="text-warning">
 	                                        <th class="col-lg-1">RID</th>
-	                                    	<th class="col-lg-3">Project name</th>
-											<th class="col-lg-2">User count</th>
+	                                    	<th class="col-lg-2">Project name</th>
+											<th class="col-lg-2">Users count</th>
+											<th class="col-lg-2">Reimburses count</th>
 	                                    	<th>Date</th>
 											<th>Total</th>
 											<th style='visibility:hidden'>Action</th>
@@ -209,6 +210,7 @@
 														echo "<tr id='tr".$result->id."'><td>#".$result->id."</td>
 															<td>".$result->project_name."</td>
 															<td>".$result->user_count."</td>
+															<td>".$result->reimburse_count."</td>
 															<td>".date_format(date_create($result->date), 'jS F\,\ Y')
 															."</td>
 															<td>Rp ".number_format($result->total_cost, 0, ",", ".")."</td>
@@ -276,7 +278,7 @@
 	$('#content-in').on('click', "#accept", (function(){
 		var reason = $("#reason").val();
 		var id = $('.rid').prop('id').substr(1,2);
-		var pid = $('.projectid').prop('id').substr(2,2);
+		var pid = $('.project-name').prop('id').substr(2,2);
 		$.ajax({
 			type: "POST",
 			url: "accept_reimburse.php",
@@ -295,7 +297,7 @@
 	$('#content-in').on('click', "#reject", (function(){
 		var reason = $("#reason").val();
 		var id = $('.rid').prop('id').substr(1,2);
-		var pid = $('.projectid').prop('id').substr(2,2);
+		var pid = $('.project-name').prop('id').substr(2,2);
 		$.ajax({
 			type: "POST",
 			url: "reject_reimburse.php",
@@ -312,7 +314,7 @@
 	}));
 
 	$('#content-in').on('click', "#back-to-project", function(){
-		var pid = $('.projectid').prop('id').substr(2,2);
+		var pid = $('.project-name').prop('id').substr(2,2);
 		getProjectInfo(pid);
 		$(document).off('click', "#back-to-project");
 	});
@@ -338,21 +340,79 @@
 	});
 
 	$('#content-in').on('click', '.delete-user', function(){
-		var pid = $('.projectid').prop('id').substr(2,2);
+		var pid = $('.project-name').prop('id').substr(2,2);
 		var uid = $(this).closest('tr').prop('id').substr(3,2);
 		deleteUser(uid, pid);
 	})
 
 	$(document).on("click", "#display-user-list", function(){
-		var pid = $('.projectid').prop('id').substr(2,2);
+		var pid = $('.project-name').prop('id').substr(2,2);
 		getAvailableUserList(pid);		
 	});
 
 	$(document).on("click", "#proccess-add-user", function(){
-		var pid = $('.projectid').prop('id').substr(2,2);
+		var pid = $('.project-name').prop('id').substr(2,2);
 		var uid = $('#user-list-dropdown').val();
 		addUser(uid, pid);		
 	});
+
+	$(document).ready(function(){
+		var project_name;
+		var project_details;
+		var project_id;
+		var name;
+		var details;
+		var nameArray;
+		var obj;
+
+		$(document).on("click", "#edit-project", function(){
+			obj = $("#edit-project");
+			obj.text("Save");
+			obj.attr("id", "save-project");
+			project_name = $(".project-name");
+			project_details = $(".project-details");
+			name = project_name.text().trim();
+			details = project_details.text().trim();
+			nameArray = name.split(' ');
+			project_name.html($('<input />',{'value' : nameArray[0]}).val(nameArray[0]));
+			project_name.children('input').addClass('form-control');
+			project_name.children('input').focus();
+			project_name.children('input').css('margin-bottom', '0px');
+			project_name.children('input').css('width', '30%');
+			project_name.children('input').css('height', '30px');
+			project_details.html($('<input />', {'value' : details}).val(details));
+			project_details.children('input').addClass('form-control');
+			project_details.children('input').focus();
+			project_details.children('input').css('margin-bottom', '0px');
+			project_details.children('input').css('width', '30%');
+			project_details.children('input').css('height', '30px');
+		})
+		$(document).on("click", "#save-project", function(){
+			obj = $("#save-project");
+			obj.text("Edit");
+			obj.attr("id", "edit-project");
+			name = project_name.children('input').val();
+			details = project_details.children('input').val();
+			project_id = $(".project-name").prop('id').substr(2,2);
+			nameArray = project_name.text().trim().split(' ');
+			$.ajax({
+				type: "POST",
+				url: "update_project.php",
+				data: 'project_id='+project_id+'&project_name='+name+'&project_details='+details,
+				success: function(msg){
+					$.notify(msg);
+					project_name.children('input').remove('input');
+					project_name.html(name+' '+nameArray[1]);
+					project_details.children('input').remove('input');
+					project_details.html(details);
+				},	
+				error: function(){
+					alert("failure");
+				}
+			});
+		})
+	})
+	
 
 	function scrollEvent(){
 		alert('scrolled');

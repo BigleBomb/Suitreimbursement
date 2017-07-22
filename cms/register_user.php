@@ -7,17 +7,14 @@ include('config.php');
         $email = $_POST['email'];
         $priv = $_POST['priv'];
         switch($priv){
-            case "Karyawan":
-                $priv = 0;
-                break;
-            case "Atasan":
+            case "User":
                 $priv = 1;
                 break;
             case "Admin":
                 $priv = 2;
                 break;
             default:
-                $priv = 0;
+                $priv = 1;
                 break;
         }
         $ch = curl_init();

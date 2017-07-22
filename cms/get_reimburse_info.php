@@ -17,9 +17,11 @@ if(isset($_POST['reimburse_id']))
         if ($resp->success == true){
             $project = $resp->result->project_data->project_name;
             $pid = $resp->result->project_data->id;
+            $category = $resp->result->category;
             $date = $resp->result->date;
             $cost = $resp->result->cost;
             $status = $resp->result->status;
+            $details = $resp->result->details;
             $reason = $resp->result->reason;
             $picture = $resp->result->picture;
             $update = $resp->result->updated_at;
@@ -88,6 +90,14 @@ if(isset($_POST['reimburse_id']))
                                         <td class='projectid' id=pr$pid>$project (ID:$pid)</td>
                                     </tr>
                                     <tr>
+                                        <td>Category</td>
+                                        <td>$category</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Details</td>
+                                        <td>$details</td>
+                                    </tr>
+                                    <tr>
                                         <td>Total</td>
                                         <td>Rp. ".number_format($cost, 0, ",", ".");
                                             if($cost > $limit)
@@ -105,9 +115,9 @@ if(isset($_POST['reimburse_id']))
                             <h4>Pictures</h4>
                             <div class='row'>";
                             if($picture!=null){
-                                echo "<div class=col-md-4'>
-                                        <a href='#' class='thumbnail'>
-                                            <img src='$imageroot/p$pid/$picture' alt='...'>
+                                echo "<div class=col-md-4'  >
+                                        <a href='#' class='thumbnail' style='float: left'>
+                                            <img src='$imageroot/p$pid/$picture' style='height:350px; width:auto' alt='...'>
                                         </a>
                                     </div>";
                             }
@@ -126,7 +136,7 @@ if(isset($_POST['reimburse_id']))
                     echo "
                         <textarea id='reason' placeholder='Enter a reason to either accept or reject the request' class='form-control' style='max-width: 100%; max-height: 100%;'></textarea>
                     </div>
-                    <div class='clearfix'></div></div>
+                    </div>
                     <div class='card-footer' align='right'>
                         <button type='button' style='float:left;' class='btn' id='back-to-project'><i class='material-icons'>arrow_back</i>  Back</button>
                         <button type='button' class='btn btn-success' id='accept'>Accept</button>
@@ -145,10 +155,10 @@ if(isset($_POST['reimburse_id']))
                         <button type='button' style='float:left;' class='btn' id='back-to-project'><i class='material-icons'>arrow_back</i>  Back</button>
                     </div>";
                 }
-                echo "</div></div></div>";
+                echo "</div></div>";
         }
         else {
-            echo "Failed to get user id";
+            echo "Failed to get project id";
         }
     }
     else{

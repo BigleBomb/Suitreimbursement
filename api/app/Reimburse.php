@@ -9,7 +9,7 @@ class Reimburse extends Model {
 	protected $table = 'reimburse';
 
     protected $fillable = [
-		'user_id', 'project_id', 'date', 'category', 'cost', 'picture', 'status', 'reason'
+		'user_id', 'project_id', 'date', 'category', 'cost', 'picture', 'status', 'details', 'reason'
 	];
 
 	public function project(){

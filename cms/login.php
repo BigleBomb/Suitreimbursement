@@ -59,8 +59,6 @@
 					curl_close ($ch);
 					$resp = json_decode($server_output);			
 
-					var_dump($resp);
-
 					if($resp != null){
 						if ($resp->success===true){
 							session_start();

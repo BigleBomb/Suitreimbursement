@@ -198,9 +198,6 @@
 	        <footer class="footer">
 	            <div class="container-fluid">
 
-	                <!--<p class="copyright pull-right">
-	                    &copy; <script>document.write(new Date().getFullYear())</script> <a href="http://www.suitmedia.com">Suitmedia</a>
-	                </p>-->
 	            </div>
 	        </footer>
 	    </div>
@@ -238,10 +235,9 @@
 								<div class="col-md-8">
 									<div class="form-group label-floating">
 										<label class="control-label">Privillege</label>
-										<select class="form-control" name="priv">
-											<option>Karyawan</option>
-											<option>Atasan</option>
-											<option>Admin</option>
+										<select id='selectPriv' form='userreg' class="form-control" name="priv">
+											<option value='1'>User</option>
+											<option value='2'>Admin</option>
 										</select>
 									</div>
 								</div>
@@ -297,17 +293,6 @@
 
 </body>
 <script>
-	// setInterval(function(){
-	// 	$.ajax({                                      
-	// 		url: 'check_session.php',          
-	// 		data: "",
-	// 		dataType: 'json',                  
-	// 		success: function(msg)
-	// 		{
-	// 			document.write(msg);
-	// 		} 
-	// 	});
-	// }, 1000);
 	$(document).ready(function(){
 		$('#createUserModal').on('hidden.bs.modal', function () {
 			$('button#submit').unbind('click');

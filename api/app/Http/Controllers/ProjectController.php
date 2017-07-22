@@ -23,7 +23,9 @@ class ProjectController extends Controller {
 		$i=0;
 		foreach($project as $project_data){
 			$user = Project::find($project_data->id)->user()->count();
+			$reimburse = Project::find($project_data->id)->reimburse()->count();
 			$res['result'][$i]['user_count'] = $user;
+			$res['result'][$i]['reimburse_count'] = $reimburse;
 			$i++;
 		}
 		return response($res);
@@ -287,9 +289,34 @@ class ProjectController extends Controller {
 		}
 	}
 
-	public function get_project(Request $request, $id){
+	public function get_project_by_userid($id){
+		$user = User::find($id);
+		if($user){
+			$project = $user->project()->get();
+			if($project){
+				$res['success'] = true;
+				$res['result'] = $project;
+
+				return response($res);
+			}
+			else{
+				$res['success'] = false;
+				$res['message'] = "No project is associated with this user";
+
+				return response($res);
+			}
+		}
+		else{
+			$res['success'] = false;
+			$res['message'] = "No user with ID $id found";
+
+			return response($res);
+		}
+	}
+
+	public function get_project($id){
 		$project = Project::where('id', $id)->first();
-		if($project !== null){
+		if($project){
 			$project = Project::find($id);
 			$user = $project->user()->get();
 			$reimburse = $project->reimburse()->get();
@@ -321,7 +348,7 @@ class ProjectController extends Controller {
 		}
 	}
 
-	public function get_reimburse_list(Request $request, $id, $menu){
+	public function get_reimburse_list($id, $menu){
 		if($menu == 'pending'){
 			$project = Project::find($id);
 			$reimburse = $project->reimburse()->where('status', 0)->get();
@@ -417,7 +444,7 @@ class ProjectController extends Controller {
 		}
 	}
 	
-	public function update_cost(Request $request, $pid)
+	public function update_cost($pid)
 	{
 		$project = Project::find($pid);
 		if($project){
@@ -439,11 +466,40 @@ class ProjectController extends Controller {
 		}
 	}
 
-	public function delete(Request $request, $id){
+	public function delete($id){
 		$project = Project::find($id);
 		if($project->delete($id)){
 			$res['success'] = true;
 			$res['message'] = "Success deleting Project with id ".$id;
+
+			return response($res);
+		}
+	}
+
+	public function update(Request $request, $pid){
+		$project = Project::find($pid);
+		if($project){
+			$name = $request->project_name;
+			$details = $request->project_details;
+
+			$project->project_name = $name;
+			$project->details = $details;
+
+			if($project->save()){
+				$res['success'] = true;
+				$res['message'] = "Success updating Project ID $pid";
+
+				return response($res);
+			}else{
+				$res['success'] = false;
+				$res['message'] = "Failed updating Project ID $pid";
+
+				return response($res);
+			}
+		}
+		else{
+			$res['success'] = false;
+			$res['message'] = "No project with ID $pid found";
 
 			return response($res);
 		}

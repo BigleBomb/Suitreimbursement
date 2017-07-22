@@ -32,8 +32,9 @@
                         <table class='table table-hover'>
                             <thead class='text-warning'>
                                 <th class='col-lg-1'>RID</th>
-                                <th class='col-lg-3'>Project name</th>
-                                <th class='col-lg-2'>User count</th>
+                                <th class='col-lg-2'>Project name</th>
+                                <th class='col-lg-2'>Users count</th>
+                                <th class='col-lg-2'>Reimburses count</th>
                                 <th>Date</th>
                                 <th>Total</th>
                                 <th style='visibility:hidden'>Action</th>
@@ -54,6 +55,7 @@
                                         echo "<tr id='tr".$result->id."'><td>#".$result->id."</td>
                                             <td>".$result->project_name."</td>
                                             <td>".$result->user_count."</td>
+                                            <td>".$result->reimburse_count."</td>
                                             <td>".date_format(date_create($result->date), 'jS F\,\ Y')
                                             ."</td>
                                             <td>Rp ".number_format($result->total_cost, 0, ",", ".")."</td>
