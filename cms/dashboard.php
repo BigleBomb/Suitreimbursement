@@ -136,15 +136,15 @@
 												curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 												$server_output = curl_exec ($ch);
 												curl_close ($ch);
-												$resp = json_decode($server_output, true);
+												$resp = json_decode($server_output);
 												
 												if($resp!=null){
-													if($resp['success']!=false){
-														echo $resp['result']['count'];
+													if($resp->success!=false){
+														echo $resp->result->count;
 														echo " <small>Request(s)</small>";
 													}
 													else{
-														echo $resp['message'];
+														echo $resp->message;
 													}
 												}else{
 													echo "Cannot get data from the server.";
@@ -165,26 +165,26 @@
 									<i class="material-icons">attach_money</i>
 								</div>
 								<div class="card-content">
-									<p class="category">Pending amount</p>
+									<p class="category">Amount paid</p>
 									<h4 class=title>		
 									<?php
 										$ch = curl_init();
 										$token = $_SESSION['token'];
-										$url = "$SERVER/reimburse/pending/totalamount?token=".$token;
+										$url = "$SERVER/reimburse/gettotal/amount?token=".$token;
 										curl_setopt($ch, CURLOPT_URL, $url);
 										curl_setopt($ch, CURLOPT_POST, 0);
 										curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 										$server_output = curl_exec ($ch);
 										curl_close ($ch);
-										$resp = json_decode($server_output, true);
+										$resp = json_decode($server_output);
 										
 										if($resp != null){
-											if($resp['success']!=false){
+											if($resp->success!=false){
 												echo "Rp ";
-												echo number_format($resp['result']['amount'], 0, ",", ".")."</h4>";
+												echo number_format($resp->result, 0, ",", ".")."</h4>";
 											}
 											else{
-												echo $resp['message'];
+												echo $resp->message;
 											}
 										}
 										else{
@@ -217,14 +217,14 @@
 										curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 										$server_output = curl_exec ($ch);
 										curl_close ($ch);
-										$resp = json_decode($server_output, true);
+										$resp = json_decode($server_output);
 										
 										if($resp != null){
-											if($resp['success']!=false){
-												echo $resp['result']['count'];
+											if($resp->success!=false){
+												echo $resp->result->count;
 											}
 											else{
-												echo $resp['message'];
+												echo $resp->message;
 											}
 										}else{
 											echo "Cannot get data from the server.";

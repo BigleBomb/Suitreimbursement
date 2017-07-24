@@ -73,6 +73,24 @@ class ReimburseController extends Controller {
 		return response($res);
 	}
 
+	public function get_total($menu){
+		if($menu == "amount"){
+			$reimburse = Reimburse::all()->where('status', 1);
+			$total = 0;
+			foreach($reimburse as $reimburselist){
+				$total += $reimburselist->cost;
+			}
+			$res['success'] = true;
+			$res['result'] = $total;
+
+			return response($res);
+		}
+		else{
+			$res['success'] = false;
+			$res['message'] = "Invalid menu";
+		}
+	}
+
 	public function get_list(Request $request, $menu){
 		if($menu == 'pending'){
 			$reimburse = Reimburse::where('status', 0)->get();
@@ -81,10 +99,12 @@ class ReimburseController extends Controller {
 					$res['success'] = true;
 					$res['result'] = $reimburse;
 					$i=0;
-					foreach($reimburse as $userdata)
+					foreach($reimburse as $reimburselist)
 					{
-						$user = User::find($userdata->user()->first()->id);
+						$user = User::find($reimburselist->user()->first()->id);
+						$project = Project::find($reimburselist->project()->first()->id);
 						$res['result'][$i]['user_name'] = $user->nama;
+						$res['result'][$i]['project_name'] = $project->project_name;
 						$i++;
 					}
 
@@ -105,10 +125,12 @@ class ReimburseController extends Controller {
 					$res['success'] = true;
 					$res['result'] = $reimburse;
 					$i=0;
-					foreach($reimburse as $userdata)
+					foreach($reimburse as $reimburselist)
 					{
-						$user = User::find($userdata->user()->first()->id);
+						$user = User::find($reimburselist->user()->first()->id);
+						$project = Project::find($reimburselist->project()->first()->id);
 						$res['result'][$i]['user_name'] = $user->nama;
+						$res['result'][$i]['project_name'] = $project->project_name;
 						$i++;
 					}
 
@@ -128,10 +150,12 @@ class ReimburseController extends Controller {
 					$res['success'] = true;
 					$res['result'] = $reimburse;
 					$i=0;
-					foreach($reimburse as $userdata)
+					foreach($reimburse as $reimburselist)
 					{
-						$user = User::find($userdata->user()->first()->id);
+						$user = User::find($reimburselist->user()->first()->id);
+						$project = Project::find($reimburselist->project()->first()->id);
 						$res['result'][$i]['user_name'] = $user->nama;
+						$res['result'][$i]['project_name'] = $project->project_name;
 						$i++;
 					}
 
@@ -155,10 +179,11 @@ class ReimburseController extends Controller {
 		if($reimburse){
 			if($reimburse->status != 1){
 				$reimburse->status = 1;
+				$reimburse->checked = 1;
 				$reimburse->reason = $reason;
 				if($reimburse->save()){
 					$res['success'] = true;
-					$res['message'] = "Project ID ".$id." has been accepted.";
+					$res['message'] = "Reimburse ID ".$id." has been accepted.";
 
 					return response($res);
 				}else{
@@ -170,7 +195,7 @@ class ReimburseController extends Controller {
 			}
 			else{
 				$res['success'] = false;
-				$res['message'] = "Project ID ".$id." is already accepted.";
+				$res['message'] = "Reimburse ID ".$id." is already accepted.";
 
 				return response($res);
 			}
@@ -192,10 +217,11 @@ class ReimburseController extends Controller {
 		if($reimburse){
 			if($reimburse->status != 2){
 				$reimburse->status = 2;
+				$reimburse->checked = 1;
 				$reimburse->reason = $reason;
 				if($reimburse->save()){
 					$res['success'] = true;
-					$res['message'] = "Project ID ".$id." has been rejected.";
+					$res['message'] = "Reimburse ID ".$id." has been rejected.";
 
 					return response($res);
 				}else{
@@ -207,7 +233,7 @@ class ReimburseController extends Controller {
 			}
 			else{
 				$res['success'] = false;
-				$res['message'] = "Project ID ".$id." is already rejected.";
+				$res['message'] = "Reimburse ID ".$id." is already rejected.";
 
 				return response($res);
 			}
