@@ -113,13 +113,13 @@
 	                        <p>User Management</p>
 	                    </a>
 	                </li>
-	                <li class="active">
+	                <li class="">
 	                    <a href="projects.php">
 	                        <i class="material-icons">content_paste</i>
 	                        <p>Projects</p>
 	                    </a>
 	                </li>
-					<li>
+                     <li class="active">
 	                    <a href="reimburse.php">
 	                        <i class="material-icons">account_balance_wallet</i>
 	                        <p>Reimbursement</p>
@@ -160,25 +160,25 @@
 	        <div class="content">
 	            <div id='content-in' class="container-fluid">
 					<div class="row">
-						<div class="col-md-12">
+	                    <div class="col-md-12">
 							<div class="card">
 	                            <div class="card-header" data-background-color="orange">
-	                                <h4 class="title">Projects list</h4>
-	                                <p class="category">New project on 
+	                                <h4 class="title"> Reimbursement Pending Request</h4>
+	                                <p class="category">New reimburse on 
 										<?php
 											$ch = curl_init();
 											$token = $_SESSION['token'];
-											$url = "$SERVER/project/last/1?token=".$token;
+											$url = "$SERVER/reimburse/last/1?token=".$token;
 											curl_setopt($ch, CURLOPT_URL, $url);
 											curl_setopt($ch, CURLOPT_POST, 0);
 											curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 											$server_output = curl_exec ($ch);
 											curl_close ($ch);
-											$resp = json_decode($server_output);
+											$resp = json_decode($server_output, true);
 											
-											if($resp->success == true){
-												foreach($resp->result as $result){
-													echo date_format(date_create($result->created_at), 'jS F Y');
+											if($resp['success'] == true){
+												foreach($resp['result'] as $result){
+													echo date_format(date_create($result['created_at']), 'jS F Y');
 												}		
 											}
 											else{
@@ -188,49 +188,46 @@
 									</p>
 	                            </div>
 	                            <div class="card-content table-responsive">
-	                                <table class="table table-hover">
-	                                    <thead class="text-warning">
-	                                        <th class="col-lg-1">RID</th>
-	                                    	<th class="col-lg-2">Project name</th>
-											<th class="col-lg-2">Users count</th>
-											<th class="col-lg-2">Reimburses count</th>
-	                                    	<th>Date</th>
-											<th>Total</th>
-											<th style='visibility:hidden'>Action</th>
-	                                    </thead>
-	                                    <tbody>
-											<?php
-												$ch = curl_init();
-
-												$token = $_SESSION['token'];
-												$url = "$SERVER/project/all?token=".$token;
-												curl_setopt($ch, CURLOPT_URL, $url);
-												curl_setopt($ch, CURLOPT_POST, 0);
-												curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-												$server_output = curl_exec ($ch);
-												curl_close ($ch);
-												$resp = json_decode($server_output);
-												if($resp->success!=false){
-													foreach($resp->result as $result){
-
-														echo "<tr id='tr".$result->id."'><td>#".$result->id."</td>
-															<td>".$result->project_name."</td>
-															<td>".$result->user_count."</td>
-															<td>".$result->reimburse_count."</td>
-															<td>".date_format(date_create($result->date), 'jS F\,\ Y')
-															."</td>
-															<td>Rp ".number_format($result->total_cost, 0, ",", ".")."</td>
-															<td><button type='button' class='btn btn-primary more-info' data-toggle='modal' data-background-color='orange'>More info</td>
-															
-														</tr>";
-													}
-												}
-												else{
-													echo "<tr><td colspan=6 align=center><h4>".$resp->message."</h4></td></tr>";
-												}
-											?>
-	                                    </tbody>
-	                                </table>
+										<table class="table">
+												<thead class="text-primary">
+													<th width=20px>RID</th>
+													<th class='col-lg-3'>Name</th>
+													<th class='col-lg-3'>Project name</th>
+													<th>Date</th>                                                  
+													<th>Ammount</th>
+													<th></th>
+												</thead>
+												<tbody>
+													<?php
+														$ch = curl_init();
+														$token = $_SESSION['token'];
+														$url = "$SERVER/reimburse/list/pending?token=".$token;
+														curl_setopt($ch, CURLOPT_URL, $url);
+														curl_setopt($ch, CURLOPT_POST, 0);
+														curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+														$server_output = curl_exec ($ch);
+														curl_close ($ch);
+														$resp = json_decode($server_output, true);
+														if($resp['success'] != false){
+															foreach($resp['result'] as $result){
+																echo "<tr><tr id='tr".$result['id']."'>
+																	<td>".$result['id']."</td>
+																	<td>".$result['user_name']."</td>
+																	<td>".$result['project_name']."</td>
+																	<td>".date_format(date_create($result['date']), 'jS F\,\ Y')
+																	."</td>
+																	<td>Rp ".number_format($result['cost'], 0, ",", ".")."</td>
+																	<td class='text-center'>
+																	<button type='button' class='btn btn-primary reimburse-info' data-toggle='modal' data-background-color='orange'>More info</td>
+																</tr>";
+															}
+														}
+														else{
+															echo "<tr><td colspan='6' align=center><h4>".$resp['message']."</h4></td></tr>";
+														}
+													?>
+												</tbody>
+                                        </table>
 	                            </div>
 	                        </div>
 						</div>
@@ -265,7 +262,7 @@
 		}));
 	})
 
-	$('#content-in').on('click', '.reimburse-info', function() {
+	$(document).on('click', '.reimburse-info', function() {
 		var rid = $(this).closest('tr').prop('id').substr(2,2);
 		$.ajax({
 			type: "POST",
@@ -275,7 +272,9 @@
 				$('#content-in').fadeOut(500, function(){
 					$('#content-in').html(msg);
 				});
-				$('#content-in').fadeIn(500);					
+				$('#content-in').fadeIn(500, function(){
+                    $("#back-to-project").attr("id", "back-to-reimburse");	
+                });				
 			},	
 			error: function(){
 				$.notify(error_msg);
@@ -283,7 +282,11 @@
 		});
 	});
 
-	$('#content-in').on('click', "#accept", (function(){
+    $(document).on('click', '#back-to-reimburse', function(){
+        backToReimbursePage();
+    })
+
+	$(document).on('click', "#accept", (function(){
 		var reason = $("#reason").val();
 		var id = $('.rid').prop('id').substr(1,2);
 		var pid = $('.projectid').prop('id').substr(2,2);
@@ -292,7 +295,7 @@
 			url: "accept_reimburse.php",
 			data: 'reimburse_id='+id+'&reason='+reason,
 			success: function(msg){
-				getProjectInfo(pid);
+				backToReimbursePage();
 				$(document).off('click', "#accept");
 				$.notify(msg);
 			},	
@@ -302,7 +305,7 @@
 		});
 	}));
 
-	$('#content-in').on('click', "#reject", (function(){
+	$(document).on('click', "#reject", (function(){
 		var reason = $("#reason").val();
 		var id = $('.rid').prop('id').substr(1,2);
 		var pid = $('.projectid').prop('id').substr(2,2);
@@ -311,7 +314,7 @@
 			url: "reject_reimburse.php",
 			data: 'reimburse_id='+id+'&reason='+reason,
 			success: function(msg){
-				getProjectInfo(pid);
+				backToReimbursePage();
 				$(document).off('click', "#reject");
 				$.notify(msg);
 			},	
@@ -321,28 +324,17 @@
 		});
 	}));
 
-	$('#content-in').on('click', "#back-to-project", function(){
-		var pid = $('.project-name').prop('id').substr(2,2);
-		getProjectInfo(pid);
-		$(document).off('click', "#back-to-project");
-	});
-
-	$('#content-in').on('click', '.more-info', function() {
-		var trId = $(this).closest('tr').prop('id').substr(2,2);
-		getProjectInfo(trId);
-	});
-
 	$('#content-in').on('click', "#back", function(){
 		$('#content-in').fadeOut(500, function(){
 			$.ajax({
 				type: "GET",
 				url: "get_project_page.php",
 				success: function(msg){
-				$('#content-in').fadeOut(500, function(){
-					$('#content-in').html(msg);
-				});
-				$('#content-in').fadeIn(500);
-				}
+                    $('#content-in').fadeOut(500, function(){
+                        $('#content-in').html(msg);
+                    });
+                    $('#content-in').fadeIn(500);
+                }
 			});
 		});
 	});
@@ -426,6 +418,18 @@
 		})
 	})
 	
+    function backToReimbursePage(){
+        $('#content-in').fadeOut(500, function(){
+            $('#content-in').attr('id', 'content');
+            $('#content').load(location.href + " #content-in", function(){
+                $('#content-in').unwrap();
+                $('#content.in').ready(function(){
+                    $('#content-in').css('display', 'none');
+                    $('#content-in').fadeIn(500);
+                });
+            });
+        })
+    }
 
 	function scrollEvent(){
 		alert('scrolled');

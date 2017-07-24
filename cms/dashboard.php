@@ -81,6 +81,12 @@
 	                        <p>Projects</p>
 	                    </a>
 	                </li>
+					 <li>
+	                    <a href="reimburse.php">
+	                        <i class="material-icons">account_balance_wallet</i>
+	                        <p>Reimbursement</p>
+	                    </a>
+	                </li>
 	            </ul>
 	    	</div>
 	    </div>
@@ -165,7 +171,7 @@
 									<i class="material-icons">attach_money</i>
 								</div>
 								<div class="card-content">
-									<p class="category">Pending amount</p>
+									<p class="category">Total amount</p>
 									<h4 class=title>		
 									<?php
 										$ch = curl_init();
@@ -281,7 +287,7 @@
 						<div class="col-md-12">
 							<div class="card">
 	                            <div class="card-header" data-background-color="orange">
-	                                <h4 class="title">Last 10 Reimbursement Request History</h4>
+	                                <h4 class="title">Last 10 Reimbursement History</h4>
 	                                <p class="category">New reimburse on 
 										<?php
 											$ch = curl_init();

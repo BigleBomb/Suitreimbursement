@@ -86,6 +86,12 @@
 	                        <p>Projects</p>
 	                    </a>
 	                </li>
+					<li>
+	                    <a href="reimburse.php">
+	                        <i class="material-icons">account_balance_wallet</i>
+	                        <p>Reimbursement</p>
+	                    </a>
+	                </li>
 	            </ul>
 	    	</div>
 	    </div>
