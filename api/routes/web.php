@@ -19,7 +19,6 @@ $app->get('/', function () use ($app) {
 $app->post('/user/login', 'LoginController@index');
 $app->post('/user/register', 'UserController@register');
 $app->get('/user/get/{id}', ['middleware' => 'auth', 'uses' =>  'UserController@get_user']);
-$app->post('/user/changepass/{id}', 'UserController@changepass');
 $app->post('/user/set/{menu}/{id}', 'UserController@set');
 $app->get('/user/all', ['middleware' => 'auth', 'uses' => 'UserController@index']);
 $app->get('/user/delete/{id}', ['middleware' => 'auth', 'uses' => 'UserController@delete']);
@@ -37,6 +36,7 @@ $app->post('/reimburse/accept/{id}', 'ReimburseController@accept');
 $app->post('/reimburse/reject/{id}', 'ReimburseController@reject');
 $app->get('/reimburse/getfromprojectbyuserid/{pid}/{id}', 'ReimburseController@get_reimburse_from_project_by_user_id');
 $app->get('/reimburse/getimagepath/{pid}/{rid}', 'ReimburseController@getImagePath');
+$app->get('/reimburse/gettotal/{menu}', 'ReimburseController@get_total');
 
 // PROJECT ROUTES
 $app->get('/project/all', 'ProjectController@index');
@@ -53,6 +53,7 @@ $app->post('/project/adduser', 'ProjectController@add_user');
 $app->post('/project/deleteuser', 'ProjectController@delete_user');
 $app->get('/project/getavailableuser/{pid}', 'ProjectController@get_available_user');
 $app->post('/project/update/{pid}', 'ProjectController@update');
+$app->get('/project/getunchecked/{pid}', 'ProjectController@get_unchecked');
 
 $app->get('sendbasicemail','MailController@basic_email');
 $app->get('sendhtmlemail','MailController@html_email');

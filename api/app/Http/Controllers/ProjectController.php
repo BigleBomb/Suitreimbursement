@@ -31,6 +31,21 @@ class ProjectController extends Controller {
 		return response($res);
 	}
 
+	public function get_unchecked($pid){
+		$project = Project::find($pid);
+		if($project){
+			$reimburse = $project->reimburse()->where('checked', 0)->count();
+			$res['success'] = true;
+			$res['result'] = $reimburse;
+			return response($res);
+		}
+		else{
+			$res['success'] = false;
+			$res['result'] = "No project with ID $pid found";
+			return response($res);
+		}
+	}
+
 	public function get_user_list(Request $request, $id){
 		$project = Project::find($id)->user()->get();
 

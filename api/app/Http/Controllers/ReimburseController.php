@@ -42,10 +42,17 @@ class ReimburseController extends Controller {
 			$res['result']['user_data'] = $user;
 			$res['result']['project_data'] = $project;
 			$image = app('App\Http\Controllers\ReimburseController')->getImagePath($project->id, $reimburse->id);
-			$fileData = file_get_contents($image);
-     		$ImgfileEncode = base64_encode($fileData);
-			$res['result']['image'] = $ImgfileEncode;
-			return response($res);
+			$res['result']['image'] ="";
+			if($image != "null"){
+				$fileData = file_get_contents($image);
+				$res['result']['image'] = base64_encode($fileData);
+
+				return response($res);
+			}
+			else{
+				$res['result']['image'] = "None";
+				return response($res);
+			}
 		}
 		else{
 			$res['success'] = false;
@@ -73,6 +80,24 @@ class ReimburseController extends Controller {
 		return response($res);
 	}
 
+	public function get_total($menu){
+		if($menu == "amount"){
+			$reimburse = Reimburse::all()->where('status', 1);
+			$total = 0;
+			foreach($reimburse as $reimburselist){
+				$total += $reimburselist->cost;
+			}
+			$res['success'] = true;
+			$res['result'] = $total;
+
+			return response($res);
+		}
+		else{
+			$res['success'] = false;
+			$res['message'] = "Invalid menu";
+		}
+	}
+
 	public function get_list(Request $request, $menu){
 		if($menu == 'pending'){
 			$reimburse = Reimburse::where('status', 0)->get();
@@ -81,10 +106,12 @@ class ReimburseController extends Controller {
 					$res['success'] = true;
 					$res['result'] = $reimburse;
 					$i=0;
-					foreach($reimburse as $userdata)
+					foreach($reimburse as $reimburselist)
 					{
-						$user = User::find($userdata->user()->first()->id);
+						$user = User::find($reimburselist->user()->first()->id);
+						$project = Project::find($reimburselist->project()->first()->id);
 						$res['result'][$i]['user_name'] = $user->nama;
+						$res['result'][$i]['project_name'] = $project->project_name;
 						$i++;
 					}
 
@@ -105,10 +132,12 @@ class ReimburseController extends Controller {
 					$res['success'] = true;
 					$res['result'] = $reimburse;
 					$i=0;
-					foreach($reimburse as $userdata)
+					foreach($reimburse as $reimburselist)
 					{
-						$user = User::find($userdata->user()->first()->id);
+						$user = User::find($reimburselist->user()->first()->id);
+						$project = Project::find($reimburselist->project()->first()->id);
 						$res['result'][$i]['user_name'] = $user->nama;
+						$res['result'][$i]['project_name'] = $project->project_name;
 						$i++;
 					}
 
@@ -128,10 +157,12 @@ class ReimburseController extends Controller {
 					$res['success'] = true;
 					$res['result'] = $reimburse;
 					$i=0;
-					foreach($reimburse as $userdata)
+					foreach($reimburse as $reimburselist)
 					{
-						$user = User::find($userdata->user()->first()->id);
+						$user = User::find($reimburselist->user()->first()->id);
+						$project = Project::find($reimburselist->project()->first()->id);
 						$res['result'][$i]['user_name'] = $user->nama;
+						$res['result'][$i]['project_name'] = $project->project_name;
 						$i++;
 					}
 
@@ -155,10 +186,11 @@ class ReimburseController extends Controller {
 		if($reimburse){
 			if($reimburse->status != 1){
 				$reimburse->status = 1;
+				$reimburse->checked = 1;
 				$reimburse->reason = $reason;
 				if($reimburse->save()){
 					$res['success'] = true;
-					$res['message'] = "Project ID ".$id." has been accepted.";
+					$res['message'] = "Reimburse ID ".$id." has been accepted.";
 
 					return response($res);
 				}else{
@@ -170,7 +202,7 @@ class ReimburseController extends Controller {
 			}
 			else{
 				$res['success'] = false;
-				$res['message'] = "Project ID ".$id." is already accepted.";
+				$res['message'] = "Reimburse ID ".$id." is already accepted.";
 
 				return response($res);
 			}
@@ -192,10 +224,11 @@ class ReimburseController extends Controller {
 		if($reimburse){
 			if($reimburse->status != 2){
 				$reimburse->status = 2;
+				$reimburse->checked = 1;
 				$reimburse->reason = $reason;
 				if($reimburse->save()){
 					$res['success'] = true;
-					$res['message'] = "Project ID ".$id." has been rejected.";
+					$res['message'] = "Reimburse ID ".$id." has been rejected.";
 
 					return response($res);
 				}else{
@@ -207,7 +240,7 @@ class ReimburseController extends Controller {
 			}
 			else{
 				$res['success'] = false;
-				$res['message'] = "Project ID ".$id." is already rejected.";
+				$res['message'] = "Reimburse ID ".$id." is already rejected.";
 
 				return response($res);
 			}
@@ -293,10 +326,15 @@ class ReimburseController extends Controller {
 				$res['result'] = $reimburse;
 				$i=0;
 				foreach($reimburse as $reimburse_list){
+					$res['result'][$i]['image'] = "";
 					$image = app('App\Http\Controllers\ReimburseController')->getImagePath($project->id, $reimburse_list->id);
-					$fileData = file_get_contents($image);
-					$ImgfileEncode = base64_encode($fileData);
-					$res['result'][$i]['image'] = $ImgfileEncode;
+					if($image != "null"){
+						$fileData = file_get_contents($image);
+						$res['result'][$i]['image'] = base64_encode($fileData);
+					}
+					else{
+						$res['result'][$i]['image'] = "None";
+					}
 					$i++;
 				}
 
@@ -403,10 +441,15 @@ class ReimburseController extends Controller {
 
 		$matching = glob($path . ".*");
 		
-		$info = pathinfo($matching[0]);
-		$ext = $info['extension'];
+		if(sizeof($matching) > 0){
+			$info = pathinfo($matching[0]);
+			$ext = $info['extension'];
 
-		return $path.'.'.$ext;
+			return $path.'.'.$ext;
+		}
+		else{
+			return "null";
+		}
 	}
 	// public function update(Request $request, $menu, $id)
 	// {
