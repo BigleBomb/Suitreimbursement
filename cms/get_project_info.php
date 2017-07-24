@@ -30,8 +30,8 @@ if(isset($_POST['project_id']))
                         <div class='col-md-12'>
                             <div class='card'> 
                                 <div class='card-header' data-background-color='orange'>
-                                    <h4 class='title'>Project <strong>$project</strong></h4>
-                                    <p class='category'><i>$details</i></p>
+                                    <h4 class='title'>Project <strong id='project-label'>$project</strong></h4>
+                                    <p class='category'><i id='project-detail-label'>$details</i></p>
                                 </div>
                                 <div class='card-content'>
                                     <div class='container-fluid'>
@@ -47,7 +47,7 @@ if(isset($_POST['project_id']))
                                                     <tbody>
                                                         <tr>
                                                             <td class='col-lg-3'>Project Name</td>
-                                                            <td class='project-name' id=pr$id>$project (PID:$id)</td>
+                                                            <td class='project-name' id='pr$id'>$project (PID:$id)</td>
                                                         </tr>
                                                         <tr>
                                                             <td>Project Details</td>

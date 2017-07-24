@@ -236,6 +236,8 @@
 	
 </body>
 <script>
+
+	var error_msg = "Could not get the data from the server. Please try again later.";
 	$(document).ready(function(){
 		$('#moreInfoModal').on('hidden.bs.modal', function () {
 			$('button#accept').unbind('click');
@@ -270,7 +272,7 @@
 				$('#content-in').fadeIn(500);					
 			},	
 			error: function(){
-				alert("failure");
+				$.notify(error_msg);
 			}
 		});
 	});
@@ -278,7 +280,7 @@
 	$('#content-in').on('click', "#accept", (function(){
 		var reason = $("#reason").val();
 		var id = $('.rid').prop('id').substr(1,2);
-		var pid = $('.project-name').prop('id').substr(2,2);
+		var pid = $('.projectid').prop('id').substr(2,2);
 		$.ajax({
 			type: "POST",
 			url: "accept_reimburse.php",
@@ -289,7 +291,7 @@
 				$.notify(msg);
 			},	
 			error: function(){
-				alert("failure");
+				$.notify(error_msg);
 			}
 		});
 	}));
@@ -297,7 +299,7 @@
 	$('#content-in').on('click', "#reject", (function(){
 		var reason = $("#reason").val();
 		var id = $('.rid').prop('id').substr(1,2);
-		var pid = $('.project-name').prop('id').substr(2,2);
+		var pid = $('.projectid').prop('id').substr(2,2);
 		$.ajax({
 			type: "POST",
 			url: "reject_reimburse.php",
@@ -308,7 +310,7 @@
 				$.notify(msg);
 			},	
 			error: function(){
-				alert("failure");
+				$.notify(error_msg);
 			}
 		});
 	}));
@@ -363,6 +365,7 @@
 		var name;
 		var details;
 		var nameArray;
+		var pid;
 		var obj;
 
 		$(document).on("click", "#edit-project", function(){
@@ -374,7 +377,9 @@
 			name = project_name.text().trim();
 			details = project_details.text().trim();
 			nameArray = name.split(' ');
-			project_name.html($('<input />',{'value' : nameArray[0]}).val(nameArray[0]));
+			pid = nameArray[nameArray.length-1];
+			name = nameArray.slice(0, -1).join(' ');
+			project_name.html($('<input />',{'value' : name}).val(name));
 			project_name.children('input').addClass('form-control');
 			project_name.children('input').focus();
 			project_name.children('input').css('margin-bottom', '0px');
@@ -402,12 +407,14 @@
 				success: function(msg){
 					$.notify(msg);
 					project_name.children('input').remove('input');
-					project_name.html(name+' '+nameArray[1]);
+					project_name.html(name+' '+pid);
+					$("#project-label").html(name);
 					project_details.children('input').remove('input');
 					project_details.html(details);
+					$("#project-detail-label").html(details);
 				},	
 				error: function(){
-					alert("failure");
+				$.notify(error_msg);
 				}
 			});
 		})
@@ -496,7 +503,7 @@
 				$('#user-list-dropdown').html(msg);
 			},	
 			error: function(){
-				alert("failure");
+				$.notify(error_msg);
 			}
 		});
 	}
@@ -513,7 +520,7 @@
 				$('#content-in').fadeIn(500);
 			},	
 			error: function(){
-				alert("failure");
+				$.notify(error_msg);
 			}
 		});
 	}

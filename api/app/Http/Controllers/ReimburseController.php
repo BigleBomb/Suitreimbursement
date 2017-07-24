@@ -291,6 +291,14 @@ class ReimburseController extends Controller {
 				$reimburse = $project->reimburse()->get()->where('user_id', $id);
 				$reimburse = $reimburse->values();
 				$res['result'] = $reimburse;
+				$i=0;
+				foreach($reimburse as $reimburse_list){
+					$image = app('App\Http\Controllers\ReimburseController')->getImagePath($project->id, $reimburse_list->id);
+					$fileData = file_get_contents($image);
+					$ImgfileEncode = base64_encode($fileData);
+					$res['result'][$i]['image'] = $ImgfileEncode;
+					$i++;
+				}
 
 				return response($res);
 			}
