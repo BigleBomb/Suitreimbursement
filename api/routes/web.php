@@ -19,7 +19,6 @@ $app->get('/', function () use ($app) {
 $app->post('/user/login', 'LoginController@index');
 $app->post('/user/register', 'UserController@register');
 $app->get('/user/get/{id}', ['middleware' => 'auth', 'uses' =>  'UserController@get_user']);
-$app->post('/user/changepass/{id}', 'UserController@changepass');
 $app->post('/user/set/{menu}/{id}', 'UserController@set');
 $app->get('/user/all', ['middleware' => 'auth', 'uses' => 'UserController@index']);
 $app->get('/user/delete/{id}', ['middleware' => 'auth', 'uses' => 'UserController@delete']);

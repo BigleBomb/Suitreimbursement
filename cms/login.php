@@ -70,7 +70,7 @@
 						else {
 							echo '<div class="alert alert-danger alert-dismissable">
 									<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
-									<strong>Email or password is wrong</strong>
+									<strong>'.$resp->message.'</strong>
 								</div>';
 						}
 					}

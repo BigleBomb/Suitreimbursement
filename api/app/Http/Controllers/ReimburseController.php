@@ -42,10 +42,17 @@ class ReimburseController extends Controller {
 			$res['result']['user_data'] = $user;
 			$res['result']['project_data'] = $project;
 			$image = app('App\Http\Controllers\ReimburseController')->getImagePath($project->id, $reimburse->id);
-			$fileData = file_get_contents($image);
-     		$ImgfileEncode = base64_encode($fileData);
-			$res['result']['image'] = $ImgfileEncode;
-			return response($res);
+			$res['result']['image'] ="";
+			if($image != "null"){
+				$fileData = file_get_contents($image);
+				$res['result']['image'] = base64_encode($fileData);
+
+				return response($res);
+			}
+			else{
+				$res['result']['image'] = "None";
+				return response($res);
+			}
 		}
 		else{
 			$res['success'] = false;
@@ -319,10 +326,15 @@ class ReimburseController extends Controller {
 				$res['result'] = $reimburse;
 				$i=0;
 				foreach($reimburse as $reimburse_list){
+					$res['result'][$i]['image'] = "";
 					$image = app('App\Http\Controllers\ReimburseController')->getImagePath($project->id, $reimburse_list->id);
-					$fileData = file_get_contents($image);
-					$ImgfileEncode = base64_encode($fileData);
-					$res['result'][$i]['image'] = $ImgfileEncode;
+					if($image != "null"){
+						$fileData = file_get_contents($image);
+						$res['result'][$i]['image'] = base64_encode($fileData);
+					}
+					else{
+						$res['result'][$i]['image'] = "None";
+					}
 					$i++;
 				}
 
@@ -429,10 +441,15 @@ class ReimburseController extends Controller {
 
 		$matching = glob($path . ".*");
 		
-		$info = pathinfo($matching[0]);
-		$ext = $info['extension'];
+		if(sizeof($matching) > 0){
+			$info = pathinfo($matching[0]);
+			$ext = $info['extension'];
 
-		return $path.'.'.$ext;
+			return $path.'.'.$ext;
+		}
+		else{
+			return "null";
+		}
 	}
 	// public function update(Request $request, $menu, $id)
 	// {

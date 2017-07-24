@@ -21,7 +21,7 @@ class LoginController extends Controller
         $login = User::where('email', $email)->first();
         if (!$login) {
             $res['success'] = false;
-            $res['message'] = 'Your email or password incorrect!';
+            $res['message'] = 'Your email is incorrect!';
 
             return response($res);
         }else{
@@ -37,7 +37,7 @@ class LoginController extends Controller
                 }
             }else{
                 $res['success'] = false;
-                $res['message'] = 'You email or password incorrect!';
+                $res['message'] = 'Your password is incorrect!';
 
                 return response($res);
             }
