@@ -213,7 +213,6 @@ class ProjectController extends Controller {
 	{
 		$date = $request->input('date');
 		$project_name = $request->input('project_name');
-		$total_cost = $request->input('total_cost');
 		$details = $request->input('details');
 
 		$project = Project::create([

@@ -299,6 +299,7 @@
 
 </body>
 <script>
+
 	$(document).ready(function(){
 		$('#createUserModal').on('hidden.bs.modal', function () {
 			$('button#submit').unbind('click');
@@ -346,6 +347,7 @@
 			});
 		});
 	});
+	
 	
 	$(document).ready(function(){
 		$(document).on('click', ".delete-user", function() {

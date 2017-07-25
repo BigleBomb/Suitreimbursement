@@ -162,11 +162,13 @@
 					</div>
 				</div>
 			</nav>
-
 	        <div class="content">
 	            <div id='content-in' class="container-fluid">
 					<div class="row">
 						<div class="col-md-12">
+							<div class="col-md-3">
+								<button type='button' class='btn btn-primary createproject' data-toggle="modal">Create Project
+							</div>
 							<div class="card">
 	                            <div class="card-header" data-background-color="orange">
 	                                <h4 class="title">Projects list</h4>
@@ -267,7 +269,77 @@
 	</div>
 	
 </body>
+<div id="createproject" class="modal fade" role="dialog">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<button type="button" class="close" data-dismiss="modal">&times;</button>
+						<h4 class="modal-title text-primary" background="green">Create new project</h4><br>
+						<div id='alertt'>
+						</div>	
+					</div>
+						<div class="modal-body">
+						<form id='createprj' class='createprj' method=POST>
+							<div class="column">
+								<div class="col-md-8">
+									<div class="form-group label-floating">
+										<label class="control-label">Project Name</label>
+										<input type="text" id='project_name' class="form-control" name="project_name" required data-toggle="tooltip" data-placement="right" title="Masukkan nama">
+									</div>
+								</div>
+								<div class="col-md-8">
+									<div class="form-group label-floating">
+										<label class="control-label">Date</label>
+										<input type="date" id='date' class="form-control" name="date" required data-toggle="tooltip" data-placement="right">
+									</div>
+								</div>
+								<div class="col-md-8">
+									<div class="form-group label-floating">
+										<label class="control-label">Detail</label>
+										<input type="textarea" id='detail' class="form-control" name="detail" required data-toggle="tooltip" data-placement="right" title="Masukkan email">
+									</div>
+								</div>	
+							</div>
+							<div class="clearfix"></div>
+						</div>
+						</form>
+						<div class="modal-footer">
+							<button class="btn btn-success" id='submit'>Create</button>
+							<button type="button" class="btn btn-secondary" data-dismiss="modal" id='cancelcreate'>Cancel</button>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
 <script>
+	$(document).on('click', '.createproject', function() {
+		$("#createproject").modal('show');
+			$("button#submit").click(function(){
+				if($('form.createprj')[0].checkValidity()) {
+					$.ajax({
+						type: "POST",
+						url: "create_project.php",
+						data: $('form.createprj').serialize(),
+						success: function(msg){
+							$("#createproject").modal('hide');
+							$('#content-in').load(location.href + ' #content-in');
+							$("button#submit").off('click', '.createproject');
+							$.notify(msg);
+							},	
+						error: function(){
+							alert('error');
+							}
+					});
+				}
+				else{
+					$('#project_name').tooltip('show');
+					$('#date').tooltip('show');
+					$('#detail').tooltip('show');
+				}
+			});
+	});
+
 
 	var error_msg = "Could not get the data from the server. Please try again later.";
 	$(document).ready(function(){
@@ -404,6 +476,9 @@
 			obj = $("#edit-project");
 			obj.text("Save");
 			obj.attr("id", "save-project");
+			$("#delete-project").attr("id", "cancel-edit");
+			$("#cancel-edit").text("Cancel");
+
 			project_name = $(".project-name");
 			project_details = $(".project-details");
 			name = project_name.text().trim();
@@ -428,6 +503,8 @@
 			obj = $("#save-project");
 			obj.text("Edit");
 			obj.attr("id", "edit-project");
+			$("#cancel-edit").attr("id", "delete-project");
+			$("#delete-project").text("Delete");
 			name = project_name.children('input').val();
 			details = project_details.children('input').val();
 			project_id = $(".project-name").prop('id').substr(2,2);
@@ -450,44 +527,10 @@
 				}
 			});
 		})
+		$(document).on("click", "#delete-project", function(){
+			obj = $("#delete-project");
+		})
 	})
-	
-
-	function scrollEvent(){
-		alert('scrolled');
-		var mainHeight = $(this).height();
-		var mainTop = $(this).offset().top;
-		$('tr', this).each(function () {
-
-			var $this = $(this);
-			var rowTop = $this.offset().top - mainTop;
-			var rowHeight = $this.height();
-			var rowBottom = rowTop + rowHeight;
-
-
-			// the row is fully off the screen
-			if (rowBottom < 0 || rowTop > mainHeight) {
-				//$(this).css({
-				//    opacity: 0
-				//});
-				return;
-			}
-
-			// the row is fully visible
-			if (rowTop >= 0 && rowBottom <= mainHeight) {
-				$this.css({
-					opacity: 1
-				});
-				return;
-			}
-
-			// fade out, in ratio
-			if (rowTop < 0) 
-				$this.css({ opacity: rowBottom / rowHeight});
-			else if (rowBottom > mainHeight) 
-				$this.css({ opacity: (mainHeight - rowTop) / rowHeight});
-		});
-	}
 
 	function addUser(uid, pid){
 		$.ajax({
