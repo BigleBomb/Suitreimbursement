@@ -470,13 +470,13 @@ class ReimburseController extends Controller {
 	// 	}
 	// }
 
-	// public function delete(Request $request, $id){
-	// 	$reimburse = Reimburse::find($id);
-	// 	if($reimburse->delete($id)){
-	// 		$res['success'] = true;
-	// 		$res['message'] = "Success deleting Reimburse with id ".$id;
+	public function delete( $id){
+		$reimburse = Reimburse::find($id);
+		if($reimburse->delete($id)){
+			$res['success'] = true;
+			$res['message'] = "Success deleting Reimburse with id ".$id;
 
-	// 		return response($res);
-	// 	}
-	// }
+			return response($res);
+		}
+	}
 }

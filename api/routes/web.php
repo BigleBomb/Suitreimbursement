@@ -37,6 +37,7 @@ $app->post('/reimburse/reject/{id}', 'ReimburseController@reject');
 $app->get('/reimburse/getfromprojectbyuserid/{pid}/{id}', 'ReimburseController@get_reimburse_from_project_by_user_id');
 $app->get('/reimburse/getimagepath/{pid}/{rid}', 'ReimburseController@getImagePath');
 $app->get('/reimburse/gettotal/{menu}', 'ReimburseController@get_total');
+$app->get('/reimburse/delete/{id}', 'ReimburseController@delete');
 
 // PROJECT ROUTES
 $app->get('/project/all', 'ProjectController@index');
@@ -54,6 +55,7 @@ $app->post('/project/deleteuser', 'ProjectController@delete_user');
 $app->get('/project/getavailableuser/{pid}', 'ProjectController@get_available_user');
 $app->post('/project/update/{pid}', 'ProjectController@update');
 $app->get('/project/getunchecked/{pid}', 'ProjectController@get_unchecked');
+$app->get('/project/gettotal', 'ProjectController@get_total');
 
 $app->get('sendbasicemail','MailController@basic_email');
 $app->get('sendhtmlemail','MailController@html_email');

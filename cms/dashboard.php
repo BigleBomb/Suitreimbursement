@@ -171,11 +171,7 @@
 									<i class="material-icons">attach_money</i>
 								</div>
 								<div class="card-content">
-<<<<<<< HEAD
-									<p class="category">Total amount</p>
-=======
 									<p class="category">Amount paid</p>
->>>>>>> a7282f8c19ccdedfc1908882f0cbf679cebf531f
 									<h4 class=title>		
 									<?php
 										$ch = curl_init();
@@ -221,7 +217,7 @@
 										<?php
 										$ch = curl_init();
 										$token = $_SESSION['token'];
-										$url = "$SERVER/user/count?token=".$token;
+										$url = "$SERVER/project/gettotal?token=".$token;
 										curl_setopt($ch, CURLOPT_URL, $url);
 										curl_setopt($ch, CURLOPT_POST, 0);
 										curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -231,7 +227,7 @@
 										
 										if($resp != null){
 											if($resp->success!=false){
-												echo $resp->result->count;
+												echo $resp->result;
 											}
 											else{
 												echo $resp->message;

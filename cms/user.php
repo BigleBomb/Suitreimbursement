@@ -81,7 +81,7 @@
 	                    </a>
 	                </li>
 	                <li>
-	                    <a href="Projects.php">
+	                    <a href="projects.php">
 	                        <i class="material-icons">content_paste</i>
 	                        <p>Projects</p>
 	                    </a>

@@ -348,7 +348,7 @@
 	}));
 
 	$('#content-in').on('click', "#back-to-project", function(){
-		var pid = $('.project-name').prop('id').substr(2,2);
+		var pid = $('.projectid').prop('id').substr(2,2);
 		getProjectInfo(pid);
 		$(document).off('click', "#back-to-project");
 	});

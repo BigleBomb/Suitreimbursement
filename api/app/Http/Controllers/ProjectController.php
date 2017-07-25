@@ -31,6 +31,14 @@ class ProjectController extends Controller {
 		return response($res);
 	}
 
+	public function get_total(){
+		$project = Project::all()->count();
+		$res['success'] = true;
+		$res['result'] = $project;
+
+		return response($res);
+	}
+
 	public function get_unchecked($pid){
 		$project = Project::find($pid);
 		if($project){

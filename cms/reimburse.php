@@ -190,11 +190,12 @@
 	                            <div class="card-content table-responsive">
 										<table class="table">
 												<thead class="text-primary">
-													<th width=20px>RID</th>
-													<th class='col-lg-3'>Name</th>
-													<th class='col-lg-3'>Project name</th>
-													<th>Date</th>                                                  
-													<th>Ammount</th>
+													<th class='col-lg-1'>RID</th>
+													<th class='col-lg-2'>Name</th>
+													<th class='col-lg-2'>Project name</th>
+													<th>Date</th>
+													<th>Category</th>                                                  
+													<th>Amount</th>
 													<th></th>
 												</thead>
 												<tbody>
@@ -207,23 +208,24 @@
 														curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 														$server_output = curl_exec ($ch);
 														curl_close ($ch);
-														$resp = json_decode($server_output, true);
-														if($resp['success'] != false){
-															foreach($resp['result'] as $result){
-																echo "<tr><tr id='tr".$result['id']."'>
-																	<td>".$result['id']."</td>
-																	<td>".$result['user_name']."</td>
-																	<td>".$result['project_name']."</td>
-																	<td>".date_format(date_create($result['date']), 'jS F\,\ Y')
+														$resp = json_decode($server_output);
+														if($resp->success != false){
+															foreach($resp->result as $result){
+																echo "<tr><tr id='tr".$result->id."'>
+																	<td>#".$result->id."</td>
+																	<td>".$result->user_name."</td>
+																	<td>".$result->project_name."</td>
+																	<td>".date_format(date_create($result->date), 'jS F\,\ Y')
 																	."</td>
-																	<td>Rp ".number_format($result['cost'], 0, ",", ".")."</td>
+																	<td>".$result->category."</td>
+																	<td>Rp ".number_format($result->cost, 0, ",", ".")."</td>
 																	<td class='text-center'>
 																	<button type='button' class='btn btn-primary reimburse-info' data-toggle='modal' data-background-color='orange'>More info</td>
 																</tr>";
 															}
 														}
 														else{
-															echo "<tr><td colspan='6' align=center><h4>".$resp['message']."</h4></td></tr>";
+															echo "<tr><td colspan='6' align=center><h4>".$resp->message."</h4></td></tr>";
 														}
 													?>
 												</tbody>
