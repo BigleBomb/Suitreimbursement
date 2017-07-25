@@ -171,11 +171,7 @@
 									<i class="material-icons">attach_money</i>
 								</div>
 								<div class="card-content">
-<<<<<<< HEAD
 									<p class="category">Total amount</p>
-=======
-									<p class="category">Amount paid</p>
->>>>>>> a7282f8c19ccdedfc1908882f0cbf679cebf531f
 									<h4 class=title>		
 									<?php
 										$ch = curl_init();

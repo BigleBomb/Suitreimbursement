@@ -81,7 +81,7 @@
 	                    </a>
 	                </li>
 	                <li>
-	                    <a href="Projects.php">
+	                    <a href="projects.php">
 	                        <i class="material-icons">content_paste</i>
 	                        <p>Projects</p>
 	                    </a>
@@ -299,6 +299,7 @@
 
 </body>
 <script>
+
 	$(document).ready(function(){
 		$('#createUserModal').on('hidden.bs.modal', function () {
 			$('button#submit').unbind('click');
@@ -346,6 +347,7 @@
 			});
 		});
 	});
+	
 	
 	$(document).ready(function(){
 		$(document).on('click', ".delete-user", function() {

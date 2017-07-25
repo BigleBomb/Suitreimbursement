@@ -37,8 +37,11 @@ if(isset($_POST['project_id']))
                                     <div class='container-fluid'>
                                         <div class='row'>
                                             <div class='col-lg-12'>
-                                                <h4 class='col-lg-10' style='padding-left:0px'>Project Details</h4>
-                                                <button style='float:right' id='edit-project' class='btn' data-background-color='blue'>Edit</button>
+                                                <h4 class='col-lg-5 style='padding-left:0px; float:left'>Project Details</h4>
+                                                <div style='float:right'>
+                                                    <button id='edit-project' class='btn' data-background-color='blue'>Edit</button>
+                                                    <button id='delete-project' class='btn' data-background-color='red'>Delete</button>
+                                                </div>
                                                 <table class='table'>
                                                     <!--<thead style='visibility:hidden'>
                                                         <th class='col-lg-3'>header</th>

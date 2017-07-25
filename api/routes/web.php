@@ -54,6 +54,7 @@ $app->post('/project/deleteuser', 'ProjectController@delete_user');
 $app->get('/project/getavailableuser/{pid}', 'ProjectController@get_available_user');
 $app->post('/project/update/{pid}', 'ProjectController@update');
 $app->get('/project/getunchecked/{pid}', 'ProjectController@get_unchecked');
+$app->post('/project/create','ProjectController@create');
 
 $app->get('sendbasicemail','MailController@basic_email');
 $app->get('sendhtmlemail','MailController@html_email');
