@@ -1,5 +1,5 @@
 <?php
-    $SERVER="api.vixelmedia.com";
+    $SERVER="localhost:1000";
 
     $imageheight = '50%';
     $imagewidth = '50%';

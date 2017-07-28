@@ -18,11 +18,10 @@ if(isset($_POST['project_id']))
             $project = $resp->result->project_name;
             $user_count = $resp->result->user_count;
             $reimburse_count = $resp->result->reimburse_count;
-            $date = $resp->result->date;
+            $date = $resp->result->created_at;
             $total = $resp->result->total_cost;
             $details = $resp->result->details;
             $update = $resp->result->updated_at;
-            $created = $resp->result->created_at;
             $reimburse_data = $resp->result->reimburse_data;
             
             echo "<div class='content'>
@@ -37,7 +36,7 @@ if(isset($_POST['project_id']))
                                     <div class='container-fluid'>
                                         <div class='row'>
                                             <div class='col-lg-12'>
-                                                <h4 class='col-lg-5 style='padding-left:0px; float:left'>Project Details</h4>
+                                                <h4 class='col-lg-5' style='padding-left:0px; float:left'>Project Details</h4>
                                                 <div style='float:right'>
                                                     <button id='edit-project' class='btn' data-background-color='blue'>Edit</button>
                                                     <button id='delete-project' class='btn' data-background-color='red'>Delete</button>
@@ -67,16 +66,12 @@ if(isset($_POST['project_id']))
                                                         <tr>
                                                             <td>Total cost</td>
                                                             <td>";
-                                                                $rcost = 0;
-                                                                foreach($reimburse_data as $reimburse){
-                                                                    $rcost += $reimburse->cost;
-                                                                }
-                                                                echo "Rp.".number_format($rcost, 0, ",", ".");
+                                                                echo "Rp.".number_format($total, 0, ",", ".");
                                                             echo "</td>
                                                         </tr>
                                                         <tr>
                                                             <td>Created at</td>
-                                                            <td>".date_format(date_create($created), 'jS F, Y')."</td>
+                                                            <td>".date_format(date_create($date), 'jS F, Y')."</td>
                                                         </tr>
                                                         <tr>
                                                             <td>Updated at</td>
@@ -111,9 +106,12 @@ if(isset($_POST['project_id']))
                                                                     $limit = $user->limit;
                                                                     $uid = $user->id;
                                                                     $email = $user->email;
-                                                                    echo "<tr id=tru$uid class='tr_user_id'><td class='col-lg-2'>#$uid</td>";
-                                                                    echo "<td class='col-lg-10'>$name</td>";
-                                                                    echo "<td class='col-lg-1' title='Click to delete user from this project'><button type='button' class='btn btn-primary delete-user' data-background-color='blue' style=' text-align: center'><i class='material-icons'>delete</i></td>";
+                                                                    echo "<tr id=tru$uid class='tr_user_id'>
+                                                                        <td class='col-lg-2'>#$uid</td>
+                                                                        <td class='col-lg-10'>$name</td>
+                                                                        <td class='col-lg-1' title='Click to delete user from this project'>
+                                                                            <button type='button' class='btn btn-primary delete-user' data-target='#confirmationModal' data-background-color='blue' style=' text-align: center'><i class='material-icons'>delete</i>
+                                                                        </td>";
                                                                 }
                                                             }
                                                             else{

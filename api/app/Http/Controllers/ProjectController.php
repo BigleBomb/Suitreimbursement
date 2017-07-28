@@ -122,6 +122,7 @@ class ProjectController extends Controller {
 	public function delete_user(Request $request){
 		$pid = $request->project_id;
 		$uid = $request->user_id;
+		$mode = $request->mode;
 		if($pid || $uid != null){
 			$project = Project::find($pid);
 			if($project){
@@ -129,6 +130,10 @@ class ProjectController extends Controller {
 					$user = User::find($uid);
 					if($user){
 						$project_user = $project->user()->detach($user);
+						$reimburse = $project->reimburse()->where('user_id', $user->id)->get();
+						if($mode == 1)
+							foreach($reimburse as $reimburselist)
+								$reimburselist->delete();
 						$res['success'] = true;
 						$res['message'] = "Success deleting User ID $uid from Project ID $pid";
 
@@ -211,12 +216,10 @@ class ProjectController extends Controller {
 	
 	public function create(Request $request)
 	{
-		$date = $request->input('date');
 		$project_name = $request->input('project_name');
 		$details = $request->input('details');
 
 		$project = Project::create([
-			'date' => $date,
 			'project_name' => $project_name,
 			'details' => $details,
 		]);
@@ -470,7 +473,7 @@ class ProjectController extends Controller {
 	{
 		$project = Project::find($pid);
 		if($project){
-			$reimburse = $project->reimburse()->get();
+			$reimburse = $project->reimburse()->get()->where('status', '!=', 2);
 			$totalcost = 0;
 			foreach($reimburse as $reimburse_data){
 				$totalcost += $reimburse_data->cost;

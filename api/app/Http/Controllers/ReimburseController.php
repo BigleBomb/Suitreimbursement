@@ -226,7 +226,9 @@ class ReimburseController extends Controller {
 				$reimburse->status = 2;
 				$reimburse->checked = 1;
 				$reimburse->reason = $reason;
+				$project = $reimburse->project()->first();
 				if($reimburse->save()){
+					app('App\Http\Controllers\ProjectController')->update_cost($reimburse->project()->first()->id);
 					$res['success'] = true;
 					$res['message'] = "Reimburse ID ".$id." has been rejected.";
 

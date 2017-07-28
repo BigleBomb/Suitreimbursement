@@ -29,6 +29,10 @@
 
 	<!--  Charts Plugin -->
 	<script src="./assets/js/chartist.min.js"></script>
+	
+	<script src='./assets/js/nprogress.js'></script>
+	<link rel='stylesheet' href='./assets/css/nprogress.css'/>
+
 
 	<!--  Notifications Plugin    -->
 	<script src="./assets/js/bootstrap-notify.js"></script>
@@ -38,6 +42,28 @@
 	
 
 	<style>
+	.pace {
+		-webkit-pointer-events: none;
+		pointer-events: none;
+
+		-webkit-user-select: none;
+		-moz-user-select: none;
+		user-select: none;
+	}
+
+	.pace-inactive {
+		display: none;
+	}
+
+	.pace .pace-progress {
+		background: #ffa726;
+		position: fixed;
+		z-index: 2000;
+		top: 0;
+		right: 100%;
+		width: 100%;
+		height: 2px;
+	}
 	.badge-notify{
 		/*background:aqua;*/
 		position:relative;
@@ -54,8 +80,8 @@
 	}
 	.scrollbar:hover
 	{
-		overflow-y:scroll;
 		padding-right:0px;
+		overflow-y:scroll;
 	}
 	#style-10::-webkit-scrollbar-track
 	{
@@ -71,14 +97,6 @@
 	#style-10::-webkit-scrollbar-thumb
 	{
 		background-color: #AAA;
-		/*background-image: -webkit-linear-gradient(90deg,
-												rgba(0, 0, 0, .2) 25%,
-												transparent 25%,
-												transparent 50%,
-												rgba(0, 0, 0, .2) 50%,
-												rgba(0, 0, 0, .2) 75%,
-												transparent 75%,
-												transparent)*/
 	}
 	</style>
 </head>
@@ -101,7 +119,7 @@
 
 			<div class="logo">
 				<a href="http://www.suitmedia.com" class="simple-text">
-					Reimbursement
+					Projects
 				</a>
 			</div>
 
@@ -167,7 +185,7 @@
 					<div class="row">
 						<div class="col-md-12">
 							<div class="col-md-3">
-								<button type='button' class='btn btn-primary createproject' data-toggle="modal">Create Project
+								<button type='button' class='btn btn-primary createproject' data-color='orange' data-toggle="modal">Create Project
 							</div>
 							<div class="card">
 	                            <div class="card-header" data-background-color="orange">
@@ -225,7 +243,7 @@
 															<td>".$result->project_name."</td>
 															<td>".$result->user_count."</td>
 															<td>".$result->reimburse_count."</td>
-															<td>".date_format(date_create($result->date), 'jS F\,\ Y')
+															<td>".date_format(date_create($result->created_at), 'jS F\,\ Y')
 															."</td>
 															<td>Rp ".number_format($result->total_cost, 0, ",", ".")."</td>
 															<td>
@@ -289,12 +307,6 @@
 								</div>
 								<div class="col-md-8">
 									<div class="form-group label-floating">
-										<label class="control-label">Date</label>
-										<input type="date" id='date' class="form-control" name="date" required data-toggle="tooltip" data-placement="right">
-									</div>
-								</div>
-								<div class="col-md-8">
-									<div class="form-group label-floating">
 										<label class="control-label">Detail</label>
 										<input type="textarea" id='detail' class="form-control" name="detail" required data-toggle="tooltip" data-placement="right" title="Masukkan email">
 									</div>
@@ -334,7 +346,6 @@
 				}
 				else{
 					$('#project_name').tooltip('show');
-					$('#date').tooltip('show');
 					$('#detail').tooltip('show');
 				}
 			});
@@ -363,25 +374,16 @@
 		}));
 	})
 
-	$('#content-in').on('click', '.reimburse-info', function() {
+	/**
+	 *	Reimburse Controller
+	 *
+	 */
+	$(document).on('click', '.reimburse-info', function() {
 		var rid = $(this).closest('tr').prop('id').substr(2,2);
-		$.ajax({
-			type: "POST",
-			url: "get_reimburse_info.php",
-			data: 'reimburse_id='+rid,
-			success: function(msg){
-				$('#content-in').fadeOut(500, function(){
-					$('#content-in').html(msg);
-				});
-				$('#content-in').fadeIn(500);					
-			},	
-			error: function(){
-				$.notify(error_msg);
-			}
-		});
+		getReimburseInfo(rid);
 	});
 
-	$('#content-in').on('click', "#accept", (function(){
+	$(document).on('click', "#accept", (function(){
 		var reason = $("#reason").val();
 		var id = $('.rid').prop('id').substr(1,2);
 		var pid = $('.projectid').prop('id').substr(2,2);
@@ -400,7 +402,7 @@
 		});
 	}));
 
-	$('#content-in').on('click', "#reject", (function(){
+	$(document).on('click', "#reject", (function(){
 		var reason = $("#reason").val();
 		var id = $('.rid').prop('id').substr(1,2);
 		var pid = $('.projectid').prop('id').substr(2,2);
@@ -419,37 +421,45 @@
 		});
 	}));
 
-	$('#content-in').on('click', "#back-to-project", function(){
+
+
+
+	$(document).on('click', "#back-to-project", function(){
 		var pid = $('.projectid').prop('id').substr(2,2);
 		getProjectInfo(pid);
-		$(document).off('click', "#back-to-project");
 	});
 
-	$('#content-in').on('click', '.more-info', function() {
+	$(document).on('click', '.more-info', function() {
 		var trId = $(this).closest('tr').prop('id').substr(2,2);
 		getProjectInfo(trId);
 	});
 
-	$('#content-in').on('click', "#back", function(){
-		$('#content-in').fadeOut(500, function(){
-			$.ajax({
-				type: "GET",
-				url: "get_project_page.php",
-				success: function(msg){
-				$('#content-in').fadeOut(500, function(){
-					$('#content-in').html(msg);
-				});
-				$('#content-in').fadeIn(500);
-				}
-			});
-		});
+	$(document).on('click', "#back", function(){
+		backToProjectPage();
 	});
 
-	$('#content-in').on('click', '.delete-user', function(){
+	
+
+	/**
+	 * Project Controller
+	 *
+	 */
+
+	$(document).on('click', '.delete-user', function(){
 		var pid = $('.project-name').prop('id').substr(2,2);
 		var uid = $(this).closest('tr').prop('id').substr(3,2);
-		deleteUser(uid, pid);
-	})
+		$('#confirmationModal').modal('show');
+		$('#confirmMsg').html("Confirmation for deleting user ID #"+uid);
+		$(document).on('click', '#confirm-yes', function(){
+			// deleteUser(uid, pid);
+			$('#confirmationModal').modal('hide');
+			$(document).off('click', '#confirm-yes');
+		})
+		$(document).on('click', '#confirm-cancel', function(){
+			$('#confirmationModal').modal('hide');
+			$(document).off('click', '#confirm-cancel');
+		})
+	});
 
 	$(document).on("click", "#display-user-list", function(){
 		var pid = $('.project-name').prop('id').substr(2,2);
@@ -462,6 +472,7 @@
 		addUser(uid, pid);		
 	});
 
+
 	$(document).ready(function(){
 		var project_name;
 		var project_details;
@@ -471,13 +482,15 @@
 		var nameArray;
 		var pid;
 		var obj;
+		var obj2;
 
 		$(document).on("click", "#edit-project", function(){
 			obj = $("#edit-project");
 			obj.text("Save");
 			obj.attr("id", "save-project");
-			$("#delete-project").attr("id", "cancel-edit");
-			$("#cancel-edit").text("Cancel");
+			obj2 = $("#delete-project");
+			obj2.text("Cancel");
+			obj2.attr("id", "cancel-edit");
 
 			project_name = $(".project-name");
 			project_details = $(".project-details");
@@ -486,12 +499,14 @@
 			nameArray = name.split(' ');
 			pid = nameArray[nameArray.length-1];
 			name = nameArray.slice(0, -1).join(' ');
+
 			project_name.html($('<input />',{'value' : name}).val(name));
 			project_name.children('input').addClass('form-control');
 			project_name.children('input').focus();
 			project_name.children('input').css('margin-bottom', '0px');
 			project_name.children('input').css('width', '30%');
 			project_name.children('input').css('height', '30px');
+			
 			project_details.html($('<input />', {'value' : details}).val(details));
 			project_details.children('input').addClass('form-control');
 			project_details.children('input').focus();
@@ -499,12 +514,15 @@
 			project_details.children('input').css('width', '30%');
 			project_details.children('input').css('height', '30px');
 		})
+
 		$(document).on("click", "#save-project", function(){
 			obj = $("#save-project");
 			obj.text("Edit");
 			obj.attr("id", "edit-project");
-			$("#cancel-edit").attr("id", "delete-project");
-			$("#delete-project").text("Delete");
+			obj2 = $("#cancel-edit")
+			obj2.text("Delete");
+			obj2.attr("id", "delete-project");
+
 			name = project_name.children('input').val();
 			details = project_details.children('input').val();
 			project_id = $(".project-name").prop('id').substr(2,2);
@@ -527,12 +545,64 @@
 				}
 			});
 		})
+
 		$(document).on("click", "#delete-project", function(){
 			obj = $("#delete-project");
+			$("#confirmMsg").html("Are you sure you want to delete this project?");
+			$("#confirmationModal").modal('show');
+		})
+
+		$(document).on("click", "#cancel-edit", function(){
+			obj = $("#save-project");
+			obj.text("Edit");
+			obj.attr("id", "edit-project");
+			obj2 = $("#cancel-edit");
+			obj2.text("Delete");
+			obj2.attr("id", "delete-project");
+			project_name.html(name+' '+pid);
+			$("#project-label").html(name);
+			project_details.children('input').remove('input');
+			project_details.html(details);
+			$("#project-detail-label").html(details);
 		})
 	})
+	
+	function backToProjectPage(){
+		NProgress.start();
+        $('#content-in').fadeOut(500, function(){
+            $('#content-in').attr('id', 'content');
+            $('#content').load(location.href + " #content-in", function(){
+                $('#content-in').unwrap();
+                $('#content-in').css('display', 'none');
+                $('#content.in').ready(function(){
+                    $('#content-in').fadeIn(500);
+					NProgress.done();
+                });
+            });
+        })
+    }
+
+	function getReimburseInfo(rid){
+		NProgress.start();
+		$.ajax({
+			type: "POST",
+			url: "get_reimburse_info.php",
+			data: 'reimburse_id='+rid,
+			success: function(msg){
+				$('#content-in').fadeOut(500, function(){
+					$('#content-in').html(msg);
+				});
+				$('#content-in').fadeIn(500);	
+				NProgress.done();				
+			},	
+			error: function(){
+				$.notify(error_msg);
+			}
+		});
+	}
 
 	function addUser(uid, pid){
+		NProgress.start();
 		$.ajax({
 			type: "POST",
 			url: "add_user_to_project.php",
@@ -544,6 +614,7 @@
 				$.notify(msg);
 				$('#addUserModal').modal('hide');
 				getProjectInfo(pid);
+				NProgress.done();
 			},	
 			error: function(){
 				$.notify(msg);
@@ -552,6 +623,7 @@
 	}
 
 	function deleteUser(uid, pid){
+		NProgress.start();
 		$.ajax({
 			type: "POST",
 			url: "delete_user_from_project.php",
@@ -562,6 +634,7 @@
 			success: function(msg){
 				$.notify(msg);
 				getProjectInfo(pid);
+				NProgress.done();
 			},	
 			error: function(){
 				$.notify(msg);
@@ -584,6 +657,7 @@
 	}
 
 	function getProjectInfo(id){
+		NProgress.start();
 		$.ajax({
 			type: "POST",
 			url: "get_project_info.php",
@@ -593,6 +667,7 @@
 					$('#content-in').html(msg);
 				});
 				$('#content-in').fadeIn(500);
+				NProgress.done();		
 			},	
 			error: function(){
 				$.notify(error_msg);
@@ -600,7 +675,6 @@
 		});
 	}
 	</script>
-
 	<div id="addUserModal" class="modal fade" role="dialog">
 		<div class="modal-dialog">
 
@@ -627,6 +701,35 @@
 		</div>
 	</div>
 
+	<div id="confirmationModal" class="modal fade" role="dialog">
+		<div class="modal-dialog">
+
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
+					<h4 class="modal-title">Confirmation</h4>
+				</div>
+				<form method=POST>
+				<div class="modal-body">
+					<h4 id="confirmMsg">Confirm?</h4>
+					<div id="confirmCheckbox" class="checkbox">
+						<label>
+							<input type="checkbox" name="checked">
+							<span class="checkbox-material">
+							</span>
+							Also delete the reimburse request from this user
+						</label>
+					</div>
+				</div>
+				</form>
+				<div class="modal-footer">
+					<button type="button" id="confirm-yes" style="float:center" class="btn btn-default" data-background-color="green">Confirm</button>
+					<button type="button" id="confirm-cancel" style="float:center" class="btn btn-default" data-background-color="red">Cancel</button>
+				</div>
+			</div>
+
+		</div>
+	</div>
 </html>
 
 <?php

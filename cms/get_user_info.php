@@ -23,7 +23,7 @@ session_start();
                 $limit = $resp->result->limit;
                 echo "<table class='table'>
                         <thead>
-                            <th></th>
+                            <th class='col-md-5'></th>
                             <th></th>
                         </thead>
                         <tbody>
@@ -34,7 +34,7 @@ session_start();
                             <tr>
                                 <td>Name</td>
                                 <td id='tdName'>$nama
-                                    <button id='btnuser' type='button' rel='tooltip' title='Edit Task' class='btn btn-primary btn-simple btn-xs buttonedit'>
+                                    <button id='btnuser' type='button' rel='tooltip' class='btn btn-primary btn-simple btn-xs buttonedit'>
 										<i class='material-icons'>edit</i>
 									</button>
                                 </td>
@@ -42,7 +42,7 @@ session_start();
                             <tr>
                                 <td>Username</td>
                                 <td id='tdUsername'>$username
-                                    <button id='btnuser' type='button' rel='tooltip' title='Edit Task' class='btn btn-primary btn-simple btn-xs buttonedit'>
+                                    <button id='btnuser' type='button' rel='tooltip' class='btn btn-primary btn-simple btn-xs buttonedit'>
 										<i class='material-icons'>edit</i>
 									</button>
                                 </td>
@@ -50,7 +50,7 @@ session_start();
                             <tr>
                                 <td>Email</td>
                                 <td id='tdEmail'>$email
-                                    <button type='button' rel='tooltip' title='Edit Task' class='btn btn-primary btn-simple btn-xs buttonedit'>
+                                    <button type='button' rel='tooltip' class='btn btn-primary btn-simple btn-xs buttonedit'>
 										<i class='material-icons'>edit</i>
 									</button>
                                 </td>
@@ -58,7 +58,7 @@ session_start();
                             <tr>
                                 <td>Limit</td>
                                 <td id='tdLimit'>".number_format($limit, 0, ",", ".")."
-                                    <button type='button' rel='tooltip' title='Edit Task' class='btn btn-primary btn-simple btn-xs buttonedit'>
+                                    <button type='button' rel='tooltip' class='btn btn-primary btn-simple btn-xs buttonedit'>
 										<i class='material-icons'>edit</i>
 									</button>
                                 </td>

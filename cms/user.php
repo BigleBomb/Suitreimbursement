@@ -54,11 +54,6 @@
 	<div class="wrapper">
 
 	    <div class="sidebar" data-color="purple" data-image="./assets/img/sidebar-1.jpg">
-			<!--
-		        Tip 1: You can change the color of the sidebar using: data-color="purple | blue | green | orange | red"
-
-		        Tip 2: you can also add an image using data-image tag
-		    -->
 
 			<div class="logo">
 				<a href="http://www.suitmedia.com" class="simple-text">
@@ -110,26 +105,6 @@
 					</div>
 					<div class="collapse navbar-collapse">
 						<ul class="nav navbar-nav navbar-right">
-							<!--<li>
-								<a href="#pablo" class="dropdown-toggle" data-toggle="dropdown">
-									<i class="material-icons">dashboard</i>
-									<p class="hidden-lg hidden-md">Dashboard</p>
-								</a>
-							</li>-->
-							<!--<li class="dropdown">
-								<a href="#" class="dropdown-toggle" data-toggle="dropdown">
-									<i class="material-icons">notifications</i>
-									<span class="notification">5</span>
-									<p class="hidden-lg hidden-md">Notifications</p>
-								</a>
-								<ul class="dropdown-menu">
-									<li><a href="#">Mike John responded to your email</a></li>
-									<li><a href="#">You have 5 new tasks</a></li>
-									<li><a href="#">You're now friend with Andrew</a></li>
-									<li><a href="#">Another Notification</a></li>
-									<li><a href="#">Another One</a></li>
-								</ul>
-							</li>-->
 							<li>
 								<a href="#pablo" class="dropdown-toggle" data-toggle="dropdown">
 	 							   <i class="material-icons">person</i>
@@ -176,20 +151,20 @@
 												curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 												$server_output = curl_exec ($ch);
 												curl_close ($ch);
-												$resp = json_decode($server_output, true);
-												if($resp['success'] != false){
-													foreach($resp['result'] as $result){
-														echo "<tr id='tr".$result['id']."'>
-															<td>#".$result['id']."</td>
-															<td>".$result['nama']."</td>
-															<td>".$result['email']."</td>
-															<td>".date_format(date_create($result['created_at']), 'jS F\,\ Y')."</td>
+												$resp = json_decode($server_output);
+												if($resp->success != false){
+													foreach($resp->result as $result){
+														echo "<tr id='tr".$result->id."'>
+															<td>#".$result->id."</td>
+															<td>".$result->nama."</td>
+															<td>".$result->email."</td>
+															<td>".date_format(date_create($result->created_at), 'jS F\,\ Y')."</td>
 															<td class='text-center'><button type='button' class='btn btn-primary modify-user' data-toggle='modal'>Modify<span><button type='button' class='btn btn-primary delete-user' data-toggle='modal'>Delete</td>
 														</tr>";
 													}
 												}
 												else{
-													echo "<tr><td colspan=5 align=center><h4>".$resp['message']."</h4></td></tr>";
+													echo "<tr><td colspan=5 align=center><h4>".$resp->message."</h4></td></tr>";
 												}
 											?>
 	                                    </tbody>
@@ -328,15 +303,15 @@
 						type: "POST",
 						url: "register_user.php",
 						data: $('form.userreg').serialize(),
-							success: function(msg){
-								$("#createUserModal").modal('hide');
-								$('#maintable').load(location.href + ' #maintable');
-								$("button#submit").unbind('click');
-								$.notify(msg);
-							},	
-							error: function(){
-								alert('error');
-							}
+						success: function(msg){
+							$("#createUserModal").modal('hide');
+							$('#maintable').load(location.href + ' #maintable');
+							$("button#submit").unbind('click');
+							$.notify(msg);
+						},	
+						error: function(){
+							alert('error');
+						}
 					});
 				}
 				else{
@@ -428,7 +403,8 @@
 				alert("failure");
 			}
 		});
-	});</script>
+	});
+	</script>
 
 </html>
 

@@ -150,7 +150,7 @@
 														echo " <small>Request(s)</small>";
 													}
 													else{
-														echo $resp->message;
+														echo "0 <small>Request(s)</small>";
 													}
 												}else{
 													echo "Cannot get data from the server.";
@@ -160,7 +160,7 @@
 								</div>
 								<div class="card-footer">
 									<div class="stats">
-										<i class="material-icons text-danger">warning</i> <a href="reimbursement.php">Check now...</a>
+										<i class="material-icons text-danger">warning</i> <a href="reimburse.php">Check now...</a>
 									</div>
 								</div>
 							</div>
@@ -228,9 +228,10 @@
 										if($resp != null){
 											if($resp->success!=false){
 												echo $resp->result;
+												echo " <small>Project(s)</small>";
 											}
 											else{
-												echo $resp->message;
+												echo "0 <small>User(s)</small>";
 											}
 										}else{
 											echo "Cannot get data from the server.";
@@ -262,14 +263,15 @@
 										curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 										$server_output = curl_exec ($ch);
 										curl_close ($ch);
-										$resp = json_decode($server_output, true);
+										$resp = json_decode($server_output);
 										
 										if($resp != null){
-											if($resp['success']!=false){
-												echo $resp['result']['count'];
+											if($resp->success!=false){
+												echo $resp->result->count;
+												echo " <small>User(s)</small>";
 											}
 											else{
-												echo $resp['message'];
+												echo "0 <small>User(s)</small>";
 											}
 										}else{
 											echo "Cannot get data from the server.";
@@ -287,7 +289,7 @@
 						<div class="col-md-12">
 							<div class="card">
 	                            <div class="card-header" data-background-color="orange">
-	                                <h4 class="title">Last 10 Reimbursement History</h4>
+	                                <h4 class="title">Last 10 Reimbursement Request History</h4>
 	                                <p class="category">New reimburse on 
 										<?php
 											$ch = curl_init();
@@ -298,11 +300,11 @@
 											curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 											$server_output = curl_exec ($ch);
 											curl_close ($ch);
-											$resp = json_decode($server_output, true);
+											$resp = json_decode($server_output);
 											
-											if($resp['success'] == true){
-												foreach($resp['result'] as $result){
-													echo date_format(date_create($result['created_at']), 'jS F Y');
+											if($resp->success == true){
+												foreach($resp->result as $result){
+													echo date_format(date_create($result->created_at), 'jS F Y');
 												}		
 											}
 											else{
@@ -333,10 +335,10 @@
 												curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 												$server_output = curl_exec ($ch);
 												curl_close ($ch);
-												$resp = json_decode($server_output, true);
-												if($resp['success']!=false){
-													foreach($resp['result'] as $result){
-														$status = $result['status'];
+												$resp = json_decode($server_output);
+												if($resp->success!=false){
+													foreach($resp->result as $result){
+														$status = $result->status;
 														$label;
 														$color;
 														$title;
@@ -359,19 +361,19 @@
 																break;
 														}
 
-														echo "<tr><td>#".$result['id']."</td>
-															<td>".$result['user_name']."</td>
-															<td>".$result['project_name']."</td>
-															<td>".date_format(date_create($result['date']), 'jS F\,\ Y')
+														echo "<tr><td>#".$result->id."</td>
+															<td>".$result->user_name."</td>
+															<td>".$result->project_name."</td>
+															<td>".date_format(date_create($result->date), 'jS F\,\ Y')
 															."</td>
-															<td>".$result['category']."</td>
-															<td>Rp ".number_format($result['cost'], 0, ",", ".")."</td>
+															<td>".$result->category."</td>
+															<td>Rp ".number_format($result->cost, 0, ",", ".")."</td>
 															<td class='text-center'><font title='$title' class='material-icons' color='$color'>$label</font></td>
 														</tr>";
 													}
 												}
 												else{
-													echo "<tr><td colspan=6 align=center><h4>".$resp['message']."</h4></td></tr>";
+													echo "<tr><td colspan=6 align=center><h4>".$resp->message."</h4></td></tr>";
 												}
 											?>
 	                                    </tbody>

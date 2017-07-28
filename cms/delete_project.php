@@ -1,17 +1,14 @@
 <?php
 include('config.php');
 session_start();
-    if(isset($_POST['project_name'])
+    if(isset($_POST['project_id'])
     ){
-        $pnama = $_POST['project_name'];
-        $detail = $_POST['detail'];
+        $id = $_POST['project_id'];
         $token = $_SESSION['token'];
 
         $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL,"$SERVER/project/create?token=$token");
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS,
-                "project_name=$pnama&details=$detail");
+        curl_setopt($ch, CURLOPT_URL,"$SERVER/project/delete/$id?token=$token");
+        curl_setopt($ch, CURLOPT_POST, 0);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $server_output = curl_exec ($ch);
         curl_close ($ch);
@@ -20,7 +17,6 @@ session_start();
         if($resp != null){
             $message = $resp->message;
             if ($resp->success==true){
-                $password = $resp->pass; 
                 echo $message;
             }
             else {

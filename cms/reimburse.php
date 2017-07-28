@@ -29,6 +29,10 @@
 
 	<!--  Charts Plugin -->
 	<script src="./assets/js/chartist.min.js"></script>
+	
+	<script src='./assets/js/nprogress.js'></script>
+	<link rel='stylesheet' href='./assets/css/nprogress.css'/>
+
 
 	<!--  Notifications Plugin    -->
 	<script src="./assets/js/bootstrap-notify.js"></script>
@@ -243,29 +247,10 @@
 <script>
 
 	var error_msg = "Could not get the data from the server. Please try again later.";
-	$(document).ready(function(){
-		$('#moreInfoModal').on('hidden.bs.modal', function () {
-			$('button#accept').unbind('click');
-			$('button#reject').unbind('click');
-			$('body').off('click', '.more-info');
-		})
-	});
-
-	$(document).ready(function(){
-		$('#cardheader').addClass("fade in");
-		$(document).on('click', '#pendingtab', (function(){
-			$('#cardheader').attr('data-background-color', 'orange');
-		}));
-		$(document).on('click', '#acceptedtab', (function(){
-			$('#cardheader').attr('data-background-color', 'green');
-		}));
-		$(document).on('click', '#rejectedtab', (function(){
-			$('#cardheader').attr('data-background-color', 'red');
-		}));
-	})
 
 	$(document).on('click', '.reimburse-info', function() {
 		var rid = $(this).closest('tr').prop('id').substr(2,2);
+		NProgress.start();
 		$.ajax({
 			type: "POST",
 			url: "get_reimburse_info.php",
@@ -276,7 +261,8 @@
 				});
 				$('#content-in').fadeIn(500, function(){
                     $("#back-to-project").attr("id", "back-to-reimburse");	
-                });				
+                });	
+				NProgress.done();			
 			},	
 			error: function(){
 				$.notify(error_msg);
@@ -326,216 +312,20 @@
 		});
 	}));
 
-	$('#content-in').on('click', "#back", function(){
-		$('#content-in').fadeOut(500, function(){
-			$.ajax({
-				type: "GET",
-				url: "get_project_page.php",
-				success: function(msg){
-                    $('#content-in').fadeOut(500, function(){
-                        $('#content-in').html(msg);
-                    });
-                    $('#content-in').fadeIn(500);
-                }
-			});
-		});
-	});
-
-	$('#content-in').on('click', '.delete-user', function(){
-		var pid = $('.project-name').prop('id').substr(2,2);
-		var uid = $(this).closest('tr').prop('id').substr(3,2);
-		deleteUser(uid, pid);
-	})
-
-	$(document).on("click", "#display-user-list", function(){
-		var pid = $('.project-name').prop('id').substr(2,2);
-		getAvailableUserList(pid);		
-	});
-
-	$(document).on("click", "#proccess-add-user", function(){
-		var pid = $('.project-name').prop('id').substr(2,2);
-		var uid = $('#user-list-dropdown').val();
-		addUser(uid, pid);		
-	});
-
-	$(document).ready(function(){
-		var project_name;
-		var project_details;
-		var project_id;
-		var name;
-		var details;
-		var nameArray;
-		var pid;
-		var obj;
-
-		$(document).on("click", "#edit-project", function(){
-			obj = $("#edit-project");
-			obj.text("Save");
-			obj.attr("id", "save-project");
-			project_name = $(".project-name");
-			project_details = $(".project-details");
-			name = project_name.text().trim();
-			details = project_details.text().trim();
-			nameArray = name.split(' ');
-			pid = nameArray[nameArray.length-1];
-			name = nameArray.slice(0, -1).join(' ');
-			project_name.html($('<input />',{'value' : name}).val(name));
-			project_name.children('input').addClass('form-control');
-			project_name.children('input').focus();
-			project_name.children('input').css('margin-bottom', '0px');
-			project_name.children('input').css('width', '30%');
-			project_name.children('input').css('height', '30px');
-			project_details.html($('<input />', {'value' : details}).val(details));
-			project_details.children('input').addClass('form-control');
-			project_details.children('input').focus();
-			project_details.children('input').css('margin-bottom', '0px');
-			project_details.children('input').css('width', '30%');
-			project_details.children('input').css('height', '30px');
-		})
-		$(document).on("click", "#save-project", function(){
-			obj = $("#save-project");
-			obj.text("Edit");
-			obj.attr("id", "edit-project");
-			name = project_name.children('input').val();
-			details = project_details.children('input').val();
-			project_id = $(".project-name").prop('id').substr(2,2);
-			nameArray = project_name.text().trim().split(' ');
-			$.ajax({
-				type: "POST",
-				url: "update_project.php",
-				data: 'project_id='+project_id+'&project_name='+name+'&project_details='+details,
-				success: function(msg){
-					$.notify(msg);
-					project_name.children('input').remove('input');
-					project_name.html(name+' '+pid);
-					$("#project-label").html(name);
-					project_details.children('input').remove('input');
-					project_details.html(details);
-					$("#project-detail-label").html(details);
-				},	
-				error: function(){
-				$.notify(error_msg);
-				}
-			});
-		})
-	})
-	
     function backToReimbursePage(){
+		NProgress.start();
         $('#content-in').fadeOut(500, function(){
             $('#content-in').attr('id', 'content');
             $('#content').load(location.href + " #content-in", function(){
                 $('#content-in').unwrap();
+                $('#content-in').css('display', 'none');
                 $('#content.in').ready(function(){
-                    $('#content-in').css('display', 'none');
                     $('#content-in').fadeIn(500);
+					NProgress.done();
                 });
             });
         })
     }
-
-	function scrollEvent(){
-		alert('scrolled');
-		var mainHeight = $(this).height();
-		var mainTop = $(this).offset().top;
-		$('tr', this).each(function () {
-
-			var $this = $(this);
-			var rowTop = $this.offset().top - mainTop;
-			var rowHeight = $this.height();
-			var rowBottom = rowTop + rowHeight;
-
-
-			// the row is fully off the screen
-			if (rowBottom < 0 || rowTop > mainHeight) {
-				//$(this).css({
-				//    opacity: 0
-				//});
-				return;
-			}
-
-			// the row is fully visible
-			if (rowTop >= 0 && rowBottom <= mainHeight) {
-				$this.css({
-					opacity: 1
-				});
-				return;
-			}
-
-			// fade out, in ratio
-			if (rowTop < 0) 
-				$this.css({ opacity: rowBottom / rowHeight});
-			else if (rowBottom > mainHeight) 
-				$this.css({ opacity: (mainHeight - rowTop) / rowHeight});
-		});
-	}
-
-	function addUser(uid, pid){
-		$.ajax({
-			type: "POST",
-			url: "add_user_to_project.php",
-			data: {
-				'project_id':pid, 
-				'user_id':uid
-			},
-			success: function(msg){
-				$.notify(msg);
-				$('#addUserModal').modal('hide');
-				getProjectInfo(pid);
-			},	
-			error: function(){
-				$.notify(msg);
-			}
-		});
-	}
-
-	function deleteUser(uid, pid){
-		$.ajax({
-			type: "POST",
-			url: "delete_user_from_project.php",
-			data: {
-				'project_id':pid, 
-				'user_id':uid
-			},
-			success: function(msg){
-				$.notify(msg);
-				getProjectInfo(pid);
-			},	
-			error: function(){
-				$.notify(msg);
-			}
-		});
-	}
-
-	function getAvailableUserList(id){
-		$.ajax({
-			type: "POST",
-			url: "get_available_user.php",
-			data: 'project_id='+id,
-			success: function(msg){
-				$('#user-list-dropdown').html(msg);
-			},	
-			error: function(){
-				$.notify(error_msg);
-			}
-		});
-	}
-
-	function getProjectInfo(id){
-		$.ajax({
-			type: "POST",
-			url: "get_project_info.php",
-			data: 'project_id='+id,
-			success: function(msg){
-				$('#content-in').fadeOut(500, function(){
-					$('#content-in').html(msg);
-				});
-				$('#content-in').fadeIn(500);
-			},	
-			error: function(){
-				$.notify(error_msg);
-			}
-		});
-	}
 	</script>
 
 	<div id="addUserModal" class="modal fade" role="dialog">

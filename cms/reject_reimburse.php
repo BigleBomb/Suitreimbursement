@@ -24,8 +24,7 @@ session_start();
                 $to = $email;
                 $subject = "Reimburse Rejected";
                 $txt = "Your reimbursement request with ID ".$id." has been rejected.";
-                $headers = "From: noreply@vixelmedia.com" . "\r\n" .
-                "CC: chrisnafc@gmail.com";
+                $headers = "From: noreply@vixelmedia.com";
                 
                 mail($to,$subject,$txt,$headers);
             }
